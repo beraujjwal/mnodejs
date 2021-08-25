@@ -13,35 +13,36 @@ class UsersController extends Controller {
     super( );
     this.User = this.db.User;
     this.Role = this.db.Role;
-    this.UserRole = this.db.UserRole;
     autoBind( this );
   }
 
   async create(req, res) {
     // Validate request
-    if (!req.body.title) {
-      res.status(400).send({ message: "Content can not be empty!" });
+    if (!req.body.name) {
+      this.ApiRes.validationErrorWithData(res, "User name can not be empty!", req.body )
       return;
     }
+
+    const User = this.User;
   
     // Create a User
-    const user = new this.User({
-      title: req.body.title,
-      description: req.body.description,
-      published: req.body.published ? req.body.published : false
+    const user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      password: req.body.password,
+      status: false,
+      verified: false
     });
   
     // Save User in the database
     user
       .save(user)
       .then(data => {
-        res.send(data);
+        this.ApiRes.successResponseWithData(res, `User created successfully!`,  data);
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the User."
-        });
+        this.ApiRes.errorResponse(res, err.message || "Some error occurred while creating the User.");        
       });
   }
 

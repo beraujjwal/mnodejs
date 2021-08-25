@@ -12,8 +12,9 @@ const mongoose = require('mongoose');
 
 log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
 const app = express();
+const router = express.Router();
 var corsOptions = {
-  origin: "*"
+  origin: '*'
 };
 app.use(cors(corsOptions));
 
@@ -23,13 +24,43 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require('./system/route')(express);
-app.use( '/api/*', ( req, res, next ) => {
-  res.json({ message: "Page Not Found!!" });
+// replace with the directory path below ./
+app.set('views', path.join(__dirname, 'resources/views'));
+
+//Set view engine
+app.set('view engine', 'pug');
+
+//set the path of the assets file to be used
+app.use(express.static(path.join(__dirname, './public')));
+
+
+const db = require('./system/core/model');
+           
+db.mongoose.connect(db.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    log(chalk.white.bgGreen.bold('✔ Connected to the database!'));
+  })
+  .catch(err => {
+    log(chalk.white.bgGreen.bold('✘ Cannot connect to the database!'));
+    log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
+    process.exit();
+  });
+
+
+
+require('./system/route')(app, router);
+
+app.all( '/api/*', ( req, res, next ) => {
+  res.json({ message: 'Page Not Found!!' });
 });
-app.use( '/*', ( req, res, next ) => {
-  res.render('404', { title: '404 Page not found', msg: 'Uh oh snap! You are drive to the wrong way' })
+app.all( '/*', ( req, res, next ) => {
+  res.render('404', { title: '404 Page not found!', msg: 'Uh oh snap! You are drive to the wrong way' })
 });
+
+
 log(chalk.white.bgGreen.bold('✔ Mapping Routes'));
 
 const PORT = parseInt(process.env.APP_PORT) || 8080;
@@ -44,5 +75,5 @@ app.listen( PORT ).on( 'error', ( err ) => {
   log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
   process.exit( 0 );
 } ).on( 'listening', () => {
-log(chalk.white.bgGreen.bold('✔ Application Started'));
+  log(chalk.white.bgGreen.bold('✔ Application Started'));
 } );

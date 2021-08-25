@@ -1,6 +1,7 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
 const { BaseController } = require('../../system/core/controller/BaseController');
+const { ApiResponse } = require('../helpers/apiResponse');
 
 class Controller extends BaseController {
 
@@ -14,6 +15,7 @@ class Controller extends BaseController {
      */
     constructor( ) {
         super( );
+        this.ApiRes = new ApiResponse( );
         autoBind( this );
     }
 

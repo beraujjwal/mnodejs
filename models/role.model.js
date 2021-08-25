@@ -2,11 +2,8 @@ module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
         name: String,
-        email: { type: String, unique: true },
-        phone: { type: String, unique: true },
-        password: String,
-        status: Boolean,
-        verified: Boolean,
+        slug: String,
+        status: Boolean
       },
       { timestamps: true }
     );
@@ -17,6 +14,6 @@ module.exports = mongoose => {
       return object;
     });
   
-    const User = mongoose.model("users", schema);
-    return User;
+    const Role = mongoose.model("role", schema);
+    return Role;
   };

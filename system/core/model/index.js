@@ -22,8 +22,9 @@ fs
         return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
     })
     .forEach(file => {
-        let modelName = changeCase.pascal( pluralize.singular( file.slice(0, -8) ) )
-        db.modelName = require(path.join(modelsPath, file))(mongoose);
+        let modelName = changeCase.pascal( pluralize.singular( file.slice( 0, -8 ) ) );
+        //console.log(modelName);
+        db[modelName] = require(path.join(modelsPath, file))(mongoose);
     });
 
 module.exports = db;
