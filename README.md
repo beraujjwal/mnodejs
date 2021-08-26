@@ -1,3 +1,5 @@
+![MNode](https://github.com/beraujjwal/mnodejs/blob/main/MNode.png?raw=true)
+
 ## About MNode
 
 MNode is a application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. SNode takes the pain out of development by easing common tasks used in many Applications.
@@ -18,7 +20,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### How do I get set up? ###
 
-* git clone https://github.com/beraujjwal/mnodejs.git(https://github.com/beraujjwal/mnodejs)
+* git clone https://github.com/beraujjwal/mnodejs.git
 * npm install
 * npx nodemon server
 
