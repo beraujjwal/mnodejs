@@ -1,6 +1,9 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
-const { Controller } = require('./controller')
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+const { Controller } = require('./controller');
 
 class UsersController extends Controller {
 
@@ -13,24 +16,18 @@ class UsersController extends Controller {
     super( );
     this.User = this.db.User;
     this.Role = this.db.Role;
+    this.regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     autoBind( this );
   }
 
   async create(req, res) {
-    // Validate request
-    if (!req.body.name) {
-      this.ApiRes.validationErrorWithData(res, "User name can not be empty!", req.body )
-      return;
-    }
-
-    const User = this.User;
   
     // Create a User
-    const user = new User({
+    const user = new this.User({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password, 8),
       status: false,
       verified: false
     });
@@ -39,10 +36,103 @@ class UsersController extends Controller {
     user
       .save(user)
       .then(data => {
-        this.ApiRes.successResponseWithData(res, `User created successfully!`,  data);
+        if (req.body.roles) {
+          this.Role.find(
+            {
+              slug: { $in: req.body.roles }
+            },
+            (err, roles) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+    
+              user.roles = roles.map(role => role._id);
+              user.save(err => {
+                if (err) {
+                  res.status(500).send({ message: err });
+                  return;
+                }
+    
+                this.ApiRes.successResponseWithData(res, `User created successfully!`,  data);
+              });
+            }
+          );
+        } else {
+          this.Role.findOne({ name: "user" }, (err, role) => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
+    
+            user.roles = [role._id];
+            user.save(err => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+    
+              this.ApiRes.successResponseWithData(res, `User created successfully!`,  data);
+            });
+          });
+        }
+        
       })
       .catch(err => {
-        this.ApiRes.errorResponse(res, err.message || "Some error occurred while creating the User.");        
+        this.ApiRes.errorResponse(res, err.message || "Some error occurred while creating the User.");
+      });
+  }
+
+
+  async signin(req, res){
+
+    const { username, password } = req.body;
+    let criteria = (username.match(this.regexEmail)) ? {email: username, status: true, verified: true} : {phone: username, status: true,verified: true};
+
+    this.User.findOne(criteria)
+      .populate("roles", "-__v")
+      .exec((err, user) => {
+        if (err) {
+          this.ApiRes.errorResponse(res, err.message || "Some error occurred while login.");
+        }
+  
+        if (!user) {
+          this.ApiRes.errorResponse(res, "User Not found."); 
+        }
+  
+        var passwordIsValid = bcrypt.compareSync(
+          req.body.password,
+          user.password
+        );
+  
+        if (!passwordIsValid) {
+          this.ApiRes.unauthorizedResponse(res, "Invalid Username/Password!");          
+        }
+  
+        var token = jwt.sign({ id: user.id, phone: user.phone, email: user.email }, this.env.JWT_SECRET, {
+          expiresIn: this.env.JWT_EXPIRES_IN, // expiresIn time
+          algorithm: 'HS256'
+        });
+  
+        var authorities = [];
+  
+        for (let i = 0; i < user.roles.length; i++) {
+          authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+        }
+
+        /*let userData = {
+          id: user._id,
+          phone: user.phone,
+          email: user.email,
+          roles: authorities
+        };*/
+
+        user.roles = authorities;
+
+        var loginRes = { user: user, accessToken: token, expiresIn: this.env.JWT_EXPIRES_IN }
+
+        this.ApiRes.successResponseWithData(res, "User login successfully!", loginRes); 
+        
       });
   }
 

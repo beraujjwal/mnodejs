@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -18,14 +19,20 @@
   "homepage": "https://github.com/beraujjwal/mnodejs#readme",
   "dependencies": {
     "auto-bind": "^4.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "case": "^1.6.3",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.8",
     "pluralize": "^8.0.0",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "validatorjs": "^3.22.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

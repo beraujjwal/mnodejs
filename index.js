@@ -38,17 +38,58 @@ const db = require('./system/core/model');
            
 db.mongoose.connect(db.url, {
     useNewUrlParser: true,
+    useCreateIndex: true,
     useUnifiedTopology: true
-  })
+})
   .then(() => {
     log(chalk.white.bgGreen.bold('✔ Connected to the database!'));
-  })
+})
   .catch(err => {
     log(chalk.white.bgGreen.bold('✘ Cannot connect to the database!'));
     log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
     process.exit();
-  });
+});
 
+function initial() {
+  db.Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new db.Role({
+        name: "User",
+        slug: "user"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'user' to roles collection");
+      });
+
+      new db.Role({
+        name: "Moderator",
+        slug: "moderator"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'moderator' to roles collection");
+      });
+
+      new db.Role({
+        name: "Admin",
+        slug: "admin"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+        
+        console.log("added 'admin' to roles collection");
+      });
+    }
+  });
+}
+
+initial();
 
 
 require('./system/route')(app, router);

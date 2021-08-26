@@ -1,9 +1,20 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
-        name: String,
-        slug: String,
-        status: Boolean
+        name: { 
+          type:  mongoose.Schema.Types.String, 
+          required: true 
+        },
+        slug: { 
+          type:  mongoose.Schema.Types.String, 
+          required: true 
+        },
+        status: Boolean,
+        user_id: [
+          {
+            type: mongoose.Schema.Types.String, ref: 'User'
+          }
+        ]
       },
       { timestamps: true }
     );
@@ -14,6 +25,6 @@ module.exports = mongoose => {
       return object;
     });
   
-    const Role = mongoose.model("role", schema);
+    const Role = mongoose.model("Role", schema);
     return Role;
   };
