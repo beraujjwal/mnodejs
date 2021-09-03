@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
+const uuid = require('uuid');
 
 
 log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
@@ -54,6 +55,7 @@ function initial() {
   db.Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new db.Role({
+        _id:  uuid.v4(),
         name: "User",
         slug: "user"
       }).save(err => {
@@ -65,6 +67,7 @@ function initial() {
       });
 
       new db.Role({
+        _id:  uuid.v4(),
         name: "Moderator",
         slug: "moderator"
       }).save(err => {
@@ -76,6 +79,7 @@ function initial() {
       });
 
       new db.Role({
+        _id:  uuid.v4(),
         name: "Admin",
         slug: "admin"
       }).save(err => {

@@ -3,8 +3,7 @@ const autoBind = require( 'auto-bind' );
 const db = require("../model");
 require( 'dotenv' ).config();
 
-
-class BaseController {
+class BaseService {
 
 
 
@@ -15,11 +14,11 @@ class BaseController {
      */
     constructor( ) {
         this.db = db;
-        this.transaction = db.trans;
         this.env = process.env;
+        this.transaction = db.trans;
         autoBind( this );
     }
 
 }
 
-module.exports = { BaseController };
+module.exports = { BaseService };

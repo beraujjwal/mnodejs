@@ -1,17 +1,30 @@
-module.exports = mongoose => {
+module.exports = (mongoose, uuid) => {
 
   let schema = mongoose.Schema(
     {
+      _id: { 
+        type: String,
+        auto: true,
+        default: () =>
+          uuid.v4(),
+          trim: true,
+          lowercase: true
+        
+      },
       name: {
         type: String,
-        required: 'This field is required.'
+        index: true,
+        required: true
       },
       email: { 
-        type: String, 
-        unique: true 
+        type: String,
+        index: true,
+        unique: true
       },
       phone: { 
-        type: String, 
+        type: String,
+        index: true,
+        required: true,
         unique: true 
       },
       password: String,
@@ -19,7 +32,7 @@ module.exports = mongoose => {
       verified: Boolean,
       roles: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: String,
           ref: "Role"
         }
       ]
@@ -27,27 +40,22 @@ module.exports = mongoose => {
     { timestamps: true }
   );
 
-    schema.path('email').validate((val) => {
-      emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return emailRegex.test(val);
-    }, 'Invalid e-mail.');
+  schema.path('email').validate((val) => {
+    emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailRegex.test(val);
+  }, 'Invalid e-mail.');
 
-    /*schema.path('email').validate(function(value, done) {
-      this.model('User').count({ email: value }, function(err, count) {
-          if (err) {
-              return done(err);
-          } 
-          // If `count` is greater than zero, "invalidate"
-          done(!count);
-      });
-    }, 'Email already exists');*/
+  /*schema.path("_id").validate(function (v) {
+      console.log("validating: " + JSON.stringify(v));
+      return validator.isUUID(v);
+  }, "ID is not a valid GUID: {VALUE}");*/
   
-    schema.method("toJSON", function() {
-      const { __v, _id, ...object } = this.toObject();
-      object.id = _id;
-      return object;
-    });
+  schema.method("toJSON", function() {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+  });
   
-    const User = mongoose.model("User", schema);
-    return User;
-  };
+  const User = mongoose.model("User", schema);
+  return User;
+};

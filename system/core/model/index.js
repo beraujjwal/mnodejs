@@ -5,7 +5,7 @@ const path = require('path');
 const mongoose = require("mongoose");
 const pluralize = require('pluralize');
 const changeCase = require('case');
-
+const uuid = require('uuid');
 const dbConfig = require("../../../config/db.config");
 const modelsPath = __dirname + '/../../../models/';
 const basename = 'index.js';
@@ -15,6 +15,7 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
+db.trans = mongoose.connection;
 
 fs
     .readdirSync(modelsPath)
@@ -24,7 +25,7 @@ fs
     .forEach(file => {
         let modelName = changeCase.pascal( pluralize.singular( file.slice( 0, -8 ) ) );
         //console.log(modelName);
-        db[modelName] = require(path.join(modelsPath, file))(mongoose);
+        db[modelName] = require(path.join(modelsPath, file))(mongoose, uuid);
     });
 
 module.exports = db;

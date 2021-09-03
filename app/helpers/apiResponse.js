@@ -3,7 +3,7 @@ require( 'dotenv' ).config();
 const autoBind = require( 'auto-bind' );
 
 class ApiResponse {
-	
+ 
 
 
     /**

@@ -30,6 +30,7 @@
     "mongoose": "^5.13.8",
     "pluralize": "^8.0.0",
     "pug": "^3.0.2",
+    "uuid": "^8.3.2",
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
