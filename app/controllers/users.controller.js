@@ -3,9 +3,9 @@ const autoBind = require( 'auto-bind' );
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const { Controller } = require('./Controller');
+const { controller } = require('./controller');
 
-class UsersController extends Controller {
+class usersController extends controller {
 
   /**
      * Controller constructor
@@ -133,4 +133,4 @@ class UsersController extends Controller {
   }
 
 }
-module.exports = new UsersController();
+module.exports = new usersController();

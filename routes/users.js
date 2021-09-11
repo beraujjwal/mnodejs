@@ -1,6 +1,6 @@
-const UsersController = require("../app/controllers/users.controller");
+const usersController = require("../app/controllers/users.controller");
 
-const UserValidation = require("../app/validations/user.validation");
+const userValidation = require("../app/validations/user.validation");
 
 
 module.exports = function(app, router) {
@@ -22,15 +22,15 @@ module.exports = function(app, router) {
 
     app.post(
         "/auth/signup",    
-        [UserValidation.signup],
-        UsersController.create
+        [userValidation.signup],
+        usersController.create
     );
 
 
     app.post(
         "/auth/signin",    
         [],
-        UsersController.signin
+        usersController.signin
     );
 
 

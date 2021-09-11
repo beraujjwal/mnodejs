@@ -1,13 +1,13 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
 const crypto = require('crypto');
-const { BaseService } = require('../../system/core/service/BaseService');
+const { baseService } = require('../../system/core/service/baseService');
 const { ApiResponse } = require('../helpers/apiResponse');
 
 const mailer =  require('../helpers/mailer');
 const crypto = require('crypto');
 
-class Service extends BaseService {
+class service extends baseService {
 
 
 
@@ -57,4 +57,4 @@ class Service extends BaseService {
 
 }
 
-module.exports = { Service };
+module.exports = { service };

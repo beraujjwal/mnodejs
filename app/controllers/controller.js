@@ -1,9 +1,9 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
-const { BaseController } = require('../../system/core/controller/BaseController');
+const { baseController } = require('../../system/core/controller/baseController');
 const { ApiResponse } = require('../helpers/apiResponse');
 
-class Controller extends BaseController {
+class controller extends baseController {
 
 
 
@@ -21,4 +21,4 @@ class Controller extends BaseController {
 
 }
 
-module.exports = { Controller };
+module.exports = { controller };

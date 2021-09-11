@@ -4,7 +4,7 @@ const db = require("../model");
 require( 'dotenv' ).config();
 
 
-class BaseMiddleware {
+class index {
 
 
 
@@ -15,11 +15,11 @@ class BaseMiddleware {
      */
     constructor( ) {
         this.db = db;
+        this.transaction = db.trans;
         this.env = process.env;
         autoBind( this );
     }
 
 }
 
-module.exports = { BaseMiddleware };
-
+module.exports = { base: index };

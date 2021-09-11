@@ -1,12 +1,12 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
-const { Controller } = require('../controllers/controller');
+const { controller } = require('../controllers/controller');
 const validator = require('../helpers/validate');
 
-class UserValidation extends Controller {
+class userValidation extends controller {
 
   /**
-     * Controller constructor
+     * Validation constructor
      * @author Ujjwal Bera
      * @param null
      */
@@ -34,4 +34,4 @@ class UserValidation extends Controller {
 }
 
 }
-module.exports = new UserValidation();
+module.exports = new userValidation();
