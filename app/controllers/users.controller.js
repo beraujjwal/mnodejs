@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const { controller } = require('./controller');
+const { Auth } = require('@service/auth.service');
 
 class usersController extends controller {
 

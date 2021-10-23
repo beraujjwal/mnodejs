@@ -1,4 +1,5 @@
 'use strict';
+require('module-alias/register')
 const chalk = require('chalk');
 const log = console.log;
 log(chalk.white.bgGreen.bold('✔ Starting Application'));
@@ -35,7 +36,7 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, './public')));
 
 
-const db = require('./system/core/model');
+const db = require('@core/model');
            
 db.mongoose.connect(db.url, {
     useNewUrlParser: true,

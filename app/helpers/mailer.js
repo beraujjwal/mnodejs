@@ -3,7 +3,7 @@ require( 'dotenv' ).config();
 const nodemailer = require("nodemailer");
 var _ = require('lodash');	
 
-const { config, defaultMail } = require('../helpers/mailer');
+const { config, defaultMail } = require('@helper/mailer');
 
 // create reusable transporter object using the default SMTP transport
 let transporter = nodemailer.createTransport(config);

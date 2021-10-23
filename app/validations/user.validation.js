@@ -1,7 +1,7 @@
 'use strict';
 const autoBind = require( 'auto-bind' );
-const { controller } = require('../controllers/controller');
-const validator = require('../helpers/validate');
+const { controller } = require('@controller/controller');
+const validator = require('@helper/validate');
 
 class userValidation extends controller {
 
