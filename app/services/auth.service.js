@@ -29,60 +29,63 @@ class auth extends services {
       status: status ? status : false,
       verified: verified ? verified : false,
     });
+    return new Promise((resolve, reject) => {
+      // Save User object in the database
+      user
+        .save(user)
+        .then(() => {
+          //Check if role is set on submit
+          if (roles) {
+            //Find selected role
+            user.roles = this.Role.find(
+              { slug: { $in: roles } },
+              (err, roles) => {
+                //Throw error occurs when finding roles
+                if (err) {
+                  return reject(new Error(err.message));
+                }
 
-    // Save User object in the database
-    return user
-      .save(user)
-      .then(() => {
-        //Check if role is set on submit
-        if (roles) {
-          //Find selected role
-          user.roles = this.Role.find(
-            { slug: { $in: roles } },
-            (err, roles) => {
+                //Generate object of roles
+                user.roles = roles.map((role) => role._id);
+
+                //Save & return roles
+                return user.save((err) => {
+                  //Throw error occurs while saving roles
+                  if (err) {
+                    return reject(new Error(err.message));
+                  }
+                  user.roles = roles;
+                  return resolve(user);
+                });
+              },
+            );
+          } else {
+            //Find default role
+            return this.Role.findOne({ slug: 'user' }, (err, role) => {
               //Throw error occurs when finding roles
               if (err) {
-                throw new Error(err);
+                return reject(new Error(err.message));
               }
 
               //Generate object of roles
-              user.roles = roles.map((role) => role._id);
+              user.roles = [role._id];
 
               //Save & return roles
               return user.save((err) => {
                 //Throw error occurs while saving roles
                 if (err) {
-                  throw new Error(err);
+                  return reject(new Error(err.message));
                 }
+                transaction.endSession();
+                return resolve(user);
               });
-            },
-          );
-          return user;
-        } else {
-          //Find default role
-          return this.Role.findOne({ slug: 'user' }, (err, role) => {
-            //Throw error occurs when finding roles
-            if (err) {
-              throw new Error(err);
-            }
-
-            //Generate object of roles
-            user.roles = [role._id];
-
-            //Save & return roles
-            return user.save((err) => {
-              //Throw error occurs while saving roles
-              if (err) {
-                throw new Error(err);
-              }
-              transaction.endSession();
             });
-          });
-        }
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
+          }
+        })
+        .catch((err) => {
+          return reject(new Error(err.message));
+        });
+    });
   }
 
   async singin({ username, password }) {
@@ -91,54 +94,56 @@ class auth extends services {
       ? { email: username, status: true, verified: true }
       : { phone: username, status: true, verified: true };
 
-    console.log(criteria);
-    try {
-      //Finding user with set criteria
-      return await this.User.findOne(criteria)
-        .populate('roles', '-__v')
-        .exec((err, user) => {
-          if (err) {
-            throw new Error(err);
-          }
+    return new Promise((resolve, reject) => {
+      try {
+        //Finding user with set criteria
+        this.User.findOne(criteria)
+          .populate('roles', '-__v')
+          .exec((err, user) => {
+            if (err) {
+              return reject(new Error(err.message));
+            }
+            if (user === null) {
+              return reject(new Error('Invalid Username/Password!'));
+            }
+            console.log(user);
+            const passwordIsValid = bcrypt.compareSync(password, user.password);
 
-          if (user === null) {
-            throw new Error('User Not found.');
-          }
+            if (!passwordIsValid) {
+              return reject(new Error('Invalid Username/Password!'));
+            }
+            console.log(this.env.JWT_EXPIRES_IN);
+            const token = jwt.sign(
+              { id: user.id, phone: user.phone, email: user.email },
+              this.env.JWT_SECRET,
+              {
+                expiresIn: this.env.JWT_EXPIRES_IN, // expiresIn time
+                algorithm: 'HS256',
+              },
+            );
 
-          const passwordIsValid = bcrypt.compareSync(password, user.password);
+            const authorities = [];
+            for (const role of user.roles) {
+              authorities.push('ROLE_' + role.name.toUpperCase());
+            }
 
-          if (!passwordIsValid) {
-            throw new Error({ message: 'Invalid Username/Password!' });
-          }
+            const currDate = new Date(Date.now());
+            const expiresIn = new Date(
+              parseInt(currDate) + parseInt(this.env.JWT_EXPIRES_IN) * 1000,
+            );
 
-          const token = jwt.sign(
-            { id: user.id, phone: user.phone, email: user.email },
-            this.env.JWT_SECRET,
-            {
-              expiresIn: this.env.JWT_EXPIRES_IN, // expiresIn time
-              algorithm: 'HS256',
-            },
-          );
-
-          const authorities = [];
-
-          for (let i = 0; i < user.roles.length; i++) {
-            authorities.push('ROLE_' + user.roles[i].name.toUpperCase());
-          }
-
-          const currDate = new Date(Date.now());
-          const expiresIn = new Date(
-            parseInt(currDate) + parseInt(this.env.JWT_EXPIRES_IN) * 1000,
-          );
-
-          const loginRes = { user, authorities, accessToken: token, expiresIn };
-
-          return loginRes;
-        });
-    } catch (ex) {
-      console.log(ex);
-      throw new Error(ex);
-    }
+            const loginRes = {
+              user,
+              authorities,
+              accessToken: token,
+              expiresIn,
+            };
+            return resolve(loginRes);
+          });
+      } catch (ex) {
+        return reject(new Error(ex.message));
+      }
+    });
   }
 }
 

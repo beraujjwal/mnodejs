@@ -2,13 +2,12 @@
 require('module-alias/register');
 const chalk = require('chalk');
 const log = console.log;
-log(chalk.white.bgGreen.bold('✔ Starting Application'));
+
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const uuid = require('uuid');
 const logger = require('morgan');
 const routers = require('./system/route/index');
 
@@ -21,7 +20,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 //don't show the log when it is test
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV !== 'production') {
   app.use(logger('dev'));
 }
 
@@ -60,50 +59,7 @@ db.mongoose
     log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
     process.exit();
   });
-
-function initial() {
-  db.Role.estimatedDocumentCount((err, count) => {
-    if (!err && count === 0) {
-      new db.Role({
-        _id: uuid.v4(),
-        name: 'User',
-        slug: 'user',
-      }).save((err) => {
-        if (err) {
-          log('error', err);
-        }
-
-        log('added "user" to roles collection');
-      });
-
-      new db.Role({
-        _id: uuid.v4(),
-        name: 'Moderator',
-        slug: 'moderator',
-      }).save((err) => {
-        if (err) {
-          log('error', err);
-        }
-
-        log('added "moderator" to roles collection');
-      });
-
-      new db.Role({
-        _id: uuid.v4(),
-        name: 'Admin',
-        slug: 'admin',
-      }).save((err) => {
-        if (err) {
-          log('error', err);
-        }
-
-        log('added "admin" to roles collection');
-      });
-    }
-  });
-}
-
-initial();
+log(chalk.white.bgGreen.bold('✔ Mapping Routes'));
 
 //Route Prefixes
 app.use('/', routers);
@@ -118,13 +74,13 @@ app.all('/*', (req, res) => {
   });
 });
 
-log(chalk.white.bgGreen.bold('✔ Mapping Routes'));
-
 const PORT = parseInt(process.env.APP_PORT) || 8080;
 const MODE = process.env.APP_ENV || 'development';
 
 log(chalk.white.bgGreen.bold(`✔ Mode: ${MODE}`));
 log(chalk.white.bgGreen.bold(`✔ Port: ${PORT}`));
+
+log(chalk.white.bgGreen.bold('✔ Starting Application'));
 
 // set port, listen for requests
 app
@@ -137,3 +93,5 @@ app
   .on('listening', () => {
     log(chalk.white.bgGreen.bold('✔ Application Started'));
   });
+
+module.exports = app; // for testing

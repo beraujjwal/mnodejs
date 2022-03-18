@@ -9,7 +9,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/;
  */
 Validator.registerAsync('unique', function (value, attribute, req, passes) {
   if (!attribute)
-    throw new Error('Specify Requirements i.e fieldName: exist:table,column');
+    throw new Error('Specify Requirements i.e fieldName: unique:table,column');
   //split table and column
   let attArr = attribute.split(',');
   if (attArr.length !== 2)
@@ -20,8 +20,8 @@ Validator.registerAsync('unique', function (value, attribute, req, passes) {
   //define custom error message
   let msg =
     column == 'username'
-      ? `${column} has already been taken `
-      : `${column} already in use`;
+      ? `${column} has already been taken`
+      : `${column} already in exist`;
   //check if incoming value already exists in the database
   Models[table].findOne({ [column]: value }, function (error, exist) {
     if (exist && !error) {

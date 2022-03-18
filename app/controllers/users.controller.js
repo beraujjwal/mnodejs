@@ -37,10 +37,14 @@ class usersController extends controller {
     }
   }
 
+  /**
+   * @desc user login
+   * @param {*} req
+   * @param {*} res
+   */
   async login(req, res) {
     try {
       let result = await this.Auth.singin(req.body);
-
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -48,15 +52,12 @@ class usersController extends controller {
           result,
         );
       } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while creating the User.',
-        );
+        this.ApiRes.successResponse(res, 'Some error occurred while login');
       }
     } catch (err) {
       this.ApiRes.errorResponse(
         res,
-        err.message || 'Some error occurred while creating the User.',
+        err.message || 'Some error occurred while login.',
       );
     }
   }

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "seed": "node ./system/core/seeding/seeder.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "case": "^1.6.3",
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -29,6 +32,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
+    "mongo-seeding": "^3.7.1",
     "mongoose": "^5.13.12",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.0",
@@ -39,6 +43,8 @@
   },
   "devDependencies": {
     "eslint": "^8.11.0",
+    "faker": "^6.6.6",
+    "mocha": "^9.2.2",
     "nodemon": "^2.0.14"
   },
   "_moduleAliases": {
