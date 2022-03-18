@@ -1,70 +1,72 @@
 'use strict';
-require( 'dotenv' ).config();
-const autoBind = require( 'auto-bind' );
+
+const autoBind = require('auto-bind');
 
 class ApiResponse {
- 
+  /**
+   * @desc Response constructor
+   *
+   * @author Ujjwal Bera
+   * @param null
+   */
+  constructor() {
+    autoBind(this);
+  }
 
+  successResponse(res, msg) {
+    let resData = {
+      error: false,
+      code: 200,
+      message: msg,
+    };
+    return res.status(200).json(resData);
+  }
 
-    /**
-     * @desc Controller constructor
-     * 
-     * @author Ujjwal Bera
-     * @param null
-     */
-	 constructor( ) {
-        autoBind( this );
-    }
+  successResponseWithData(res, msg, data) {
+    let resData = {
+      error: false,
+      code: 200,
+      message: msg,
+      data: data,
+    };
+    return res.status(200).json(resData);
+  }
 
-	successResponse(res, msg) {
-		let resData = {
-			error: false,
-			message: msg
-		};
-		return res.status(200).json(resData);
-	}
+  errorResponse(res, msg, code) {
+    let resData = {
+      error: true,
+      code: code ? code : 500,
+      message: msg,
+    };
+    return res.status(200).json(resData);
+  }
 
-	successResponseWithData(res, msg, data) {
-		let resData = {
-			error: false,
-			message: msg,
-			data: data
-		};
-		return res.status(200).json(resData);
-	}
+  notFoundResponse(res, msg) {
+    let resData = {
+      error: true,
+      code: 404,
+      message: msg,
+    };
+    return res.status(200).json(resData);
+  }
 
-	errorResponse(res, msg) {
-		let resData = {
-			error: true,
-			message: msg,
-		};
-		return res.status(500).json(resData);
-	}
+  validationErrorWithData(res, msg, data) {
+    let resData = {
+      error: true,
+      code: 400,
+      message: msg,
+      data: data,
+    };
+    return res.status(200).json(resData);
+  }
 
-	notFoundResponse(res, msg) {
-		let resData = {
-			error: true,
-			message: msg,
-		};
-		return res.status(404).json(resData);
-	}
-
-	validationErrorWithData(res, msg, data) {
-		let resData = {
-			error: true,
-			message: msg,
-			data: data
-		};
-		return res.status(400).json(resData);
-	}
-
-	unauthorizedResponse(res, msg) {
-		let resData = {
-			error: true,
-			message: msg,
-		};
-		return res.status(401).json(resData);
-	}
-
+  unauthorizedResponse(res, msg) {
+    let resData = {
+      error: true,
+      code: 401,
+      message: msg,
+    };
+    return res.status(200).json(resData);
+  }
 }
 module.exports = { ApiResponse };

@@ -1,47 +1,45 @@
 module.exports = (mongoose, uuid) => {
-
   let schema = mongoose.Schema(
     {
-      _id: { 
+      _id: {
         type: String,
         auto: true,
-        default: () =>
-          uuid.v4(),
-          trim: true,
-          lowercase: true
-        
+        default: () => uuid.v4(),
+        trim: true,
+        lowercase: true,
       },
       name: {
         type: String,
         index: true,
-        required: true
+        required: true,
       },
-      email: { 
+      email: {
         type: String,
         index: true,
-        unique: true
+        unique: true,
       },
-      phone: { 
+      phone: {
         type: String,
         index: true,
         required: true,
-        unique: true 
+        unique: true,
       },
-      password: String,
+      password: { type: String, select: false },
       status: Boolean,
       verified: Boolean,
       roles: [
         {
           type: String,
-          ref: "Role"
-        }
-      ]
+          ref: 'Role',
+        },
+      ],
     },
-    { timestamps: true }
+    { timestamps: true },
   );
 
   schema.path('email').validate((val) => {
-    emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return emailRegex.test(val);
   }, 'Invalid e-mail.');
 
@@ -49,13 +47,19 @@ module.exports = (mongoose, uuid) => {
       console.log("validating: " + JSON.stringify(v));
       return validator.isUUID(v);
   }, "ID is not a valid GUID: {VALUE}");*/
-  
-  schema.method("toJSON", function() {
+
+  schema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
+    object.v = __v;
     return object;
   });
-  
-  const User = mongoose.model("User", schema);
+
+  // Virtual for user's full name
+  /*schema.virtual('fullName').get(function () {
+    return this.firstName + ' ' + this.lastName;
+  });*/
+
+  const User = mongoose.model('User', schema);
   return User;
 };
