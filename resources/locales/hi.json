@@ -1,0 +1,16 @@
+{
+  "OK": "OK",
+  "LOGIN_SUCCESS": "आप सफलता पूर्वक प्रवेश कर चुके हैं।",
+  "LOGIN_INVALID_PASSWORD": "अमान्य पासवर्ड!।",
+  "LOGIN_USER_NOT_FOUND": "उपयोगकर्ता नहीं मिला!।",
+  "LOGIN_INVALID_USERNAME_PASSWORD": "आपने एक अमान्य उपयोगकर्ता नाम या पासवर्ड दर्ज किया है।",
+  "You have %s message": {
+    "one": "आपके पास %s संदेश है।",
+    "other": "आपके पास %s संदेश हैं।"
+  },
+  "USER_PERMISSION_DENIED": "उपयोगकर्ता अनुमति अस्वीकृत।",
+  "REGISTER_SUCCESS": "आपने सफलतापूर्वक पंजीकरण करवा लिया है।",
+  "ACTIVATE_SUCCESS": "आपका खाता सफलतापूर्वक सक्रिय कर दिया गया है।",
+  "UNABLE_TO_CHANGE_PASSWORD": "आपका पासवर्ड बदलने में असमर्थ। पुनः प्रयास करें।",
+  "PROFILE_UPDATED_SUCESSFULLY": "प्रोफाइल को सफलतापूर्वक अपडेट किया गया।"
+}

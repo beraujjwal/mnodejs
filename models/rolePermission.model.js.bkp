@@ -11,19 +11,24 @@ module.exports = (mongoose, uuid) => {
         lowercase: true,
       },
       name: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         index: true,
         required: true,
         trim: true,
       },
       slug: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         index: true,
         required: true,
         trim: true,
         lowercase: true,
       },
-      status: Boolean,
+      status: Boolean /*,
+        user_id: [
+          {
+            type: mongoose.Schema.Types.String, ref: 'User'
+          }
+        ]*/,
     },
     { timestamps: true },
   );
@@ -42,6 +47,6 @@ module.exports = (mongoose, uuid) => {
         return validator.isUUID(v);
     }, "ID is not a valid GUID: {VALUE}");*/
 
-  const Role = mongoose.model('Role', schema);
-  return Role;
+  const Permission = mongoose.model('Permission', schema);
+  return Permission;
 };

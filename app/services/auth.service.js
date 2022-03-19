@@ -1,9 +1,9 @@
 const autoBind = require('auto-bind');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { services } = require('@service/services');
+const { service } = require('@service/service');
 
-class auth extends services {
+class auth extends service {
   /**
    * services constructor
    * @author Ujjwal Bera
@@ -89,6 +89,7 @@ class auth extends services {
   }
 
   async singin({ username, password }) {
+    //var lang = getLocale();
     //Setting login criterias
     let criteria = username.match(this.regexEmail)
       ? { email: username, status: true, verified: true }
@@ -104,7 +105,7 @@ class auth extends services {
               return reject(new Error(err.message));
             }
             if (user === null) {
-              return reject(new Error('Invalid Username/Password!'));
+              return reject(new Error(__('LOGIN_INVALID_USERNAME_PASSWORD')));
             }
             console.log(user);
             const passwordIsValid = bcrypt.compareSync(password, user.password);

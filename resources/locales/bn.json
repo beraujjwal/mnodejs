@@ -1,0 +1,16 @@
+{
+  "OK": "OK",
+  "LOGIN_SUCCESS": "আপনি সফলভাবে লগ ইন করেছেন।",
+  "LOGIN_INVALID_PASSWORD": "অবৈধ পাসওয়ার্ড!।",
+  "LOGIN_USER_NOT_FOUND": "ব্যবহারকারী খুঁজে পাওয়া যায় না!।",
+  "LOGIN_INVALID_USERNAME_PASSWORD": "আপনি একটি অবৈধ ব্যবহারকারীর নাম বা পাসওয়ার্ড প্রবেশ করেছেন।",
+  "You have %s message": {
+    "one": "আপনার %s বার্তা আছে।",
+    "other": "আপনার %s বার্তা আছে।"
+  },
+  "USER_PERMISSION_DENIED": "ব্যবহারকারীর অনুমতি অস্বীকৃত।",
+  "REGISTER_SUCCESS": "আপনি সফলভভাবে নিবন্ধন করেছেন।",
+  "ACTIVATE_SUCCESS": "আপনার অ্যাকাউন্ট সফলভাবে সক্রিয় করা হয়েছে।",
+  "UNABLE_TO_CHANGE_PASSWORD": "আপনার পাসওয়ার্ড পরিবর্তন করতে অক্ষম. আবার চেষ্টা করুন।",
+  "PROFILE_UPDATED_SUCESSFULLY": "প্রোফাইল সফলভাবে আপডেট করা হয়েছে।"
+}

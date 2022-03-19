@@ -1,4 +1,6 @@
-const bcrypt = require('bcryptjs');
+'use strict';
+//const bcrypt = require('bcryptjs');
+const mongoose_delete = require('mongoose-delete');
 module.exports = (mongoose, uuid) => {
   let schema = mongoose.Schema(
     {
@@ -13,19 +15,22 @@ module.exports = (mongoose, uuid) => {
         type: String,
         index: true,
         required: true,
+        trim: true,
       },
       email: {
         type: String,
         index: true,
         unique: true,
+        trim: true,
       },
       phone: {
         type: String,
         index: true,
         required: true,
         unique: true,
+        trim: true,
       },
-      password: { type: String },
+      password: { type: String, trim: true },
       status: Boolean,
       verified: Boolean,
       roles: [
@@ -37,6 +42,8 @@ module.exports = (mongoose, uuid) => {
     },
     { timestamps: true },
   );
+
+  schema.plugin(mongoose_delete, { deletedAt: true });
 
   schema.path('email').validate((val) => {
     let emailRegex =

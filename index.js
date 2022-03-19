@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const logger = require('morgan');
+const i18n = require('./config/i18n');
 const routers = require('./system/route/index');
 
 log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
@@ -29,6 +30,9 @@ app.use(bodyParser.json({ limit: '20mb' }));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
+
+// i18n
+app.use(i18n);
 
 // replace with the directory path below ./
 app.set('views', path.join(__dirname, 'resources/views'));

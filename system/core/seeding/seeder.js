@@ -8,7 +8,7 @@ const config = {
   database: dbConfig.url,
   inputPath: seederPath,
   dropDatabase: false,
-  dropCollections: false,
+  dropCollections: true,
 };
 const seeder = new Seeder(config);
 const collections = seeder.readCollectionsFromPath(

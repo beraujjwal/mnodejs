@@ -2,9 +2,9 @@
 const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
-const { user } = require('@service/user.service');
+const { permission } = require('@service/permission.service');
 
-class usersController extends controller {
+class permissionsController extends controller {
   /**
    * Controller constructor
    * @author Ujjwal Bera
@@ -12,7 +12,7 @@ class usersController extends controller {
    */
   constructor() {
     super();
-    this.UserService = new user();
+    this.permissionService = new permission();
     autoBind(this);
   }
 
@@ -21,10 +21,10 @@ class usersController extends controller {
    * @param {*} req
    * @param {*} res
    */
-  async profile(req, res) {
+  async permissionList(req, res) {
     try {
       console.log(req.user);
-      let result = await this.UserService.getProfile(req.user.id);
+      let result = await this.permissionService.permissionList(req.user.id);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -47,10 +47,10 @@ class usersController extends controller {
    * @param {*} req
    * @param {*} res
    */
-  async updateProfile(req, res) {
+  async permissionStore(req, res) {
     try {
       console.log(req.user);
-      let result = await this.UserService.updateProfile(req.user.id, req.body);
+      let result = await this.permissionService.permissionStore(req.body);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -68,4 +68,4 @@ class usersController extends controller {
     }
   }
 }
-module.exports = new usersController();
+module.exports = new permissionsController();

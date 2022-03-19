@@ -1,0 +1,16 @@
+{
+  "OK": "OK",
+  "LOGIN_SUCCESS": "You have successfully logged in.",
+  "LOGIN_INVALID_PASSWORD": "Invalid Password!",
+  "LOGIN_USER_NOT_FOUND": "User Not found!",
+  "LOGIN_INVALID_USERNAME_PASSWORD": "You have entered an invalid username or password.",
+  "You have %s message": {
+    "one": "You have %s message",
+    "other": "You have %s messages"
+  },
+  "USER_PERMISSION_DENIED": "User permission denied",
+  "REGISTER_SUCCESS": "You have successfully Registered.",
+  "ACTIVATE_SUCCESS": "Your account has been successfully activated.",
+  "UNABLE_TO_CHANGE_PASSWORD": "Unable to change your password. Try again.",
+  "PROFILE_UPDATED_SUCESSFULLY": "Profile updated successfully."
+}

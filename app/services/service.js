@@ -6,7 +6,7 @@ const { ApiResponse } = require('@helper/apiResponse');
 //const mailer =  require("../helpers/mailer");
 //const crypto = require("crypto");
 
-class services extends baseService {
+class service extends baseService {
   /**
    * Service constructor
    * @author Ujjwal Bera
@@ -51,4 +51,4 @@ class services extends baseService {
   }
 }
 
-module.exports = { services };
+module.exports = { service };
