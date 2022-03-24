@@ -27,7 +27,6 @@ module.exports = (mongoose, uuid) => {
       role_permissions: [
         {
           role_id: { type: String, ref: 'Role' },
-          role_name: { type: String },
           create: { type: Boolean },
           delete: { type: Boolean },
           update: { type: Boolean },
@@ -37,7 +36,6 @@ module.exports = (mongoose, uuid) => {
       user_permissions: [
         {
           user_id: { type: String, ref: 'User' },
-          user_name: { type: String },
           create: { type: Boolean },
           delete: { type: Boolean },
           update: { type: Boolean },

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
+    "dev": "TZ=Asia/Kolkata nodemon index.js",
     "seed": "node ./system/core/seeding/seeder.js"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "mongoose-delete": "^0.5.4",
     "morgan": "^1.10.0",
     "nodemailer": "^6.7.0",
+    "otp-generator": "^4.0.0",
     "pluralize": "^8.0.0",
     "pug": "^3.0.2",
     "uuid": "^8.3.2",
@@ -45,7 +46,7 @@
   },
   "devDependencies": {
     "eslint": "^8.11.0",
-    "faker": "^6.6.6",
+    "faker": "^5.1.0",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.14"
   },

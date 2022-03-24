@@ -19,7 +19,7 @@ fs.readdirSync(routesPath)
       })
       .forEach((innerFile) => {
         let routeName = require(path.join(innerDirPath, innerFile));
-        app.use('/' + file + '/', routeName);
+        app.use(`/${file}/`, routeName);
       });
   })
   .forEach((file) => {

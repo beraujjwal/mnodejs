@@ -20,11 +20,6 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
-//don't show the log when it is test
-if (process.env.NODE_ENV !== 'production') {
-  app.use(logger('dev'));
-}
-
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: '20mb' }));
 
@@ -63,6 +58,12 @@ db.mongoose
     log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
     process.exit();
   });
+//don't show the log when it is test
+if (process.env.NODE_ENV !== 'production') {
+  app.use(logger('dev'));
+  db.mongoose.set('debug', true);
+}
+
 log(chalk.white.bgGreen.bold('✔ Mapping Routes'));
 
 //Route Prefixes

@@ -49,7 +49,6 @@ class usersController extends controller {
    */
   async updateProfile(req, res) {
     try {
-      console.log(req.user);
       let result = await this.UserService.updateProfile(req.user.id, req.body);
       if (result) {
         this.ApiRes.successResponseWithData(
@@ -61,6 +60,7 @@ class usersController extends controller {
         this.ApiRes.successResponse(res, 'Some error occurred while login');
       }
     } catch (err) {
+      console.log(err);
       this.ApiRes.errorResponse(
         res,
         err.message || 'Some error occurred while login.',

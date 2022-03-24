@@ -16,85 +16,79 @@ class user extends service {
   }
 
   async getProfile(profileId) {
-    //var lang = getLocale();
-    //Setting login criterias
-    const userId = profileId;
-    return new Promise((resolve, reject) => {
-      try {
-        //Finding user with set criteria
-        console.log(userId);
-        this.User.findOne({ _id: userId })
-          .populate('roles', '-__v')
-          .exec((err, user) => {
-            if (err) {
-              return reject(new Error(err.message));
-            }
-            if (user === null) {
-              return reject(new Error(__('LOGIN_INVALID_USERNAME_PASSWORD')));
-            }
-            return resolve(user);
-          });
-      } catch (ex) {
-        return reject(new Error(ex.message));
+    try {
+      let profileDetails = await this.User.findById(profileId)
+        .populate({
+          path: 'roles',
+          populate: [
+            {
+              path: 'permissions',
+              model: 'Permission',
+            },
+          ],
+        })
+        .exec();
+
+      if (!profileDetails) {
+        throw new Error('User profile not found!.');
       }
-    });
+      return profileDetails;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   async updateProfile(profileId, { name, email, phone, roles }) {
-    // Create a User object
-    const user = new this.User({
-      name: name,
-      email: email,
-      phone: phone,
-      _id: profileId,
-    });
-    let userId = profileId;
-    return new Promise((resolve, reject) => {
-      // Save User object in the database
-      this.User.findByIdAndUpdate(
-        userId,
-        { $push: { user } },
-        {
-          new: true,
-          upsert: true,
-          runValidators: true,
-          select: '-roles -_id -updatedAt -createdAt',
-        },
-      )
-        .then(() => {
-          //Check if role is set on submit
-          if (roles) {
-            //Find selected role
-            user.roles = this.Role.find(
-              { slug: { $in: roles } },
-              (err, roles) => {
-                //Throw error occurs when finding roles
-                if (err) {
-                  return reject(new Error(err.message));
-                }
-
-                //Generate object of roles
-                user.roles = roles.map((role) => role._id);
-
-                //Save & return roles
-                return user.save((err) => {
-                  //Throw error occurs while saving roles
-                  if (err) {
-                    return reject(new Error(err.message));
-                  }
-                  user.roles = roles;
-                  return resolve(user);
-                });
-              },
-            );
-          } else {
-            return resolve(user);
-          }
+    try {
+      let profileDetails = await this.User.findById(profileId)
+        .populate({
+          path: 'roles',
+          populate: [
+            {
+              path: 'permissions',
+              model: 'Permission',
+            },
+          ],
         })
-        .catch((err) => {
-          return reject(new Error(err.message));
-        });
-    });
+        .exec();
+
+      if (!profileDetails) {
+        throw new Error('User profile not found!.');
+      }
+      let { __v, _id, ...newProfileDetails } = profileDetails;
+      let data = newProfileDetails._doc;
+
+      if (name != null) {
+        data.name = name;
+      }
+      if (email != null) {
+        data.email = email;
+      }
+      if (phone != null) {
+        data.phone = phone;
+      }
+
+      if (roles) {
+        //Find selected role
+        let userRoles = await this.Role.find({ slug: { $in: roles } });
+
+        //Generate object of roles
+        data.roles = userRoles.map((role) => role._id);
+      }
+
+      // Removing below data from main object
+      delete data.__v;
+      delete data._id;
+      delete data.password;
+      delete data.updatedAt;
+      delete data.createdAt;
+
+      let filter = { _id: _id };
+      await this.User.updateOne(filter, { $set: data });
+      return data;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 }
 

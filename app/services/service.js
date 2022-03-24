@@ -1,9 +1,10 @@
 'use strict';
 const autoBind = require('auto-bind');
+const jwt = require('jsonwebtoken');
 const { baseService } = require('@core/service/baseService');
 const { ApiResponse } = require('@helper/apiResponse');
 
-//const mailer =  require("../helpers/mailer");
+const mailer = require('../helpers/mailer');
 //const crypto = require("crypto");
 
 class service extends baseService {
@@ -14,7 +15,7 @@ class service extends baseService {
    */
   constructor() {
     super();
-    //this.mailer = mailer;
+    this.mailer = mailer;
     //this.crypto = crypto;
     this.ApiRes = new ApiResponse();
     autoBind(this);
@@ -48,6 +49,36 @@ class service extends baseService {
         [this.Op.and]: query,
       },
     });
+  }
+
+  async generateToken(userInfo, algorithm = 'HS256') {
+    try {
+      // Gets expiration time
+      const expiration =
+        Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN;
+
+      return jwt.sign(userInfo, this.env.JWT_SECRET, {
+        expiresIn: expiration, // expiresIn time
+        algorithm: algorithm,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async sentMail(userInfo, algorithm = 'HS256') {
+    try {
+      // Gets expiration time
+      const expiration =
+        Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN;
+
+      return jwt.sign(userInfo, this.env.JWT_SECRET, {
+        expiresIn: expiration, // expiresIn time
+        algorithm: algorithm,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }
 

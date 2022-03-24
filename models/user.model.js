@@ -1,5 +1,5 @@
 'use strict';
-//const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const mongoose_delete = require('mongoose-delete');
 module.exports = (mongoose, uuid) => {
   let schema = mongoose.Schema(
@@ -19,26 +19,37 @@ module.exports = (mongoose, uuid) => {
       },
       email: {
         type: String,
+        lowercase: true,
         index: true,
-        unique: true,
         trim: true,
       },
       phone: {
         type: String,
         index: true,
         required: true,
-        unique: true,
         trim: true,
       },
       password: { type: String, trim: true },
       status: Boolean,
-      verified: Boolean,
+      verified: {
+        type: Boolean,
+        index: true,
+        trim: true,
+      },
       roles: [
         {
           type: String,
           ref: 'Role',
         },
       ],
+      loginAttempts: {
+        type: Number,
+        default: 0,
+      },
+      blockExpires: {
+        type: Date,
+        default: Date.now,
+      },
     },
     { timestamps: true },
   );
@@ -56,40 +67,61 @@ module.exports = (mongoose, uuid) => {
       return validator.isUUID(v);
   }, "ID is not a valid GUID: {VALUE}");*/
 
-  schema.pre('save', function (next) {
+  schema.pre('save', async function (next) {
     let user = this;
-    //const SALT_FACTOR = 10;
+    const SALT_FACTOR = 10;
 
     // If user is not new or the password is not modified
-    if (!user.isNew && !user.isModified('password')) {
+    if (!user.isModified('password')) {
       return next();
     }
 
     // Encrypt password before saving to database
-    /*bcrypt.genSalt(SALT_FACTOR, function (err, salt) {
-      if (err) return next(err);
+    let salt = await bcrypt.genSalt(SALT_FACTOR);
+    user.password = await bcrypt.hash(user.password, salt);
 
-      bcrypt.hash(user.password, salt, null, function (err, hash) {
-        if (err) return next(err);
-        user.password = hash;
-        console.log(user);
-        next();
-      });
-    });*/
-
-    if (this.isNew) {
+    if (user.isNew) {
       user.createAt = user.updateAt = Date.now();
     } else {
       user.updateAt = Date.now();
     }
 
-    User.findOne({ email: this.email }, 'email', function (err, results) {
+    if (user.loginAttempts >= 5) {
+      user.loginAttempts = 0;
+      user.blockExpires = new Date(Date.now() + 60 * 5 * 1000);
+    }
+
+    let emailCriteria = {
+      email: user.email,
+      verified: true,
+      deleted: false,
+      _id: { $ne: user._id },
+    };
+    User.findOne(emailCriteria, 'email', function (err, results) {
       if (err) {
         next(err);
       } else if (results) {
         console.warn('results', results);
-        user.invalidate('email', 'email must be unique');
-        next(new Error('email must be unique'));
+        user.invalidate('email', 'Email must be unique');
+        next(new Error('Email must be unique'));
+      } else {
+        next();
+      }
+    });
+
+    let phoneCriteria = {
+      phone: user.phone,
+      verified: true,
+      deleted: false,
+      _id: { $ne: user._id },
+    };
+    User.findOne(phoneCriteria, 'phone', function (err, results) {
+      if (err) {
+        next(err);
+      } else if (results) {
+        console.warn('results', results);
+        user.invalidate('phone', 'Email number must be unique');
+        next(new Error('Phone number must be unique'));
       } else {
         next();
       }

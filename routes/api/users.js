@@ -10,10 +10,16 @@ const router = express.Router();
 router.post(
   '/v1.0/auth/signup',
   [userValidation.signup],
-  authController.create,
+  authController.register,
 );
 
 router.post('/v1.0/auth/signin', [userValidation.signin], authController.login);
+
+router.post(
+  '/v1.0/auth/forgot-password',
+  [userValidation.forgotPassword],
+  authController.forgotPassword,
+);
 
 router.get(
   '/v1.0/user/profile',
@@ -23,7 +29,7 @@ router.get(
 
 router.post(
   '/v1.0/user/profile',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, userValidation.profile],
   usersController.updateProfile,
 );
 module.exports = router;

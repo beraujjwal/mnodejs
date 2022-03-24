@@ -11,23 +11,34 @@ Validator.registerAsync('unique', function (value, attribute, req, passes) {
   if (!attribute)
     throw new Error('Specify Requirements i.e fieldName: unique:table,column');
   //split table and column
+  //console.log(attribute);
   let attArr = attribute.split(',');
-  if (attArr.length !== 2)
-    throw new Error(`Invalid format for validation rule on ${attribute}`);
+  console.log(attArr);
+  if (attArr.length < 1) {
+    //throw new Error(`Invalid format for validation rule on ${attribute}`);
+    passes(false, `Invalid format for validation rule on ${attribute}`);
+    return;
+  }
 
   //assign array index 0 and 1 to table and column respectively
   const { 0: table, 1: column, 2: pk, 3: pkvalue } = attArr;
   //define custom error message
   let msg =
     column == 'username'
-      ? `${column} has already been taken`
-      : `${column} already in exist`;
+      ? `This ${column} has already been taken.`
+      : `This ${column} is already associated with an account.`;
   //check if incoming value already exists in the database
-  Models[table].findOne({ [column]: value }, function (error, exist) {
+  let criteria = { [column]: value };
+  if (pk != null && pkvalue != null) {
+    criteria = { [column]: value, [pk]: { $ne: pkvalue } };
+  }
+  Models[table].findOne(criteria, function (error, exist) {
     if (exist && !error) {
-      throw new Error(msg);
+      passes(false, msg); // return false if value exists
+      return;
     }
   });
+
   //passes(false, msg); // return false if value exists
   //return;
   passes();
