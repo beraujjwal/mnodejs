@@ -23,15 +23,15 @@ class auth extends service {
     try {
       await session.startTransaction();
       if (!roles) {
-        roles = ['user']; // if role is not selected, setting default role for new user
+        roles = ['subscriber']; // if role is not selected, setting default role for new user
       }
       let dbRoles = await this.Role.find({ slug: { $in: roles } });
       if (dbRoles.length < 1) {
-        throw new Error('You have selected invalid roles.');
+        throw new Error('You have selected an invalid role.');
       }
 
       // Create a User object
-      const user = new this.User({
+      const user = await new this.User({
         name: name,
         email: email,
         phone: phone,
@@ -43,25 +43,25 @@ class auth extends service {
       // Save User object in the database
       user.roles = await dbRoles.map((role) => role._id);
 
+      //Save user roles
+      await user.save();
+
       let token = await this.generateToken({
         name: name,
         phone: phone,
         email: email,
       });
 
-      //Save user roles
-      await user.save();
-
-      const userToken = new this.Token({
+      const userToken = await new this.Token({
         user: user._id,
         token: token,
         type: 'ACTIVATION',
         status: true,
         expiresAt: new Date(Date.now() + 60 * 60 * 1000),
       });
-      await userToken.save();
+      userToken.save();
 
-      let mailOptions = {
+      /*let mailOptions = {
         to: user.email,
         subject: 'Complete your account registration',
         html: `<h4><b>Hello!</b></h4>
@@ -73,14 +73,13 @@ class auth extends service {
           <br><br>
           <p>--Yours truly,<br aria-hidden="true">MNodejs</p>`,
       };
-      this.mailer.send(mailOptions);
+      //this.mailer.send(mailOptions);*/
 
       //user.roles = roles;
       //user.token = userToken;
       await session.commitTransaction();
       return { user, token: userToken };
     } catch (error) {
-      console.log(error);
       await session.abortTransaction();
       throw new Error(
         error.message ||

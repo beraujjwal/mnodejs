@@ -11,7 +11,7 @@ const path = require('path');
 const logger = require('morgan');
 const i18n = require('./config/i18n');
 const routers = require('./system/route/index');
-
+const winston = require('./config/winston');
 log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
 const app = express();
 
@@ -60,7 +60,7 @@ db.mongoose
   });
 //don't show the log when it is test
 if (process.env.NODE_ENV !== 'production') {
-  app.use(logger('dev'));
+  app.use(logger('dev', { stream: winston.stream }));
   db.mongoose.set('debug', true);
 }
 
@@ -98,5 +98,22 @@ app
   .on('listening', () => {
     log(chalk.white.bgGreen.bold('✔ Application Started'));
   });
+
+/*app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // add this line to include winston logging
+  winston.error(
+    `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${
+      req.method
+    } - ${req.ip}`,
+  );
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});*/
 
 module.exports = app; // for testing

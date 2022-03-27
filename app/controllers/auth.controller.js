@@ -33,8 +33,8 @@ class authController extends controller {
       });
       this.ApiRes.successResponseWithData(
         res,
-        'User created successfully!',
         result,
+        'User created successfully!',
       );
     } catch (err) {
       this.ApiRes.errorResponse(
@@ -56,8 +56,8 @@ class authController extends controller {
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
-          'User acctivated successfully!',
           result,
+          'User acctivated successfully!',
         );
       } else {
         this.ApiRes.errorResponse(
@@ -84,8 +84,8 @@ class authController extends controller {
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
-          'User login successfully!',
           result,
+          'User login successfully!',
         );
       } else {
         this.ApiRes.successResponse(res, 'Some error occurred while login');
@@ -109,8 +109,8 @@ class authController extends controller {
       let result = await this.Auth.forgotPassword({ username });
       this.ApiRes.successResponseWithData(
         res,
-        'Forgot password mail sent successfully!',
         result,
+        'Forgot password mail sent successfully!',
       );
     } catch (err) {
       this.ApiRes.errorResponse(
@@ -132,8 +132,8 @@ class authController extends controller {
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
-          'User acctivated successfully!',
           result,
+          'User acctivated successfully!',
         );
       } else {
         this.ApiRes.errorResponse(

@@ -24,24 +24,6 @@ module.exports = (mongoose, uuid) => {
         lowercase: true,
       },
       status: Boolean,
-      role_permissions: [
-        {
-          role_id: { type: String, ref: 'Role' },
-          create: { type: Boolean },
-          delete: { type: Boolean },
-          update: { type: Boolean },
-          read: { type: Boolean },
-        },
-      ],
-      user_permissions: [
-        {
-          user_id: { type: String, ref: 'User' },
-          create: { type: Boolean },
-          delete: { type: Boolean },
-          update: { type: Boolean },
-          read: { type: Boolean },
-        },
-      ],
     },
     { timestamps: true },
   );
@@ -62,28 +44,28 @@ module.exports = (mongoose, uuid) => {
   schema.pre('save', function (next) {
     let permission = this;
 
-    // If user is not new or the password is not modified
-    if (!permission.isNew && !permission.isModified('password')) {
-      return next();
-    }
-
     if (this.isNew) {
       permission.createAt = permission.updateAt = Date.now();
+      permission.slug = permission.name.split(' ').join('-').toLowerCase();
     } else {
       permission.updateAt = Date.now();
     }
 
-    Permission.findOne({ slug: this.slug }, 'slug', function (err, results) {
-      if (err) {
-        next(err);
-      } else if (results) {
-        console.warn('results', results);
-        permission.invalidate('slug', 'slug must be unique');
-        next(new Error('slug must be unique'));
-      } else {
-        next();
-      }
-    });
+    Permission.findOne(
+      { slug: permission.slug, _id: { $ne: permission._id } },
+      'slug',
+      function (err, results) {
+        if (err) {
+          next(err);
+        } else if (results) {
+          console.warn('results', results);
+          permission.invalidate('slug', 'slug must be unique');
+          next(new Error('slug must be unique'));
+        } else {
+          next();
+        }
+      },
+    );
   });
 
   const Permission = mongoose.model('Permission', schema);

@@ -22,7 +22,8 @@ class ApiResponse {
     return res.status(200).json(resData);
   }
 
-  successResponseWithData(res, msg, data) {
+  successResponseWithData(res, data, msg = null) {
+    if (msg == null) msg = 'OK';
     let resData = {
       error: false,
       code: 200,
@@ -50,12 +51,13 @@ class ApiResponse {
     return res.status(200).json(resData);
   }
 
-  validationErrorWithData(res, msg, data) {
+  validationErrorWithData(res, data, msg = null) {
+    if (msg == null) msg = 'Validation failed';
     let resData = {
       error: true,
       code: 400,
       message: msg,
-      data: data,
+      data: data.errors,
     };
     return res.status(200).json(resData);
   }

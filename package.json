@@ -42,7 +42,8 @@
     "pluralize": "^8.0.0",
     "pug": "^3.0.2",
     "uuid": "^8.3.2",
-    "validatorjs": "^3.22.1"
+    "validatorjs": "^3.22.1",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "eslint": "^8.11.0",

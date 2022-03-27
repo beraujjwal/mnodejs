@@ -24,20 +24,6 @@ module.exports = (mongoose, uuid) => {
         lowercase: true,
       },
       status: Boolean,
-      rights: [
-        {
-          resource: {
-            type: String,
-            ref: 'Resource',
-          },
-          full: { type: Boolean },
-          create: { type: Boolean },
-          read: { type: Boolean },
-          update: { type: Boolean },
-          delete: { type: Boolean },
-          deny: { type: Boolean },
-        },
-      ],
     },
     { timestamps: true },
   );
@@ -55,7 +41,32 @@ module.exports = (mongoose, uuid) => {
         console.log("validating: " + JSON.stringify(v));
         return validator.isUUID(v);
     }, "ID is not a valid GUID: {VALUE}");*/
+  schema.pre('save', function (next) {
+    let resource = this;
 
-  const Role = mongoose.model('Role', schema);
-  return Role;
+    if (this.isNew) {
+      resource.createAt = resource.updateAt = Date.now();
+    } else {
+      resource.updateAt = Date.now();
+    }
+
+    Resource.findOne(
+      { slug: this.slug, _id: { $ne: resource._id } },
+      'slug',
+      function (err, results) {
+        if (err) {
+          next(err);
+        } else if (results) {
+          console.warn('results', results);
+          resource.invalidate('slug', 'slug must be unique');
+          next(new Error('slug must be unique'));
+        } else {
+          next();
+        }
+      },
+    );
+  });
+
+  const Resource = mongoose.model('Resource', schema);
+  return Resource;
 };

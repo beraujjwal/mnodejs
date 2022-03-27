@@ -28,6 +28,8 @@ I'm doing my best to provide you a good experience when using my apps, so if you
 - Basic Authentication (Register/Login/Forgot Password)
 - Profile Management (Pull Profile Details/Update Profile/Change Password)
 - Email helper ready just import and use.
+- Integrated Authorization.
+- Integrated ACL with User permission & Role Permission.
 
 ## Software Requirements
 
@@ -112,6 +114,22 @@ If you need to add more routes to the project just create a new file in `/routes
 ### Creating new controllers
 
 If you need to add more controllers to the project just create a new file in `/app/controllers/` and use them in the routes.
+
+### Authorization setting example in router
+
+```js
+router.get('/users', [authMiddleware.verifyToken], usersController.userStore);
+```
+
+### ACL setting example in router
+
+```js
+router.post(
+  '/users',
+  [authMiddleware.verifyToken, aclMiddleware.hasPermission('read', 'users')], // "read" as action, "users" as resource
+  usersController.userStore,
+);
+```
 
 ## Tests
 

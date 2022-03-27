@@ -1,19 +1,19 @@
 const autoBind = require('auto-bind');
 const { service } = require('@service/service');
 
-class permission extends service {
+class resource extends service {
   /**
-   * permission service constructor
+   * resource service constructor
    * @author Ujjwal Bera
    * @param null
    */
   constructor() {
     super();
-    this.Permission = this.db.Permission;
+    this.Resource = this.db.Resource;
     autoBind(this);
   }
 
-  async permissionList(queries) {
+  async resourceList(queries) {
     try {
       let {
         keyword = null,
@@ -30,7 +30,8 @@ class permission extends service {
       if (ordering == 'desc') {
         order = -1;
       }
-      return await this.Permission.find(filter)
+
+      return await this.Resource.find(filter)
         .sort({ [orderby]: order })
         .limit(parseInt(limit))
         .skip(parseInt(skip));
@@ -39,44 +40,44 @@ class permission extends service {
     }
   }
 
-  async permissionStore(name) {
+  async resourceStore(name) {
     try {
-      const permission = new this.Permission({
+      const resource = new this.Resource({
         name: name,
         slug: name.split(' ').join('-').toLowerCase(),
       });
-      return permission.save(permission);
+      return resource.save(resource);
     } catch (ex) {
       throw new Error(ex.message);
     }
   }
 
-  async permissionDetails(permissionId) {
+  async resourceDetails(resourceId) {
     try {
-      let permission = await this.Permission.findOne({
-        _id: permissionId,
+      let resource = await this.Resource.findOne({
+        _id: resourceId,
         deleted: false,
       });
-      if (!permission) {
-        throw new Error('Permission not found with this given details.');
+      if (!resource) {
+        throw new Error('Resource not found with this given details.');
       }
-      return permission;
+      return resource;
     } catch (ex) {
       throw new Error(ex.message);
     }
   }
 
-  async permissionUpdate(permissionId, name) {
+  async resourceUpdate(resourceId, name) {
     try {
-      let permission = await this.Permission.findOne({
-        _id: permissionId,
+      let resource = await this.Resource.findOne({
+        _id: resourceId,
         deleted: false,
       });
-      if (!permission) {
-        throw new Error('Permission not found.');
+      if (!resource) {
+        throw new Error('Resource not found.');
       }
 
-      let data = permission._doc;
+      let data = resource._doc;
 
       if (name != null) {
         data.name = name;
@@ -88,11 +89,11 @@ class permission extends service {
       delete data.updatedAt;
       delete data.createdAt;
 
-      let filter = { _id: permission._id };
-      await this.Permission.updateOne(filter, { $set: data });
+      let filter = { _id: resourceId };
+      await this.Resource.updateOne(filter, { $set: data });
 
-      return await this.Permission.findOne({
-        _id: permissionId,
+      return await this.Resource.findOne({
+        _id: resourceId,
         deleted: false,
       });
     } catch (ex) {
@@ -101,20 +102,20 @@ class permission extends service {
     }
   }
 
-  async permissionDelete(permissionId) {
+  async resourceDelete(resourceId) {
     try {
-      let permission = await this.Permission.findOne({
-        _id: permissionId,
+      let resource = await this.Resource.findOne({
+        _id: resourceId,
         deleted: false,
       });
-      if (!permission) {
-        throw new Error('Permission not found.');
+      if (!resource) {
+        throw new Error('Resource not found.');
       }
 
-      await permission.delete();
+      await resource.delete();
 
-      return await this.Permission.findOne({
-        _id: permissionId,
+      return await this.Resource.findOne({
+        _id: resourceId,
         deleted: true,
       });
     } catch (ex) {
@@ -124,4 +125,4 @@ class permission extends service {
   }
 }
 
-module.exports = { permission };
+module.exports = { resource };

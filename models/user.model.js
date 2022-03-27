@@ -50,6 +50,19 @@ module.exports = (mongoose, uuid) => {
         type: Date,
         default: Date.now,
       },
+      rights: [
+        {
+          resource: {
+            type: String,
+            ref: 'Resource',
+          },
+          create: { type: Boolean },
+          delete: { type: Boolean },
+          update: { type: Boolean },
+          read: { type: Boolean },
+          deny: { type: Boolean },
+        },
+      ],
     },
     { timestamps: true },
   );
@@ -95,9 +108,10 @@ module.exports = (mongoose, uuid) => {
       email: user.email,
       verified: true,
       deleted: false,
+      status: false,
       _id: { $ne: user._id },
     };
-    User.findOne(emailCriteria, 'email', function (err, results) {
+    await User.findOne(emailCriteria, 'email', async function (err, results) {
       if (err) {
         next(err);
       } else if (results) {
@@ -105,6 +119,7 @@ module.exports = (mongoose, uuid) => {
         user.invalidate('email', 'Email must be unique');
         next(new Error('Email must be unique'));
       } else {
+        console.log('Email unique check pass');
         next();
       }
     });
@@ -113,16 +128,18 @@ module.exports = (mongoose, uuid) => {
       phone: user.phone,
       verified: true,
       deleted: false,
+      status: false,
       _id: { $ne: user._id },
     };
-    User.findOne(phoneCriteria, 'phone', function (err, results) {
+    await User.findOne(phoneCriteria, 'phone', async function (err, results) {
       if (err) {
         next(err);
       } else if (results) {
         console.warn('results', results);
-        user.invalidate('phone', 'Email number must be unique');
+        user.invalidate('phone', 'Phone number must be unique');
         next(new Error('Phone number must be unique'));
       } else {
+        console.log('Phone unique check pass');
         next();
       }
     });
