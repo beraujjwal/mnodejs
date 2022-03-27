@@ -115,6 +115,18 @@ If you need to add more routes to the project just create a new file in `/routes
 
 If you need to add more controllers to the project just create a new file in `/app/controllers/` and use them in the routes.
 
+### Helpfull Commands from CLI to generate files
+
+```bash
+node cli make:controller product
+node cli make:model product
+node cli make:service product
+node cli make:validation product
+node cli make:middleware product
+```
+
+## Authorization & ACL setting
+
 ### Authorization setting example in router
 
 ```js
@@ -146,6 +158,16 @@ If you need to add more test cases to the project just create a new file in `/te
 ## Bugs or improvements
 
 Every project needs improvements, Feel free to report any bugs or improvements. Pull requests are always welcome.
+
+## Who do I talk to?
+
+- [Ujjwal Bera](https://github.com/beraujjwal)
+
+## Release History
+
+- 2021-09-09 [Pre-release][] (public, Pre-release)
+
+[pre-release]: https://github.com/beraujjwal/mnodejs/releases/tag/v0.1
 
 ## License
 

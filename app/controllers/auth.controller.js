@@ -12,7 +12,7 @@ class authController extends controller {
    */
   constructor() {
     super();
-    this.Auth = new auth();
+    this.AuthService = new auth();
     autoBind(this);
   }
 
@@ -24,7 +24,7 @@ class authController extends controller {
   async register(req, res) {
     try {
       let { name, email, phone, password, roles } = req.body;
-      let result = await this.Auth.singup({
+      let result = await this.AuthService.singup({
         name,
         email,
         phone,
@@ -52,7 +52,7 @@ class authController extends controller {
   async verify(req, res) {
     try {
       let { user_id, token } = req.params;
-      let result = await this.Auth.verify(user_id, token);
+      let result = await this.AuthService.verify(user_id, token);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -80,7 +80,7 @@ class authController extends controller {
    */
   async login(req, res) {
     try {
-      let result = await this.Auth.singin(req.body, res);
+      let result = await this.AuthService.singin(req.body, res);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -106,7 +106,7 @@ class authController extends controller {
   async forgotPassword(req, res) {
     try {
       let { username } = req.body;
-      let result = await this.Auth.forgotPassword({ username });
+      let result = await this.AuthService.forgotPassword({ username });
       this.ApiRes.successResponseWithData(
         res,
         result,
@@ -128,7 +128,7 @@ class authController extends controller {
   async reset(req, res) {
     try {
       let { user_id, token } = req.params;
-      let result = await this.Auth.verify(user_id, token);
+      let result = await this.AuthService.verify(user_id, token);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,

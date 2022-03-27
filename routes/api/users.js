@@ -48,19 +48,19 @@ router.post(
 
 router.get(
   '/v1.0/user/:id',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, aclMiddleware.hasPermission('read', 'users')],
   usersController.userDetails,
 );
 
 router.put(
   '/v1.0/user/:id',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, aclMiddleware.hasPermission('write', 'users')],
   usersController.userUpdate,
 );
 
 router.delete(
   '/v1.0/user/:id',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, aclMiddleware.hasPermission('delete', 'users')],
   usersController.userDelete,
 );
 module.exports = router;
