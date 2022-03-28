@@ -23,7 +23,6 @@ class usersController extends controller {
    */
   async profile(req, res) {
     try {
-      console.log(req.user);
       let result = await this.userService.getProfile(req.user.id);
       if (result) {
         this.ApiRes.successResponseWithData(
@@ -32,18 +31,22 @@ class usersController extends controller {
           'Profile details got successfully!',
         );
       } else {
-        this.ApiRes.successResponse(res, 'Some error occurred while login');
+        this.ApiRes.successResponse(
+          res,
+          'Some error occurred while fetching your profile details.',
+        );
       }
     } catch (err) {
       this.ApiRes.errorResponse(
         res,
-        err.message || 'Some error occurred while login.',
+        err.message ||
+          'Some error occurred while fetching your profile details.',
       );
     }
   }
 
   /**
-   * @desc get logged-in user profile
+   * @desc update logged-in user profile
    * @param {*} req
    * @param {*} res
    */
@@ -57,13 +60,47 @@ class usersController extends controller {
           'Profile details updated successfully!',
         );
       } else {
-        this.ApiRes.successResponse(res, 'Some error occurred while login');
+        this.ApiRes.successResponse(
+          res,
+          'Some error occurred while updating your profile details.',
+        );
       }
     } catch (err) {
       console.log(err);
       this.ApiRes.errorResponse(
         res,
-        err.message || 'Some error occurred while login.',
+        err.message ||
+          'Some error occurred while updating your profile details.',
+      );
+    }
+  }
+
+  /**
+   * @desc change password of logged-in user
+   * @param {*} req
+   * @param {*} res
+   */
+  async changePassword(req, res) {
+    try {
+      let result = await this.userService.changePassword(req.user.id, req.body);
+      if (result) {
+        this.ApiRes.successResponseWithData(
+          res,
+          result,
+          'Profile password updated successfully!',
+        );
+      } else {
+        this.ApiRes.successResponse(
+          res,
+          'Some error occurred while updating your profile password.',
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      this.ApiRes.errorResponse(
+        res,
+        err.message ||
+          'Some error occurred while updating your profile password.',
       );
     }
   }

@@ -1,5 +1,7 @@
 const autoBind = require('auto-bind');
+const bcrypt = require('bcryptjs');
 const { service } = require('@service/service');
+const { generatePassword, generateOTP } = require('../helpers/utility');
 
 class user extends service {
   /**
@@ -17,7 +19,7 @@ class user extends service {
 
   async getProfile(profileId) {
     try {
-      let profileDetails = await this.User.findById(profileId)
+      const profileDetails = await this.User.findById(profileId)
         .populate({
           path: 'roles',
           populate: [
@@ -40,7 +42,7 @@ class user extends service {
 
   async updateProfile(profileId, { name, email, phone, roles }) {
     try {
-      let profileDetails = await this.User.findById(profileId)
+      const profileDetails = await this.User.findById(profileId)
         .populate({
           path: 'roles',
           populate: [
@@ -87,6 +89,51 @@ class user extends service {
       await this.User.updateOne(filter, { $set: data });
       return data;
     } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async changePassword(
+    profileId,
+    { old_password, password, password_confirmation },
+  ) {
+    try {
+      if (old_password == password) {
+        throw new Error(
+          'Old password & new password is same. Please try different password.',
+        );
+      }
+      if (password !== password_confirmation) {
+        throw new Error(
+          'New password & password confirmation is not matching.',
+        );
+      }
+      const user = await this.User.findById(profileId);
+
+      if (!user) {
+        throw new Error('User profile not found!.');
+      }
+      const passwordIsValid = await bcrypt.compareSync(password, user.password);
+      if (!passwordIsValid) {
+        throw new Error('Old massword not matching.');
+      }
+
+      let { __v, _id, ...newProfileDetails } = user;
+      let data = newProfileDetails._doc;
+
+      data.password = password;
+
+      // Removing below data from main object
+      delete data.__v;
+      delete data._id;
+      delete data.updatedAt;
+      delete data.createdAt;
+
+      let filter = { _id: _id };
+      await this.User.updateOne(filter, { $set: data });
+      return data;
+    } catch (err) {
+      console.log(err);
       throw new Error(err.message);
     }
   }

@@ -104,5 +104,21 @@ class userValidation extends controller {
       }
     });
   }
+
+  async changePassword(req, res, next) {
+    const validationRule = {
+      old_password: 'required',
+      password: 'required',
+      password_confirmation: 'required',
+    };
+
+    validator(req.body, validationRule, {}, (err, status) => {
+      if (!status) {
+        this.ApiRes.validationErrorWithData(res, err);
+      } else {
+        next();
+      }
+    });
+  }
 }
 module.exports = new userValidation();

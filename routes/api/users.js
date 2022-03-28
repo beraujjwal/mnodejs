@@ -34,6 +34,12 @@ router.post(
   usersController.updateProfile,
 );
 
+router.post(
+  '/v1.0/user/change-password',
+  [authMiddleware.verifyToken, userValidation.changePassword],
+  usersController.changePassword,
+);
+
 router.get(
   '/v1.0/users',
   [authMiddleware.verifyToken, aclMiddleware.hasPermission('read', 'users')],

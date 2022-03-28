@@ -265,7 +265,7 @@ class auth extends service {
 
     try {
       //Finding user with set criteria
-      let user = await this.User.findOne(criteria)
+      const user = await this.User.findOne(criteria)
         .populate('roles', '-__v')
         .exec();
 

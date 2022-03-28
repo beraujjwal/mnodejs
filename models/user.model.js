@@ -89,10 +89,11 @@ module.exports = (mongoose, uuid) => {
       return next();
     }
 
-    // Encrypt password before saving to database
-    let salt = await bcrypt.genSalt(SALT_FACTOR);
-    user.password = await bcrypt.hash(user.password, salt);
-
+    if (this.isModified('password') || this.isNew) {
+      // Encrypt password before saving to database
+      let salt = await bcrypt.genSalt(SALT_FACTOR);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
     if (user.isNew) {
       user.createAt = user.updateAt = Date.now();
     } else {
