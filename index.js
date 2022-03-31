@@ -2,7 +2,6 @@
 require('module-alias/register');
 const chalk = require('chalk');
 const log = console.log;
-
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
