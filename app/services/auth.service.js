@@ -203,10 +203,12 @@ class auth extends service {
 
       const passwordIsValid = await bcrypt.compareSync(password, user.password);
 
+      let blockLoginAttempts = this.env.BLOCK_LOGIN_ATTEMPTS;
+
       if (!passwordIsValid) {
         let filter = { _id: user._id };
         let data = { loginAttempts: user.loginAttempts + 1 };
-        if (user.loginAttempts >= 4) {
+        if (user.loginAttempts >= blockLoginAttempts) {
           let blockExpires = new Date(Date.now() + 60 * 5 * 1000);
           data = { ...data, loginAttempts: 0, blockExpires };
         }
@@ -214,7 +216,7 @@ class auth extends service {
           $set: data,
         });
 
-        if (user.loginAttempts >= 4) {
+        if (user.loginAttempts >= blockLoginAttempts) {
           throw new Error(
             'Your login attempts exist. Please try after 300 seconds.',
           );

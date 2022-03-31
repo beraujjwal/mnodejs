@@ -16,36 +16,6 @@ describe('User', () => {
       db.Token.deleteMany({});
       done();
     });
-
-    /*await db.Role.deleteMany({});
-    await db.Permission.deleteMany({});
-    await db.Resource.deleteMany({});
-
-    await db.Resource.insertMany([{ name: 'Root' }, { name: 'Gest' }]);
-
-    await db.Permission.insertMany([{ name: 'Full' }, { name: 'Deny' }]);*/
-
-    /*db.Role.insertMany([
-      {
-        name: 'Administrator',
-        rights: [
-          {
-            resource: 'root',
-            full: true,
-          },
-        ],
-      },
-      {
-        name: 'Subscriber',
-        rights: [
-          {
-            resource: 'gest',
-            full: true,
-          },
-        ],
-      },
-    ]);*/
-    //done();
   });
 
   // Prepare data for testing
@@ -58,9 +28,9 @@ describe('User', () => {
   };
 
   const rootUserData = {
-    name: 'Usha Bera',
-    email: 'bera.usha@hotmail.com',
-    phone: '9475967638',
+    name: 'Anna Jones',
+    email: 'anna.jones@mail.com',
+    phone: '9874563211',
     password: '123456',
     roles: ['administrator'],
   };
@@ -151,7 +121,7 @@ describe('User', () => {
   /*
    * Test the /POST route
    */
-  describe('/POST Login user only with username', () => {
+  describe('/POST Login user only with email', () => {
     it('It should send validation error for Login', (done) => {
       chai
         .request(server)
@@ -168,7 +138,24 @@ describe('User', () => {
   /*
    * Test the /POST route
    */
-  describe('/POST Login user with wrong username password', () => {
+  describe('/POST Login user only with phone', () => {
+    it('It should send validation error for Login', (done) => {
+      chai
+        .request(server)
+        .post('/api/v1.0/auth/signin')
+        .send({ username: testData.phone })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(true);
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /POST route
+   */
+  describe('/POST Login user with wrong username & password', () => {
     it('it should Send failed user Login', (done) => {
       chai
         .request(server)
@@ -188,12 +175,72 @@ describe('User', () => {
   /*
    * Test the /POST route
    */
-  describe('/POST Login user with correct username & password', () => {
+  describe('/POST Login user with wrong password', () => {
+    it('it should Send failed user Login', (done) => {
+      chai
+        .request(server)
+        .post('/api/v1.0/auth/signin')
+        .send({ username: testData.email, password: '1234' })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(true);
+          res.body.should.have
+            .property('message')
+            .eql('You have submitted invalid login details.');
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /POST route
+   */
+  describe('/POST Login user with correct email & password', () => {
     it('it should do user Login', (done) => {
       chai
         .request(server)
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email, password: testData.password })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(false);
+          res.body.should.have
+            .property('message')
+            .eql('User login successfully!');
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /POST route
+   */
+  describe('/GET Login user with correct email & password', () => {
+    it('it should do user Login', (done) => {
+      chai
+        .request(server)
+        .post('/api/v1.0/auth/signin')
+        .send({ username: testData.email, password: testData.password })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(false);
+          res.body.should.have
+            .property('message')
+            .eql('User login successfully!');
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /POST route
+   */
+  describe('/POST Login user with correct phone & password', () => {
+    it('it should do user Login', (done) => {
+      chai
+        .request(server)
+        .post('/api/v1.0/auth/signin')
+        .send({ username: testData.phone, password: testData.password })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);

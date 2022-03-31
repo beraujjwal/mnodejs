@@ -23,7 +23,7 @@ describe('Permission', () => {
   // Prepare data for testing
   const userTestData = {
     password: '123456',
-    username: 'bera.usha@hotmail.com',
+    username: 'anna.jones@mail.com',
   };
   var loginResponse, permissionData;
 
