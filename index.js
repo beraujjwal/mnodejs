@@ -45,6 +45,7 @@ db.mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => {
     if (process.env.APP_ENV === 'development') {
@@ -59,7 +60,7 @@ db.mongoose
     process.exit();
   });
 //don't show the log when it is test
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev', { stream: winston.stream }));
   db.mongoose.set('debug', true);
 }

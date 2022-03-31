@@ -1,6 +1,6 @@
 const express = require('express');
-
 const permissionsController = require('../../app/controllers/permissions.controller');
+const permissionValidation = require('../../app/validations/permission.validation');
 const authMiddleware = require('../../app/middlewares/auth.middleware');
 
 const router = express.Router();
@@ -12,8 +12,8 @@ router.get(
 );
 
 router.post(
-  '/v1.0/permission/store',
-  [authMiddleware.verifyToken],
+  '/v1.0/permission',
+  [authMiddleware.verifyToken, permissionValidation.create],
   permissionsController.permissionStore,
 );
 
@@ -25,7 +25,7 @@ router.get(
 
 router.put(
   '/v1.0/permission/:id',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, permissionValidation.update],
   permissionsController.permissionUpdate,
 );
 

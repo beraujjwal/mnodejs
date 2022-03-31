@@ -51,7 +51,7 @@ module.exports = (mongoose, uuid) => {
     }
 
     Resource.findOne(
-      { slug: this.slug, _id: { $ne: resource._id } },
+      { slug: this.slug, _id: { $ne: resource._id }, deleted: false },
       'slug',
       function (err, results) {
         if (err) {

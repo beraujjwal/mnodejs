@@ -13,8 +13,8 @@ i18n.configure({
   directoryPermissions: '755',
   extension: '.json',
   /*api: {
-		'__': 'translate',  
-		'__n': 'translateN' 
+		'__': 'translate',
+		'__n': 'translateN'
 	},*/
   register: global,
 });
@@ -26,7 +26,7 @@ module.exports = async function (req, res, next) {
   if (headres['accept-language']) {
     lang = headres['accept-language'];
   }
-  console.log(`Current language is ${lang}`);
+  //console.log(`Current language is ${lang}`);
   i18n.setLocale(lang);
   return next();
 };

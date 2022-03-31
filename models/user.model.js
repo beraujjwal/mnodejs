@@ -116,11 +116,11 @@ module.exports = (mongoose, uuid) => {
       if (err) {
         next(err);
       } else if (results) {
-        console.warn('results', results);
+        //console.warn('results', results);
         user.invalidate('email', 'Email must be unique');
         next(new Error('Email must be unique'));
       } else {
-        console.log('Email unique check pass');
+        //console.log('Email unique check pass');
         next();
       }
     });
@@ -136,11 +136,11 @@ module.exports = (mongoose, uuid) => {
       if (err) {
         next(err);
       } else if (results) {
-        console.warn('results', results);
+        //console.warn('results', results);
         user.invalidate('phone', 'Phone number must be unique');
         next(new Error('Phone number must be unique'));
       } else {
-        console.log('Phone unique check pass');
+        //console.log('Phone unique check pass');
         next();
       }
     });

@@ -3,9 +3,9 @@ const autoBind = require('auto-bind');
 const { controller } = require('@controller/controller');
 const validator = require('@helper/validate');
 
-class resourceValidation extends controller {
+class roleValidation extends controller {
   /**
-   * Resource validation constructor
+   * Validation constructor
    * @author Ujjwal Bera
    * @param null
    */
@@ -46,4 +46,4 @@ class resourceValidation extends controller {
     });
   }
 }
-module.exports = new resourceValidation();
+module.exports = new roleValidation();

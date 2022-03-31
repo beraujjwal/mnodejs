@@ -52,7 +52,7 @@ module.exports = (mongoose, uuid) => {
     }
 
     Permission.findOne(
-      { slug: permission.slug, _id: { $ne: permission._id } },
+      { slug: permission.slug, _id: { $ne: permission._id }, deleted: false },
       'slug',
       function (err, results) {
         if (err) {

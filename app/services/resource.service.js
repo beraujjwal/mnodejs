@@ -45,6 +45,7 @@ class resource extends service {
       const resource = new this.Resource({
         name: name,
         slug: name.split(' ').join('-').toLowerCase(),
+        status: true,
       });
       return resource.save(resource);
     } catch (ex) {
@@ -67,7 +68,7 @@ class resource extends service {
     }
   }
 
-  async resourceUpdate(resourceId, name) {
+  async resourceUpdate(resourceId, name, status) {
     try {
       let resource = await this.Resource.findOne({
         _id: resourceId,
@@ -81,6 +82,10 @@ class resource extends service {
 
       if (name != null) {
         data.name = name;
+      }
+
+      if (status != null) {
+        data.status = status;
       }
 
       // Removing below data from main object

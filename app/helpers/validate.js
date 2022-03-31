@@ -32,9 +32,9 @@ Validator.registerAsync('unique', async (value, attribute, req, passes) => {
   if (pk != null && pkvalue != null) {
     criteria = { ...criteria, [pk]: { $ne: pkvalue } };
   }
-  console.log('BEFORE QUERY');
+
   let user = await Models[table].findOne(criteria);
-  console.log('AFTER QUERY');
+
   if (user) {
     passes(false, msg); // return false if value exists
     return;

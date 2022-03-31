@@ -110,8 +110,12 @@ class resourcesController extends controller {
   async resourceUpdate(req, res) {
     try {
       let resourceId = req.params.id;
-      let { name } = req.body;
-      let result = await this.resourceService.resourceUpdate(resourceId, name);
+      let { name, status } = req.body;
+      let result = await this.resourceService.resourceUpdate(
+        resourceId,
+        name,
+        status,
+      );
       if (result) {
         this.ApiRes.successResponseWithData(
           res,

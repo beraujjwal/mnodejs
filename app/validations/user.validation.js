@@ -32,7 +32,6 @@ class userValidation extends controller {
       validationRule,
       {},
       (err, status) => {
-        console.log('VALIDATION CALLED');
         if (!status) {
           this.ApiRes.validationErrorWithData(res, err);
         } else {

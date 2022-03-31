@@ -1,6 +1,6 @@
 const express = require('express');
-
 const resourcesController = require('../../app/controllers/resources.controller');
+const resourceValidation = require('../../app/validations/resource.validation');
 const authMiddleware = require('../../app/middlewares/auth.middleware');
 
 const router = express.Router();
@@ -12,8 +12,8 @@ router.get(
 );
 
 router.post(
-  '/v1.0/resource/store',
-  [authMiddleware.verifyToken],
+  '/v1.0/resource',
+  [authMiddleware.verifyToken, resourceValidation.create],
   resourcesController.resourceStore,
 );
 
@@ -25,7 +25,7 @@ router.get(
 
 router.put(
   '/v1.0/resource/:id',
-  [authMiddleware.verifyToken],
+  [authMiddleware.verifyToken, resourceValidation.update],
   resourcesController.resourceUpdate,
 );
 

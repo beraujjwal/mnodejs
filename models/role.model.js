@@ -55,6 +55,31 @@ module.exports = (mongoose, uuid) => {
         console.log("validating: " + JSON.stringify(v));
         return validator.isUUID(v);
     }, "ID is not a valid GUID: {VALUE}");*/
+  schema.pre('save', function (next) {
+    let role = this;
+
+    if (this.isNew) {
+      role.createAt = role.updateAt = Date.now();
+    } else {
+      role.updateAt = Date.now();
+    }
+
+    Role.findOne(
+      { slug: this.slug, _id: { $ne: role._id }, deleted: false },
+      'slug',
+      function (err, results) {
+        if (err) {
+          next(err);
+        } else if (results) {
+          console.warn('results', results);
+          role.invalidate('slug', 'slug must be unique');
+          next(new Error('slug must be unique'));
+        } else {
+          next();
+        }
+      },
+    );
+  });
 
   const Role = mongoose.model('Role', schema);
   return Role;

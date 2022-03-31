@@ -106,17 +106,17 @@ class auth extends service {
         );
       }
 
-      //Throwing error if user already active
-      if (userData.status === true) {
-        throw new Error(
-          'Your account already activated your account. Please try to login.',
-        );
-      }
-
       //Throwing error if user already verified
       if (userData.verified === true) {
         throw new Error(
           'Your account already verified your account. Please try to login.',
+        );
+      }
+
+      //Throwing error if user already active
+      if (userData.status === true) {
+        throw new Error(
+          'Your account already activated your account. Please try to login.',
         );
       }
 
@@ -169,12 +169,6 @@ class auth extends service {
       ? { email: username }
       : { phone: username };
 
-    criteria = {
-      ...criteria,
-      status: true,
-      verified: true,
-    };
-
     try {
       //Finding user with set criteria
       let user = await this.User.findOne(criteria)
@@ -184,6 +178,18 @@ class auth extends service {
       if (user === null) {
         throw new Error(
           'We are unable to find your account with the given details.',
+        );
+      }
+
+      if (user.verified === false) {
+        throw new Error(
+          'You have not yet verified your account. Please verify your account.',
+        );
+      }
+
+      if (user.status === false) {
+        throw new Error(
+          'Your account is in inactive status. Please contact the application administrator.',
         );
       }
 
@@ -247,7 +253,6 @@ class auth extends service {
       };
       return loginRes;
     } catch (error) {
-      console.log(error);
       throw new Error(
         error.message ||
           'An error occurred while login into your account. Please try again.',

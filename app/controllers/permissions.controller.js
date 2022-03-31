@@ -111,10 +111,11 @@ class permissionsController extends controller {
   async permissionUpdate(req, res) {
     try {
       let permissionId = req.params.id;
-      let { name } = req.body;
+      let { name, status } = req.body;
       let result = await this.permissionService.permissionUpdate(
         permissionId,
         name,
+        status,
       );
       if (result) {
         this.ApiRes.successResponseWithData(

@@ -17,7 +17,7 @@ const levels = {
 var options = {
   file: {
     level: 'info',
-    filename: '../logs/app.log',
+    filename: './logs/app.log',
     handleExceptions: true,
     json: true,
     maxsize: 5242880, // 5MB

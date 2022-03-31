@@ -44,6 +44,7 @@ class permission extends service {
       const permission = new this.Permission({
         name: name,
         slug: name.split(' ').join('-').toLowerCase(),
+        status: true,
       });
       return permission.save(permission);
     } catch (ex) {
@@ -66,7 +67,7 @@ class permission extends service {
     }
   }
 
-  async permissionUpdate(permissionId, name) {
+  async permissionUpdate(permissionId, name, status) {
     try {
       let permission = await this.Permission.findOne({
         _id: permissionId,
@@ -80,6 +81,10 @@ class permission extends service {
 
       if (name != null) {
         data.name = name;
+      }
+
+      if (status != null) {
+        data.status = status;
       }
 
       // Removing below data from main object

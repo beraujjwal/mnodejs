@@ -166,8 +166,10 @@ Every project needs improvements, Feel free to report any bugs or improvements. 
 ## Release History
 
 - 2021-09-09 [Pre-release][] (public, Pre-release)
+- 2022-03-28 [Release (v1.0.0)][] (public)
 
 [pre-release]: https://github.com/beraujjwal/mnodejs/releases/tag/v0.1
+[release (v1.0.0)]: https://github.com/beraujjwal/mnodejs/releases/tag/V1.0.0
 
 ## License
 

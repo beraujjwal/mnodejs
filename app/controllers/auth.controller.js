@@ -94,6 +94,7 @@ class authController extends controller {
       this.ApiRes.errorResponse(
         res,
         err.message || 'Some error occurred while login.',
+        400,
       );
     }
   }
