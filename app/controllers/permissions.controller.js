@@ -3,6 +3,7 @@ const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
 const { permission } = require('@service/permission.service');
+const permissionService = new permission('Permission');
 
 class permissionsController extends controller {
   /**
@@ -10,9 +11,9 @@ class permissionsController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.permissionService = new permission();
+  constructor(service) {
+    super(service);
+    this.service = permissionService;
     autoBind(this);
   }
 
@@ -23,7 +24,9 @@ class permissionsController extends controller {
    */
   async permissionList(req, res) {
     try {
-      let result = await this.permissionService.permissionList(req.query);
+      let result = await this.service.permissionList(req.query);
+      //if all filter fields name are same as db field name you can just use
+      //let result = await this.service.getAll (req.query);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -53,7 +56,7 @@ class permissionsController extends controller {
   async permissionStore(req, res) {
     try {
       let { name } = req.body;
-      let result = await this.permissionService.permissionStore(name);
+      let result = await this.service.permissionStore(name);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -67,6 +70,7 @@ class permissionsController extends controller {
         );
       }
     } catch (err) {
+      console.log(err);
       this.ApiRes.errorResponse(
         res,
         err.message || 'Some error occurred while storing permission.',
@@ -82,7 +86,7 @@ class permissionsController extends controller {
   async permissionDetails(req, res) {
     try {
       let permissionId = req.params.id;
-      let result = await this.permissionService.permissionDetails(permissionId);
+      let result = await this.service.permissionDetails(permissionId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -112,7 +116,7 @@ class permissionsController extends controller {
     try {
       let permissionId = req.params.id;
       let { name, status } = req.body;
-      let result = await this.permissionService.permissionUpdate(
+      let result = await this.service.permissionUpdate(
         permissionId,
         name,
         status,
@@ -145,7 +149,7 @@ class permissionsController extends controller {
   async permissionDelete(req, res) {
     try {
       let permissionId = req.params.id;
-      let result = await this.permissionService.permissionDelete(permissionId);
+      let result = await this.service.permissionDelete(permissionId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -166,4 +170,4 @@ class permissionsController extends controller {
     }
   }
 }
-module.exports = new permissionsController();
+module.exports = new permissionsController(permissionService);

@@ -59,7 +59,7 @@ db.mongoose
     process.exit();
   });
 //don't show the log when it is test
-if (process.env.NODE_ENV === 'development') {
+if (process.env.APP_ENV === 'development') {
   app.use(logger('dev', { stream: winston.stream }));
   db.mongoose.set('debug', true);
 }

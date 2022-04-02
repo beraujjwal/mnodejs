@@ -47,6 +47,7 @@ module.exports = (mongoose, uuid) => {
     if (this.isNew) {
       permission.createAt = permission.updateAt = Date.now();
       permission.slug = permission.name.split(' ').join('-').toLowerCase();
+      permission.updateAt = Date.now();
     } else {
       permission.updateAt = Date.now();
     }
@@ -60,7 +61,9 @@ module.exports = (mongoose, uuid) => {
         } else if (results) {
           console.warn('results', results);
           permission.invalidate('slug', 'slug must be unique');
-          next(new Error('slug must be unique'));
+          let error = new Error('Name already exists.');
+          error.statusCode = 400;
+          next(error);
         } else {
           next();
         }

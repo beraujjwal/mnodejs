@@ -10,8 +10,8 @@ class controller extends baseController {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
+  constructor(service) {
+    super(service);
     this.ApiRes = new ApiResponse();
     autoBind(this);
   }

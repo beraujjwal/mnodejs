@@ -2,6 +2,7 @@ const autoBind = require('auto-bind');
 const bcrypt = require('bcryptjs');
 const { service } = require('@service/service');
 const { generatePassword, generateOTP } = require('../helpers/utility');
+const User = require('@model/user.model');
 
 class user extends service {
   /**
@@ -10,10 +11,11 @@ class user extends service {
    * @param null
    */
   constructor() {
-    super();
-    this.User = this.db.User;
+    super(User);
+    this.User = User;
     this.Role = this.db.Role;
     this.regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
     autoBind(this);
   }
 

@@ -13,9 +13,10 @@ class service extends baseService {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
+  constructor(model) {
+    super(model);
     this.mailer = mailer;
+    this.model = this.db[model];
     //this.crypto = crypto;
     this.ApiRes = new ApiResponse();
     autoBind(this);
