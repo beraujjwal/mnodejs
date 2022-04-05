@@ -15,10 +15,10 @@ class permission extends service {
 
   async permissionList(queries) {
     try {
-      let { orderby, ordering, limit, page, ...search } = queries;
+      let { orderby, order, limit, page, ...search } = queries;
       let filter = { deleted: false };
-      if (search.keyword != null && search.keyword.length > 0) {
-        filter = { ...filter, name: new RegExp(search.keyword, 'i') };
+      if (search.name != null && search.name.length > 0) {
+        filter = { ...filter, name: new RegExp(search.name, 'i') };
       }
 
       return await this.getAll(queries, filter);

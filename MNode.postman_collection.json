@@ -1,842 +1,695 @@
 {
-	"info": {
-		"_postman_id": "a5da2be6-4190-44e6-ad21-8d9ba9cf887f",
-		"name": "MNode",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Authorized Section",
-			"item": [
-				{
-					"name": "Users",
-					"item": [
-						{
-							"name": "Users List",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/users",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"users"
-									],
-									"query": [
-										{
-											"key": "keyword",
-											"value": "ma",
-											"disabled": true
-										},
-										{
-											"key": "orderby",
-											"value": "3",
-											"disabled": true
-										},
-										{
-											"key": "ordering",
-											"value": "desc",
-											"disabled": true
-										},
-										{
-											"key": "limit",
-											"value": "",
-											"disabled": true
-										},
-										{
-											"key": "skip",
-											"value": "",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User Create",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Huma Bera\",\n    \"email\": \"bera.huma@mail.com\",\n    \"phone\": \"9876543218\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"subscriber\"\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/store",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										"store"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "636d4430-70a9-4407-964c-dc975ed88551"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User Update",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Huma Bera\",\n    \"email\": \"bera.huma@mail.com\",\n    \"phone\": \"9876543218\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"contributor\", \"author\"\n    ],\n    \"status\": true\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "636d4430-70a9-4407-964c-dc975ed88551"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "User Delete",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "a7bbce76-3019-4d50-9960-e69516c72f63"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					]
-				},
-				{
-					"name": "Profile",
-					"item": [
-						{
-							"name": "Get Profile",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "accept-language",
-										"value": "bn",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/profile",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										"profile"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Profile",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "accept-language",
-										"value": "bn",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Sona Bera Update\",\n    \"email\": \"bera.sona@hotmail.com\",\n    \"phone\": \"9475967799\",\n    \"roles\": [\n        \"admin\", \"user\"\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/user/profile",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"user",
-										"profile"
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					]
-				},
-				{
-					"name": "Permissions",
-					"item": [
-						{
-							"name": "Get Permissions List",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/permissions",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"permissions"
-									],
-									"query": [
-										{
-											"key": "keyword",
-											"value": "a",
-											"disabled": true
-										},
-										{
-											"key": "orderby",
-											"value": "3",
-											"disabled": true
-										},
-										{
-											"key": "ordering",
-											"value": "desc",
-											"disabled": true
-										},
-										{
-											"key": "limit",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "skip",
-											"value": null,
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Permission Store",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Permission\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/permission/store",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"permission",
-										"store"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Permission Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/permission/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"permission",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "7d22415b-92da-4a7b-9745-4df4675dc9ed"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Permission Update",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Permission\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/permission/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"permission",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "7d22415b-92da-4a7b-9745-4df4675dc9ed"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Permission",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/permission/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"permission",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "a7bbce76-3019-4d50-9960-e69516c72f63"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					]
-				},
-				{
-					"name": "Resources",
-					"item": [
-						{
-							"name": "Get Resources List",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/resources",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"resources"
-									],
-									"query": [
-										{
-											"key": "keyword",
-											"value": "",
-											"disabled": true
-										},
-										{
-											"key": "orderby",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "ordering",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "limit",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "skip",
-											"value": null,
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Resource Store",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Permission\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/resource/store",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"resource",
-										"store"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Resource Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/resource/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"resource",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Resource Update",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Permission\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/resource/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"resource",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Resource",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{API_BASE_URL}}v1.0/resource/:id",
-									"host": [
-										"{{API_BASE_URL}}v1",
-										"0"
-									],
-									"path": [
-										"resource",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									""
-								]
-							}
-						}
-					]
-				}
-			],
-			"auth": {
-				"type": "apikey",
-				"apikey": [
-					{
-						"key": "value",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2ZDFlYmJiLTI2OGMtNDYzZi05Yzk4LTJiZTEzYTkzNGMxMSIsInBob25lIjoiOTg3NjU0MzIxNSIsImVtYWlsIjoiYmVyYS51c2hhQG1haWwuY29tIiwiaWF0IjoxNjQ4Mzk1MTYwLCJleHAiOjM1OTkxOTAzMjB9.zbKkbI2K3Hfd1BgzhidNgcyhoEafAZ7hKUir3eeH-ig",
-						"type": "string"
-					},
-					{
-						"key": "key",
-						"value": "x-access-token",
-						"type": "string"
-					}
-				]
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "User Register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Usha Bera\",\n    \"email\": \"bera.usha@mail.com\",\n    \"phone\": \"9876543215\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"subscriber\", \"editor\", \"contributor\"\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{API_BASE_URL}}v1.0/auth/signup",
-					"host": [
-						"{{API_BASE_URL}}v1",
-						"0"
-					],
-					"path": [
-						"auth",
-						"signup"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Verify Account",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_URL}}auth/verify/:user_id/:token",
-					"host": [
-						"{{BASE_URL}}auth"
-					],
-					"path": [
-						"verify",
-						":user_id",
-						":token"
-					],
-					"variable": [
-						{
-							"key": "user_id",
-							"value": "c6d1ebbb-268c-463f-9c98-2be13a934c11"
-						},
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVXNoYSBCZXJhIiwicGhvbmUiOiI5ODc2NTQzMjE1IiwiZW1haWwiOiJiZXJhLnVzaGFAbWFpbC5jb20iLCJpYXQiOjE2NDgzOTUxMTksImV4cCI6MzU5OTE5MDIzOH0.5XcopiLvRmsZukeHOkE4UNLbfJzMrUAwlrWv3o545wU"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Login",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "accept-language",
-						"value": "bn",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"bera.usha@mail.com\",\n    \"password\": \"123456\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{API_BASE_URL}}v1.0/auth/signin",
-					"host": [
-						"{{API_BASE_URL}}v1",
-						"0"
-					],
-					"path": [
-						"auth",
-						"signin"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Forgot Password",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"bera.kona@hotmail.com\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{API_BASE_URL}}v1.0/auth/forgot-password",
-					"host": [
-						"{{API_BASE_URL}}v1",
-						"0"
-					],
-					"path": [
-						"auth",
-						"forgot-password"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "API_BASE_URL",
-			"value": "http://localhost:8080/api/",
-			"type": "string"
-		},
-		{
-			"key": "BASE_URL",
-			"value": "http://localhost:8080/",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "a5da2be6-4190-44e6-ad21-8d9ba9cf887f",
+    "name": "MNode",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authorized Section",
+      "item": [
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "Users List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/users",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["users"],
+                  "query": [
+                    {
+                      "key": "keyword",
+                      "value": "ma",
+                      "disabled": true
+                    },
+                    {
+                      "key": "orderby",
+                      "value": "3",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ordering",
+                      "value": "desc",
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "skip",
+                      "value": "",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User Create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Huma Bera\",\n    \"email\": \"bera.huma@mail.com\",\n    \"phone\": \"9876543218\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"subscriber\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/store",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", "store"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "636d4430-70a9-4407-964c-dc975ed88551"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User Update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Huma Bera\",\n    \"email\": \"bera.huma@mail.com\",\n    \"phone\": \"9876543218\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"contributor\", \"author\"\n    ],\n    \"status\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "636d4430-70a9-4407-964c-dc975ed88551"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "User Delete",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "a7bbce76-3019-4d50-9960-e69516c72f63"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Get Profile",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "accept-language",
+                    "value": "bn",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/profile",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", "profile"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Profile",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "accept-language",
+                    "value": "bn",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Sona Bera Update\",\n    \"email\": \"bera.sona@hotmail.com\",\n    \"phone\": \"9475967799\",\n    \"roles\": [\n        \"admin\", \"user\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/user/profile",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["user", "profile"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Permissions",
+          "item": [
+            {
+              "name": "Get Permissions List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/permissions",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["permissions"],
+                  "query": [
+                    {
+                      "key": "keyword",
+                      "value": "a",
+                      "disabled": true
+                    },
+                    {
+                      "key": "orderby",
+                      "value": "3",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ordering",
+                      "value": "desc",
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "skip",
+                      "value": null,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Permission Store",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Permission\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/permission/store",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["permission", "store"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Permission Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/permission/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["permission", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "7d22415b-92da-4a7b-9745-4df4675dc9ed"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Permission Update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Permission\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/permission/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["permission", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "7d22415b-92da-4a7b-9745-4df4675dc9ed"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Permission",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/permission/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["permission", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "a7bbce76-3019-4d50-9960-e69516c72f63"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resources",
+          "item": [
+            {
+              "name": "Get Resources List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/resources",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["resources"],
+                  "query": [
+                    {
+                      "key": "keyword",
+                      "value": "",
+                      "disabled": true
+                    },
+                    {
+                      "key": "orderby",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "ordering",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": null,
+                      "disabled": true
+                    },
+                    {
+                      "key": "skip",
+                      "value": null,
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Resource Store",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Permission\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/resource/store",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["resource", "store"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Resource Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/resource/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["resource", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Resource Update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Permission\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/resource/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["resource", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Resource",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{API_BASE_URL}}v1.0/resource/:id",
+                  "host": ["{{API_BASE_URL}}v1", "0"],
+                  "path": ["resource", ":id"],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "9f035fa0-9baf-4745-84ff-dbd85b3c9fb7"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "apikey",
+        "apikey": [
+          {
+            "key": "value",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2ZDFlYmJiLTI2OGMtNDYzZi05Yzk4LTJiZTEzYTkzNGMxMSIsInBob25lIjoiOTg3NjU0MzIxNSIsImVtYWlsIjoiYmVyYS51c2hhQG1haWwuY29tIiwiaWF0IjoxNjQ4Mzk1MTYwLCJleHAiOjM1OTkxOTAzMjB9.zbKkbI2K3Hfd1BgzhidNgcyhoEafAZ7hKUir3eeH-ig",
+            "type": "string"
+          },
+          {
+            "key": "key",
+            "value": "x-access-token",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [""]
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Usha Bera\",\n    \"email\": \"bera.usha@mail.com\",\n    \"phone\": \"9876543215\",\n    \"password\": \"123456\",\n    \"roles\" : [\n        \"subscriber\", \"editor\", \"contributor\"\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{API_BASE_URL}}v1.0/auth/signup",
+          "host": ["{{API_BASE_URL}}v1", "0"],
+          "path": ["auth", "signup"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verify Account",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}auth/verify/:user_id/:token",
+          "host": ["{{BASE_URL}}auth"],
+          "path": ["verify", ":user_id", ":token"],
+          "variable": [
+            {
+              "key": "user_id",
+              "value": "c6d1ebbb-268c-463f-9c98-2be13a934c11"
+            },
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVXNoYSBCZXJhIiwicGhvbmUiOiI5ODc2NTQzMjE1IiwiZW1haWwiOiJiZXJhLnVzaGFAbWFpbC5jb20iLCJpYXQiOjE2NDgzOTUxMTksImV4cCI6MzU5OTE5MDIzOH0.5XcopiLvRmsZukeHOkE4UNLbfJzMrUAwlrWv3o545wU"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "User Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept-language",
+            "value": "bn",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"bera.usha@mail.com\",\n    \"password\": \"123456\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{API_BASE_URL}}v1.0/auth/signin",
+          "host": ["{{API_BASE_URL}}v1", "0"],
+          "path": ["auth", "signin"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Forgot Password",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"bera.kona@hotmail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{API_BASE_URL}}v1.0/auth/forgot-password",
+          "host": ["{{API_BASE_URL}}v1", "0"],
+          "path": ["auth", "forgot-password"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_BASE_URL",
+      "value": "http://localhost:5445/api/",
+      "type": "string"
+    },
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5445/",
+      "type": "string"
+    }
+  ]
 }

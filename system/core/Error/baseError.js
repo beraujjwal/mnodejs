@@ -1,16 +1,46 @@
-class BaseError extends Error {
-	public readonly name: string;
-	public readonly httpCode: HttpStatusCode;
-	public readonly isOperational: boolean;
+const httpStatusCode = require('./httpStatusCode');
+class baseError extends Error {
+  //let error = true;
+  //let responseTimestamp = new Date();
 
-	constructor(name: string, httpCode: HttpStatusCode, description: string, isOperational: boolean) {
-	  super(description);
-	  Object.setPrototypeOf(this, new.target.prototype);
+  /**
+   * HTTP Error Class
+   * @param error
+   */
+  constructor(error) {
+    if (typeof error === 'string') {
+      this.statusCode = 500;
+      this.message = error;
+      this.name = 'InternalServerError';
+    } else {
+      if (error.name === 'ValidationError') {
+        error.statusCode = 422;
+      }
 
-	  this.name = name;
-	  this.httpCode = httpCode;
-	  this.isOperational = isOperational;
+      let errorName = 'InternalServerError';
 
-	  Error.captureStackTrace(this);
-	}
-   }
+      switch (error.statusCode) {
+        case 422:
+          errorName = 'ValidationError';
+          break;
+        case 401:
+          errorName = 'UnauthorizedError';
+          break;
+        case 403:
+          errorName = 'ForbiddenError';
+          break;
+        case 404:
+          errorName = 'NotFoundError';
+          break;
+        default:
+          errorName = 'InternalServerError';
+      }
+      this.statusCode = error.statusCode ? error.statusCode : 500;
+      this.message = error.message || 'Something wrong!';
+      this.errors = error.errors;
+      this.name = errorName;
+    }
+  }
+}
+
+module.exports = { baseError };

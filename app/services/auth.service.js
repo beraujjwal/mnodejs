@@ -181,6 +181,14 @@ class auth extends service {
         );
       }
 
+      let isMatch = await user.comparePassword(password);
+
+      if (isMatch == false) {
+        throw new Error(
+          'We are unable to find your account with the given details.',
+        );
+      }
+
       if (user.verified === false) {
         throw new Error(
           'You have not yet verified your account. Please verify your account.',
@@ -255,6 +263,7 @@ class auth extends service {
       };
       return loginRes;
     } catch (error) {
+      console.log(error);
       throw new Error(
         error.message ||
           'An error occurred while login into your account. Please try again.',

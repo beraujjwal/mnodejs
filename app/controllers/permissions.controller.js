@@ -24,7 +24,7 @@ class permissionsController extends controller {
    */
   async permissionList(req, res) {
     try {
-      let result = await this.service.permissionList(req.query);
+      let result = await this.service.getAll(req.query);
       //if all filter fields name are same as db field name you can just use
       //let result = await this.service.getAll (req.query);
       if (result) {
@@ -56,6 +56,7 @@ class permissionsController extends controller {
   async permissionStore(req, res) {
     try {
       let { name } = req.body;
+      //let result = await this.service.permissionStore(name);
       let result = await this.service.permissionStore(name);
       if (result) {
         this.ApiRes.successResponseWithData(
@@ -86,7 +87,7 @@ class permissionsController extends controller {
   async permissionDetails(req, res) {
     try {
       let permissionId = req.params.id;
-      let result = await this.service.permissionDetails(permissionId);
+      let result = await this.service.get(permissionId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,

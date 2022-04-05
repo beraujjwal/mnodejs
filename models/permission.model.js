@@ -19,7 +19,6 @@ module.exports = (mongoose, uuid) => {
       slug: {
         type: String,
         index: true,
-        required: true,
         trim: true,
         lowercase: true,
       },
@@ -45,7 +44,7 @@ module.exports = (mongoose, uuid) => {
     let permission = this;
 
     if (this.isNew) {
-      permission.createAt = permission.updateAt = Date.now();
+      permission.createAt = Date.now();
       permission.slug = permission.name.split(' ').join('-').toLowerCase();
       permission.updateAt = Date.now();
     } else {
@@ -65,10 +64,26 @@ module.exports = (mongoose, uuid) => {
           error.statusCode = 400;
           next(error);
         } else {
+          console.log('Passed');
           next();
         }
       },
     );
+  });
+
+  schema.pre('update', function (next) {
+    console.log('update Call');
+    const modifiedName = this.getUpdate().$set.name;
+    if (!modifiedName) {
+      return next();
+    }
+    /*try {
+      const newFiedValue = // do whatever...
+        (this.getUpdate().$set.field = newFieldValue);
+      next();
+    } catch (error) {
+      return next(error);
+    }*/
   });
 
   const Permission = mongoose.model('Permission', schema);

@@ -1,5 +1,6 @@
 'use strict';
 const autoBind = require('auto-bind');
+const { parseInt } = require('lodash');
 const { base } = require('../base');
 
 class baseService extends base {
@@ -19,7 +20,7 @@ class baseService extends base {
   async getAll(
     {
       orderby = 'name',
-      ordering = 'asc',
+      order = 'asc',
       limit = this.dataPerPage,
       page = 1,
       ...search
@@ -28,27 +29,42 @@ class baseService extends base {
   ) {
     try {
       console.log(filter, search);
+
       if (filter === null) {
         for (const field in search) {
-          filter = { ...filter, [field]: new RegExp(search[field], 'i') };
+          let filterValue;
+          if (typeof search[field] === 'number') {
+            console.log('Number');
+            filterValue = parseInt(search[field]);
+          } else if (typeof search[field] === 'string') {
+            console.log('String');
+            filterValue = new RegExp(search[field], 'i');
+          } else if (typeof search[field] === 'boolean') {
+            console.log('boolean');
+            filterValue = parseInt(search[field]);
+          } else {
+            filterValue = search[field];
+            console.log('boolean');
+          }
+          filter = { ...filter, [field]: filterValue };
         }
       }
       filter = { ...filter, deleted: false, deletedAt: null };
-      let order = 1;
-      if (ordering == 'desc') {
-        order = -1;
+      let ordering = 1;
+      if (order == 'desc') {
+        ordering = -1;
       }
       let skip = parseInt(page) * parseInt(limit) - parseInt(limit);
       const items = await this.model
         .find(filter)
-        .sort({ [orderby]: order })
+        .sort({ [orderby]: ordering })
         .skip(skip)
         .limit(parseInt(limit));
       const total = await this.model.countDocuments(filter);
       return { items, totalCount: total };
     } catch (ex) {
       let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
+      error.statusCode = 400;
       throw error;
     }
   }
@@ -62,7 +78,7 @@ class baseService extends base {
       throw new Error(`This ${this.name} not found.`);
     } catch (ex) {
       let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
+      error.statusCode = 400;
       throw error;
     }
   }
@@ -79,6 +95,8 @@ class baseService extends base {
       }
       throw new Error(`Unable to create this ${this.name}.`);
     } catch (ex) {
+      console.log(data);
+      console.log(ex);
       let error = new Error(ex.message);
       error.statusCode = ex.statusCode;
       throw error;

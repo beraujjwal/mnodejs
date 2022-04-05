@@ -29,7 +29,7 @@ module.exports = (mongoose, uuid) => {
         required: true,
         trim: true,
       },
-      password: { type: String, trim: true },
+      password: { type: String, trim: true, select: true },
       status: Boolean,
       verified: {
         type: Boolean,
@@ -157,6 +157,13 @@ module.exports = (mongoose, uuid) => {
   /*schema.virtual('fullName').get(function () {
     return this.firstName + ' ' + this.lastName;
   });*/
+
+  schema.methods.comparePassword = async function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+      if (err) return cb(err);
+      cb(null, isMatch);
+    });
+  };
 
   const User = mongoose.model('User', schema);
   return User;
