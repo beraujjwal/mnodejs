@@ -1,8 +1,12 @@
 'use strict';
+const chalk = require('chalk');
+const log = console.log;
 const { Seeder } = require('mongo-seeding');
 const path = require('path');
 const dbConfig = require('../../../config/db.config');
 const seederPath = path.resolve(__dirname, '../../../database/seeder/');
+
+console.log(dbConfig);
 
 const config = {
   database: dbConfig.url,
@@ -12,13 +16,13 @@ const config = {
 };
 const seeder = new Seeder(config);
 const collections = seeder.readCollectionsFromPath(
-  path.resolve('./database/seeder/'),
+  path.resolve(__dirname, '../../../database/seeder/'),
 );
 
 const main = async () => {
   try {
     await seeder.import(collections);
-    console.log('Seed complete!');
+    log(chalk.white.bgGreen.bold('✔ Seed complete!'));
     process.exit(0);
   } catch (err) {
     console.log(err);

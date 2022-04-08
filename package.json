@@ -4,12 +4,12 @@
   "description": "MNode is a basic skeleton written in JavaScript with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. MNode takes the pain out of development by easing common tasks used in many applications. MNode is accessible, powerful, and provides tools required for large, robust applications.",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production pm2 start server.js",
-    "test": "_mocha --timeout 100000 --exit --report lcovonly -- -R spec",
+    "start": "cross-env APP_ENV=production pm2 start server.js",
+    "test": "cross-env APP_ENV=test node ./system/core/seeding/clean.js && node ./system/core/seeding/seeder.js && _mocha --timeout 1000 --exit --report lcovonly -- -R spec",
     "lint": "eslint --fix --config .eslintrc.json \"**/*.js\"",
-    "dev": "TZ=Asia/Kolkata nodemon index.js",
-    "fresh": "npm run clean && npm run seed",
-    "clean": "node clean.js",
+    "dev": "cross-env TZ=Asia/Kolkata APP_ENV=development nodemon index.js",
+    "fresh": "cross-env APP_ENV=test node ./system/core/seeding/clean.js && node ./system/core/seeding/seeder.js",
+    "clean": "node ./system/core/seeding/clean.js",
     "seed": "node ./system/core/seeding/seeder.js"
   },
   "repository": {

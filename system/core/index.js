@@ -37,6 +37,12 @@ app.set('view engine', 'pug');
 //set the path of the assets file to be used
 app.use(express.static(path.join(__dirname, './public')));
 
+const PORT = parseInt(process.env.APP_PORT) || 5445;
+const MODE = process.env.APP_ENV || 'development';
+
+log(chalk.white.bgGreen.bold(`✔ Mode: ${MODE}`));
+log(chalk.white.bgGreen.bold(`✔ Port: ${PORT}`));
+
 require('./db.connection');
 
 //don't show the log when it is test
@@ -59,13 +65,7 @@ app.all('/*', (req, res) => {
   });
 });
 
-const PORT = parseInt(process.env.APP_PORT) || 5445;
-const MODE = process.env.APP_ENV || 'development';
-
-log(chalk.white.bgGreen.bold(`✔ Mode: ${MODE}`));
-log(chalk.white.bgGreen.bold(`✔ Port: ${PORT}`));
-
-log(chalk.white.bgGreen.bold('✔ Starting Application'));
+//log(chalk.white.bgGreen.bold('✔ Starting Application'));
 
 // set port, listen for requests
 app

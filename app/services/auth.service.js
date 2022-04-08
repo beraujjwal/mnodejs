@@ -181,35 +181,8 @@ class auth extends service {
         );
       }
 
-      let isMatch = await user.comparePassword(password);
-
-      if (isMatch == false) {
-        throw new Error(
-          'We are unable to find your account with the given details.',
-        );
-      }
-
-      if (user.verified === false) {
-        throw new Error(
-          'You have not yet verified your account. Please verify your account.',
-        );
-      }
-
-      if (user.status === false) {
-        throw new Error(
-          'Your account is in inactive status. Please contact the application administrator.',
-        );
-      }
-
-      if (user.blockExpires > new Date()) {
-        let tryAfter =
-          (new Date(user.blockExpires).getTime() - new Date().getTime()) / 1000;
-        throw new Error(
-          `Your login attempts exist. Please try after ${Math.round(tryAfter)}`,
-        );
-      }
-
-      const passwordIsValid = await bcrypt.compareSync(password, user.password);
+      let passwordIsValid = await user.comparePassword(password);
+      //const passwordIsValid = await bcrypt.compareSync(password, user.password);
 
       let blockLoginAttempts = this.env.BLOCK_LOGIN_ATTEMPTS;
 
@@ -231,6 +204,26 @@ class auth extends service {
         } else {
           throw new Error('You have submitted invalid login details.');
         }
+      }
+
+      if (user.verified === false) {
+        throw new Error(
+          'You have not yet verified your account. Please verify your account.',
+        );
+      }
+
+      if (user.status === false) {
+        throw new Error(
+          'Your account is in inactive status. Please contact the application administrator.',
+        );
+      }
+
+      if (user.blockExpires > new Date()) {
+        let tryAfter =
+          (new Date(user.blockExpires).getTime() - new Date().getTime()) / 1000;
+        throw new Error(
+          `Your login attempts exist. Please try after ${Math.round(tryAfter)}`,
+        );
       }
 
       const token = await this.generateToken({

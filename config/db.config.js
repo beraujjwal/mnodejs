@@ -1,5 +1,9 @@
 'use strict';
 require('dotenv').config();
+let dbName =
+  process.env.APP_ENV == 'test'
+    ? process.env.DB_DATABASE + '-test'
+    : process.env.DB_DATABASE;
 
 module.exports = {
   url:
@@ -9,5 +13,5 @@ module.exports = {
     ':' +
     parseInt(process.env.DB_PORT) +
     '/' +
-    process.env.DB_DATABASE,
+    dbName,
 };
