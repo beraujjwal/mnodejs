@@ -1,4 +1,7 @@
+'use strict';
+require('dotenv').config();
 const otpGenerator = require('otp-generator');
+const jwt = require('jsonwebtoken');
 exports.randomNumber = function (length) {
   var text = '';
   var possible = '123456789';
@@ -31,4 +34,19 @@ exports.generateOTP = function (
     upperCaseAlphabets: upperCase,
     specialChars: specialChars,
   });
+};
+
+exports.generateToken = function (userInfo, algorithm = 'HS256') {
+  try {
+    // Gets expiration time
+    const expiration =
+      Math.floor(Date.now() / 1000) + 60 * process.env.JWT_EXPIRES_IN;
+
+    return jwt.sign(userInfo, process.env.JWT_SECRET, {
+      expiresIn: expiration, // expiresIn time
+      algorithm: algorithm,
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };

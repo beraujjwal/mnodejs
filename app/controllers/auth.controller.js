@@ -2,7 +2,9 @@
 const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
-const { auth } = require('@service/auth.service');
+const { user } = require('@service/user.service');
+
+const userService = new user('User');
 
 class authController extends controller {
   /**
@@ -10,9 +12,9 @@ class authController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.AuthService = new auth();
+  constructor(service) {
+    super(service);
+    this.service = service;
     autoBind(this);
   }
 
@@ -24,7 +26,7 @@ class authController extends controller {
   async register(req, res) {
     try {
       let { name, email, phone, password, roles } = req.body;
-      let result = await this.AuthService.singup({
+      let result = await this.service.singup({
         name,
         email,
         phone,
@@ -52,7 +54,7 @@ class authController extends controller {
   async verify(req, res) {
     try {
       let { user_id, token } = req.params;
-      let result = await this.AuthService.verify(user_id, token);
+      let result = await this.service.verify(user_id, token);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -80,7 +82,7 @@ class authController extends controller {
    */
   async login(req, res) {
     try {
-      let result = await this.AuthService.singin(req.body, res);
+      let result = await this.service.singin(req.body, res);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -107,7 +109,7 @@ class authController extends controller {
   async forgotPassword(req, res) {
     try {
       let { username } = req.body;
-      let result = await this.AuthService.forgotPassword({ username });
+      let result = await this.service.forgotPassword({ username });
       this.ApiRes.successResponseWithData(
         res,
         result,
@@ -129,7 +131,36 @@ class authController extends controller {
   async reset(req, res) {
     try {
       let { user_id, token } = req.params;
-      let result = await this.AuthService.verify(user_id, token);
+      let result = await this.service.verify(user_id, token);
+      if (result) {
+        this.ApiRes.successResponseWithData(
+          res,
+          result,
+          'User acctivated successfully!',
+        );
+      } else {
+        this.ApiRes.errorResponse(
+          res,
+          'Some error occurred while verify your account. Please try again.',
+        );
+      }
+    } catch (err) {
+      this.ApiRes.errorResponse(
+        res,
+        err.message || 'Some error occurred while creating the User.',
+      );
+    }
+  }
+
+  /**
+   * @desc reset user password
+   * @param {*} req
+   * @param {*} res
+   */
+  async resetPassword(req, res) {
+    try {
+      let { user_id, token } = req.params;
+      let result = await this.service.verify(user_id, token);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -150,4 +181,4 @@ class authController extends controller {
     }
   }
 }
-module.exports = new authController();
+module.exports = new authController(userService);

@@ -20,6 +20,12 @@ module.exports = (mongoose, uuid) => {
         required: true,
         trim: true,
       },
+      sent: {
+        type: String,
+        index: true,
+        required: true,
+        trim: true,
+      },
       type: {
         type: String,
         index: true,

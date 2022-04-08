@@ -7,9 +7,9 @@ class resource extends service {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.Resource = this.db.Resource;
+  constructor(model) {
+    super(model);
+    this.model = this.db[model];
     autoBind(this);
   }
 

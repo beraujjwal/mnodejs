@@ -29,9 +29,9 @@ class authMiddleware extends middleware {
       return this.ApiRes.errorResponse(res, 'No token provided!');
     }
 
-    let decoded = await jwt.verify(token, this.env.JWT_SECRET);
-    req.user_id = decoded.id;
     try {
+      let decoded = await jwt.verify(token, this.env.JWT_SECRET);
+      req.user_id = decoded.id;
       //Finding user with set criteria
       let user = await this.User.findOne({ _id: decoded.id });
       if (user === null) {

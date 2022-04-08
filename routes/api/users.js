@@ -19,6 +19,12 @@ router.group('/v1.0', (router) => {
       [userValidation.forgotPassword],
       authController.forgotPassword,
     );
+
+    router.post(
+      '/reset-password',
+      [userValidation.forgotPassword],
+      authController.resetPassword,
+    );
   });
 
   router.group('/user', authMiddleware.verifyToken, (router) => {

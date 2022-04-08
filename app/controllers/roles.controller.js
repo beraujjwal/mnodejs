@@ -3,6 +3,7 @@ const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
 const { role } = require('@service/role.service');
+const roleService = new role('Role');
 
 class rolesController extends controller {
   /**
@@ -10,9 +11,9 @@ class rolesController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.roleService = new role();
+  constructor(service) {
+    super(service);
+    this.service = roleService;
     autoBind(this);
   }
 
@@ -23,7 +24,7 @@ class rolesController extends controller {
    */
   async roleList(req, res) {
     try {
-      let result = await this.roleService.roleList(req.query);
+      let result = await this.service.roleList(req.query);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -52,7 +53,7 @@ class rolesController extends controller {
   async roleStore(req, res) {
     try {
       let { name, rights } = req.body;
-      let result = await this.roleService.roleStore(name, rights);
+      let result = await this.service.roleStore(name, rights);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -81,7 +82,7 @@ class rolesController extends controller {
   async roleDetails(req, res) {
     try {
       let roleId = req.params.id;
-      let result = await this.roleService.roleDetails(roleId);
+      let result = await this.service.roleDetails(roleId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -111,12 +112,7 @@ class rolesController extends controller {
     try {
       let roleId = req.params.id;
       let { name, rights, status } = req.body;
-      let result = await this.roleService.roleUpdate(
-        roleId,
-        name,
-        rights,
-        status,
-      );
+      let result = await this.service.roleUpdate(roleId, name, rights, status);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -145,7 +141,7 @@ class rolesController extends controller {
   async roleDelete(req, res) {
     try {
       let roleId = req.params.id;
-      let result = await this.roleService.roleDelete(roleId);
+      let result = await this.service.roleDelete(roleId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -166,4 +162,4 @@ class rolesController extends controller {
     }
   }
 }
-module.exports = new rolesController();
+module.exports = new rolesController(roleService);

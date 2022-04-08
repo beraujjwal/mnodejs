@@ -3,6 +3,9 @@ const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
 const { user } = require('@service/user.service');
+//const { role } = require('@service/role.service');
+const userService = new user('User');
+//const roleService = new role('Role');
 
 class usersController extends controller {
   /**
@@ -10,9 +13,10 @@ class usersController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.userService = new user();
+  constructor(service) {
+    super(service);
+    this.service = userService;
+    //this.roleService = roleService;
     autoBind(this);
   }
 
@@ -23,7 +27,7 @@ class usersController extends controller {
    */
   async profile(req, res) {
     try {
-      let result = await this.userService.getProfile(req.user.id);
+      let result = await this.service.getProfile(req.user.id);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -52,7 +56,7 @@ class usersController extends controller {
    */
   async updateProfile(req, res) {
     try {
-      let result = await this.userService.updateProfile(req.user.id, req.body);
+      let result = await this.service.updateProfile(req.user.id, req.body);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -82,7 +86,7 @@ class usersController extends controller {
    */
   async changePassword(req, res) {
     try {
-      let result = await this.userService.changePassword(req.user.id, req.body);
+      let result = await this.service.changePassword(req.user.id, req.body);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -112,7 +116,7 @@ class usersController extends controller {
    */
   async userList(req, res) {
     try {
-      let result = await this.userService.userList(req.query);
+      let result = await this.service.userList(req.query);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -141,7 +145,7 @@ class usersController extends controller {
   async userStore(req, res) {
     try {
       let { name, email, phone, password, roles, verified, status } = req.body;
-      let result = await this.userService.userStore(
+      let result = await this.service.userStore(
         name,
         email,
         phone,
@@ -178,7 +182,7 @@ class usersController extends controller {
   async userDetails(req, res) {
     try {
       let userId = req.params.id;
-      let result = await this.userService.userDetails(userId);
+      let result = await this.service.userDetails(userId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -208,7 +212,7 @@ class usersController extends controller {
     try {
       let userId = req.params.id;
       let { name, email, phone, roles, status } = req.body;
-      let result = await this.userService.userUpdate(
+      let result = await this.service.userUpdate(
         userId,
         name,
         email,
@@ -244,7 +248,7 @@ class usersController extends controller {
   async userDelete(req, res) {
     try {
       let userId = req.params.id;
-      let result = await this.userService.userDelete(userId);
+      let result = await this.service.userDelete(userId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -265,4 +269,4 @@ class usersController extends controller {
     }
   }
 }
-module.exports = new usersController();
+module.exports = new usersController(userService);

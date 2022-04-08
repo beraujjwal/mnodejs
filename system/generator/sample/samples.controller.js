@@ -1,8 +1,8 @@
 'use strict';
-const { Controller } = require('./Controller');
+const { controller } = require('./controller');
 const autoBind = require('auto-bind');
 
-class CONTROLLER_CAMEL_CASE_PLURAL_FORMController extends Controller {
+class CONTROLLER_CAMEL_CASE_PLURAL_FORMController extends controller {
   /**
    * Controller constructor
    * @author Ujjwal Bera

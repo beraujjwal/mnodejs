@@ -10,6 +10,7 @@ class baseController extends base {
    */
   constructor(service) {
     super();
+    this.service = service;
     autoBind(this);
   }
 
@@ -17,7 +18,7 @@ class baseController extends base {
     try {
       const response = await this.service.getAll(req.query);
 
-      return res.status(response.statusCode).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -29,7 +30,7 @@ class baseController extends base {
     try {
       const response = await this.service.get(id);
 
-      return res.status(response.statusCode).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -39,7 +40,7 @@ class baseController extends base {
     try {
       const response = await this.service.insert(req.body);
 
-      return res.status(response.statusCode).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -51,7 +52,7 @@ class baseController extends base {
     try {
       const response = await this.service.update(id, req.body);
 
-      return res.status(response.statusCode).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }
@@ -63,7 +64,7 @@ class baseController extends base {
     try {
       const response = await this.service.delete(id);
 
-      return res.status(response.statusCode).json(response);
+      return res.status(200).json(response);
     } catch (e) {
       next(e);
     }

@@ -3,6 +3,7 @@ const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
 const { resource } = require('@service/resource.service');
+const resourceService = new resource('Resource');
 
 class resourcesController extends controller {
   /**
@@ -10,9 +11,9 @@ class resourcesController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
-    this.resourceService = new resource();
+  constructor(service) {
+    super(service);
+    this.service = resourceService;
     autoBind(this);
   }
 
@@ -23,7 +24,7 @@ class resourcesController extends controller {
    */
   async resourceList(req, res) {
     try {
-      let result = await this.resourceService.resourceList(req.query);
+      let result = await this.service.resourceList(req.query);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -52,7 +53,7 @@ class resourcesController extends controller {
   async resourceStore(req, res) {
     try {
       let { name } = req.body;
-      let result = await this.resourceService.resourceStore(name);
+      let result = await this.service.resourceStore(name);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -81,7 +82,7 @@ class resourcesController extends controller {
   async resourceDetails(req, res) {
     try {
       let resourceId = req.params.id;
-      let result = await this.resourceService.resourceDetails(resourceId);
+      let result = await this.service.resourceDetails(resourceId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -111,11 +112,7 @@ class resourcesController extends controller {
     try {
       let resourceId = req.params.id;
       let { name, status } = req.body;
-      let result = await this.resourceService.resourceUpdate(
-        resourceId,
-        name,
-        status,
-      );
+      let result = await this.service.resourceUpdate(resourceId, name, status);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -144,7 +141,7 @@ class resourcesController extends controller {
   async resourceDelete(req, res) {
     try {
       let resourceId = req.params.id;
-      let result = await this.resourceService.resourceDelete(resourceId);
+      let result = await this.service.resourceDelete(resourceId);
       if (result) {
         this.ApiRes.successResponseWithData(
           res,
@@ -165,4 +162,4 @@ class resourcesController extends controller {
     }
   }
 }
-module.exports = new resourcesController();
+module.exports = new resourcesController(resourceService);
