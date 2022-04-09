@@ -262,7 +262,6 @@ class user extends service {
       };
       return loginRes;
     } catch (error) {
-      console.log(error);
       throw new Error(
         error.message ||
           'An error occurred while login into your account. Please try again.',
@@ -462,7 +461,6 @@ class user extends service {
       await this.model.updateOne(filter, { $set: data });
       return data;
     } catch (err) {
-      console.log(err);
       throw new Error(err.message);
     }
   }
@@ -608,7 +606,6 @@ class user extends service {
         deleted: false,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -630,7 +627,6 @@ class user extends service {
         deleted: true,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }

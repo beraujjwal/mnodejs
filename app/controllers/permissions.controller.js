@@ -71,7 +71,6 @@ class permissionsController extends controller {
         );
       }
     } catch (err) {
-      console.log(err);
       this.ApiRes.errorResponse(
         res,
         err.message || 'Some error occurred while storing permission.',

@@ -57,12 +57,9 @@ class aclMiddleware extends middleware {
       loop1: if (haveAccess === false) {
         //Checking role have permission
         for await (const role of user.roles) {
-          console.log('ROLE LOOP' + role._id);
           for await (const right of role.rights) {
-            console.log('RIGHT LOOP' + right.resource);
             if (right.resource === 'root') {
               if (right.full && right.full === true) {
-                console.log(`${right.resource} have root ${right.full} module`);
                 haveAccess = true;
                 break loop1;
               }
@@ -71,11 +68,9 @@ class aclMiddleware extends middleware {
               if (right.deny && right.deny === false) {
                 break loop1;
               } else if (right.full && right.full === true) {
-                console.log(`${right.resource} have ${right.full} module`);
                 haveAccess = true;
                 break loop1;
               } else if (right[action] && right[action] === true) {
-                console.log(`${right.resource} have ${right[action]} module`);
                 haveAccess = true;
                 break loop1;
               } else {

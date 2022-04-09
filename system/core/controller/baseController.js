@@ -2,6 +2,14 @@
 const autoBind = require('auto-bind');
 const { base } = require('../base');
 
+const {
+  successResponse,
+  errorResponse,
+  notFoundResponse,
+  validationError,
+  unauthorizedResponse,
+} = require('../helpers/apiResponse');
+
 class baseController extends base {
   /**
    * Base Controller Layer
@@ -11,16 +19,21 @@ class baseController extends base {
   constructor(service) {
     super();
     this.service = service;
+    this.success = successResponse;
+    this.notFound = notFoundResponse;
+    this.error = errorResponse;
+    this.validationError = validationError;
+    this.unauthorized = unauthorizedResponse;
     autoBind(this);
   }
 
   async getAll(req, res, next) {
     try {
       const response = await this.service.getAll(req.query);
-
-      return res.status(200).json(response);
+      return res.status(200).json(this.success(response));
     } catch (e) {
-      next(e);
+      return res.status(200).json(this.error(e));
+      //next(e);
     }
   }
 
@@ -30,9 +43,10 @@ class baseController extends base {
     try {
       const response = await this.service.get(id);
 
-      return res.status(200).json(response);
+      return res.status(200).json(this.success(response));
     } catch (e) {
-      next(e);
+      return res.status(200).json(this.error(e));
+      //next(e);
     }
   }
 
@@ -40,9 +54,10 @@ class baseController extends base {
     try {
       const response = await this.service.insert(req.body);
 
-      return res.status(200).json(response);
+      return res.status(200).json(this.success(response));
     } catch (e) {
-      next(e);
+      return res.status(200).json(this.error(e));
+      //next(e);
     }
   }
 
@@ -52,9 +67,10 @@ class baseController extends base {
     try {
       const response = await this.service.update(id, req.body);
 
-      return res.status(200).json(response);
+      return res.status(200).json(this.success(response));
     } catch (e) {
-      next(e);
+      return res.status(200).json(this.error(e));
+      //next(e);
     }
   }
 
@@ -64,9 +80,10 @@ class baseController extends base {
     try {
       const response = await this.service.delete(id);
 
-      return res.status(200).json(response);
+      return res.status(200).json(this.success(response));
     } catch (e) {
-      next(e);
+      return res.status(200).json(this.error(e));
+      //next(e);
     }
   }
 }

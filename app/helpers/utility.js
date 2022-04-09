@@ -2,7 +2,7 @@
 require('dotenv').config();
 const otpGenerator = require('otp-generator');
 const jwt = require('jsonwebtoken');
-exports.randomNumber = function (length) {
+exports.randomNumber = (length) => {
   var text = '';
   var possible = '123456789';
   for (var i = 0; i < length; i++) {

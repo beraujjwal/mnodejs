@@ -70,7 +70,6 @@ class usersController extends controller {
         );
       }
     } catch (err) {
-      console.log(err);
       this.ApiRes.errorResponse(
         res,
         err.message ||
@@ -100,7 +99,6 @@ class usersController extends controller {
         );
       }
     } catch (err) {
-      console.log(err);
       this.ApiRes.errorResponse(
         res,
         err.message ||

@@ -6,8 +6,6 @@ const path = require('path');
 const dbConfig = require('../../../config/db.config');
 const seederPath = path.resolve(__dirname, '../../../database/seeder/');
 
-console.log(dbConfig);
-
 const config = {
   database: dbConfig.url,
   inputPath: seederPath,
@@ -25,7 +23,6 @@ const main = async () => {
     log(chalk.white.bgGreen.bold('✔ Seed complete!'));
     process.exit(0);
   } catch (err) {
-    console.log(err);
     process.exit(0);
   }
 };

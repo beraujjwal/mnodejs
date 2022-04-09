@@ -133,7 +133,6 @@ class role extends service {
         deleted: false,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -155,7 +154,6 @@ class role extends service {
         deleted: true,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }

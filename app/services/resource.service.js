@@ -102,7 +102,6 @@ class resource extends service {
         deleted: false,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -124,7 +123,6 @@ class resource extends service {
         deleted: true,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }

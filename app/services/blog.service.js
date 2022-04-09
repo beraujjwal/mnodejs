@@ -36,7 +36,6 @@ class blog extends service {
         status: true,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -62,7 +61,6 @@ class blog extends service {
       });
       return await this.get(blogId);
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -71,7 +69,6 @@ class blog extends service {
     try {
       return await this.delete({ _id: blogId });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }

@@ -2,6 +2,14 @@
 const autoBind = require('auto-bind');
 const { base } = require('../base');
 
+const {
+  successResponse,
+  errorResponse,
+  notFoundResponse,
+  validationError,
+  unauthorizedResponse,
+} = require('../helpers/apiResponse');
+
 class baseMiddleware extends base {
   /**
    * Base Controller Layer
@@ -10,6 +18,11 @@ class baseMiddleware extends base {
    */
   constructor() {
     super();
+    this.success = successResponse;
+    this.notFound = notFoundResponse;
+    this.error = errorResponse;
+    this.validationError = validationError;
+    this.unauthorized = unauthorizedResponse;
     autoBind(this);
   }
 }

@@ -38,7 +38,6 @@ module.exports = (mongoose, uuid) => {
   });
 
   /*schema.path("_id").validate(function (v) {
-        console.log("validating: " + JSON.stringify(v));
         return validator.isUUID(v);
     }, "ID is not a valid GUID: {VALUE}");*/
   schema.pre('save', function (next) {

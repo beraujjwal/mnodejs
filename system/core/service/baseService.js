@@ -28,23 +28,17 @@ class baseService extends base {
     filter = null,
   ) {
     try {
-      console.log(filter, search);
-
       if (filter === null) {
         for (const field in search) {
           let filterValue;
           if (typeof search[field] === 'number') {
-            console.log('Number');
             filterValue = parseInt(search[field]);
           } else if (typeof search[field] === 'string') {
-            console.log('String');
             filterValue = new RegExp(search[field], 'i');
           } else if (typeof search[field] === 'boolean') {
-            console.log('boolean');
             filterValue = parseInt(search[field]);
           } else {
             filterValue = search[field];
-            console.log('boolean');
           }
           filter = { ...filter, [field]: filterValue };
         }
@@ -95,8 +89,6 @@ class baseService extends base {
       }
       throw new Error(`Unable to create this ${this.name}.`);
     } catch (ex) {
-      console.log(data);
-      console.log(ex);
       let error = new Error(ex.message);
       error.statusCode = ex.statusCode;
       throw error;

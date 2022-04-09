@@ -76,7 +76,6 @@ module.exports = (mongoose, uuid) => {
   }, 'Invalid e-mail.');
 
   /*schema.path("_id").validate(function (v) {
-      console.log("validating: " + JSON.stringify(v));
       return validator.isUUID(v);
   }, "ID is not a valid GUID: {VALUE}");*/
 
@@ -120,7 +119,6 @@ module.exports = (mongoose, uuid) => {
         user.invalidate('email', 'Email must be unique');
         next(new Error('Email must be unique'));
       } else {
-        //console.log('Email unique check pass');
         next();
       }
     });
@@ -140,7 +138,6 @@ module.exports = (mongoose, uuid) => {
         user.invalidate('phone', 'Phone number must be unique');
         next(new Error('Phone number must be unique'));
       } else {
-        //console.log('Phone unique check pass');
         next();
       }
     });

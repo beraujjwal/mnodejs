@@ -42,7 +42,6 @@ const clean = async () => {
     log(chalk.white.bgGreen.bold('✔ Cleanup for all connections complete!'));
     process.exit(0);
   } catch (err) {
-    console.log(err);
     process.exit(0);
   }
 };

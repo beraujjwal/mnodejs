@@ -6,13 +6,13 @@ const authMiddleware = require('../../app/middlewares/auth.middleware');
 const aclMiddleware = require('../../app/middlewares/acl.middleware');
 
 const router = express.Router();
-router.group('/v1.0', authMiddleware.verifyToken, (router) => {
+router.group('/v1.0', (router) => {
   router.get(
     '/blogs',
-    [aclMiddleware.hasPermission('read', 'blogs')],
-    blogsController.blogList,
+    [authMiddleware.verifyToken, aclMiddleware.hasPermission('read', 'blogs')],
+    blogsController.getAll,
   );
-  router.group('/blog', (router) => {
+  router.group('/blog', authMiddleware.verifyToken, (router) => {
     router.post(
       '',
       [aclMiddleware.hasPermission('create', 'blogs'), blogValidation.create],
@@ -22,19 +22,19 @@ router.group('/v1.0', authMiddleware.verifyToken, (router) => {
     router.get(
       '/:id',
       [aclMiddleware.hasPermission('read', 'blogs')],
-      blogsController.blogDetails,
+      blogsController.get,
     );
 
     router.put(
       '/:id',
       [aclMiddleware.hasPermission('write', 'blogs'), blogValidation.update],
-      blogsController.blogUpdate,
+      blogsController.update,
     );
 
     router.delete(
       '/:id',
       [aclMiddleware.hasPermission('delete', 'blogs')],
-      blogsController.blogDelete,
+      blogsController.delete,
     );
   });
 });

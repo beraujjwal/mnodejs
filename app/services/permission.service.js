@@ -35,7 +35,6 @@ class permission extends service {
         status: true,
       });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -60,7 +59,6 @@ class permission extends service {
       });
       return await this.get(permissionId);
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }
@@ -69,7 +67,6 @@ class permission extends service {
     try {
       return await this.delete({ _id: permissionId });
     } catch (ex) {
-      console.log(ex);
       throw new Error(ex.message);
     }
   }

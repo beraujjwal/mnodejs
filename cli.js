@@ -24,7 +24,7 @@ async function main() {
       throw new Error('Invalid Command');
     }
   } catch (error) {
-    console.log(error.message);
+    log(chalk.white.bgGreen.bold(`✘ Error: ${error.message}`));
   }
 }
 

@@ -254,7 +254,6 @@ class token extends service {
       };
       return loginRes;
     } catch (error) {
-      console.log(error);
       throw new Error(
         error.message ||
           'An error occurred while login into your account. Please try again.',

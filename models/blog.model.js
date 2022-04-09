@@ -41,7 +41,6 @@ module.exports = (mongoose, uuid) => {
   });
 
   /*schema.path("_id").validate(function (v) {
-        console.log("validating: " + JSON.stringify(v));
         return validator.isUUID(v);
     }, "ID is not a valid GUID: {VALUE}");*/
   schema.pre('save', function (next) {
@@ -68,7 +67,6 @@ module.exports = (mongoose, uuid) => {
           error.statusCode = 400;
           next(error);
         } else {
-          console.log('Passed');
           next();
         }
       },
@@ -76,7 +74,6 @@ module.exports = (mongoose, uuid) => {
   });
 
   schema.pre('update', function (next) {
-    console.log('update Call');
     const modifiedName = this.getUpdate().$set.name;
     if (!modifiedName) {
       return next();
