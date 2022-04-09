@@ -90,11 +90,19 @@ exports.errorResponse = (err, code) => {
     statusCode = findCode.code;
     indicate = findCode.indicate;
   }
-
+  console.log(typeof err);
+  let message = null;
+  if (typeof err === Object) {
+    message = err.message;
+  } else if (typeof err === 'object') {
+    message = err.message;
+  } else if (typeof err === 'string') {
+    message = err;
+  }
   return {
     error: true,
     code: statusCode,
-    message: err.message,
+    message,
     indicate,
     details: JSON.stringify(err),
   };

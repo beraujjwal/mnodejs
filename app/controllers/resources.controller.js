@@ -21,27 +21,19 @@ class resourcesController extends controller {
    * @desc Fetching list of resources
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resourceList(req, res) {
+  async resourceList(req, res, next) {
     try {
       let result = await this.service.resourceList(req.query);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Resource list got successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching list of resources.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Resource list got successfully!'));
       }
+      next('Some error occurred while fetching list of resources.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching list of resources.',
-      );
+      next(err);
     }
   }
 
@@ -49,28 +41,20 @@ class resourcesController extends controller {
    * @desc Store a new resource
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resourceStore(req, res) {
+  async resourceStore(req, res, next) {
     try {
       let { name } = req.body;
       let result = await this.service.resourceStore(name);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Resource details stored successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while storing resource.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'New resource created successfully!'));
       }
+      next('Some error occurred while creating new resource.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while storing resource.',
-      );
+      next(err);
     }
   }
 
@@ -78,28 +62,20 @@ class resourcesController extends controller {
    * @desc Fetch detail of a resource
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resourceDetails(req, res) {
+  async resourceDetails(req, res, next) {
     try {
       let resourceId = req.params.id;
       let result = await this.service.resourceDetails(resourceId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Resource details fetched successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching resource.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Resource details got successfully!'));
       }
+      next('Some error occurred while fetching resource details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching resource.',
-      );
+      next(err);
     }
   }
 
@@ -107,29 +83,21 @@ class resourcesController extends controller {
    * @desc Updated a resource
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resourceUpdate(req, res) {
+  async resourceUpdate(req, res, next) {
     try {
       let resourceId = req.params.id;
       let { name, status } = req.body;
       let result = await this.service.resourceUpdate(resourceId, name, status);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Resource details updated successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while updating resource.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Resource details updated successfully!'));
       }
+      next('Some error occurred while updating resource details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while updating resource.',
-      );
+      next(err);
     }
   }
 
@@ -137,28 +105,20 @@ class resourcesController extends controller {
    * @desc Delete a resource
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resourceDelete(req, res) {
+  async resourceDelete(req, res, next) {
     try {
       let resourceId = req.params.id;
       let result = await this.service.resourceDelete(resourceId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Resource details deleted successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while deleting resource.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Resource deleted successfully!'));
       }
+      next('Some error occurred while deleting resource.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while deleting resource.',
-      );
+      next(err);
     }
   }
 }

@@ -10,6 +10,8 @@ const {
   unauthorizedResponse,
 } = require('../helpers/apiResponse');
 
+const { log, error, info } = require('../helpers/errorLogs');
+
 class baseMiddleware extends base {
   /**
    * Base Controller Layer
@@ -23,6 +25,9 @@ class baseMiddleware extends base {
     this.error = errorResponse;
     this.validationError = validationError;
     this.unauthorized = unauthorizedResponse;
+    this.log = log;
+    this.errorLog = error;
+    this.infoLog = info;
     autoBind(this);
   }
 }

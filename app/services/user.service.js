@@ -187,6 +187,14 @@ class user extends service {
         );
       }
 
+      if (user.blockExpires > new Date()) {
+        let tryAfter =
+          (new Date(user.blockExpires).getTime() - new Date().getTime()) / 1000;
+        throw new Error(
+          `Your login attempts exist. Please try after ${Math.round(tryAfter)}`,
+        );
+      }
+
       let passwordIsValid = await user.comparePassword(password);
       //const passwordIsValid = await bcrypt.compareSync(password, user.password);
 
@@ -221,14 +229,6 @@ class user extends service {
       if (user.status === false) {
         throw new Error(
           'Your account is in inactive status. Please contact the application administrator.',
-        );
-      }
-
-      if (user.blockExpires > new Date()) {
-        let tryAfter =
-          (new Date(user.blockExpires).getTime() - new Date().getTime()) / 1000;
-        throw new Error(
-          `Your login attempts exist. Please try after ${Math.round(tryAfter)}`,
         );
       }
 
@@ -369,6 +369,7 @@ class user extends service {
 
   async updateProfile(profileId, { name, email, phone, roles }) {
     try {
+      console.log('Started');
       const profileDetails = await this.model
         .findById(profileId)
         .populate({
@@ -381,7 +382,7 @@ class user extends service {
           ],
         })
         .exec();
-
+      console.log('Ended');
       if (!profileDetails) {
         throw new Error('User profile not found!.');
       }
@@ -400,7 +401,7 @@ class user extends service {
 
       if (roles) {
         //Find selected role
-        let userRoles = await this.Role.find({ slug: { $in: roles } });
+        let userRoles = await this.role.find({ slug: { $in: roles } });
 
         //Generate object of roles
         data.roles = userRoles.map((role) => role._id);
@@ -498,7 +499,7 @@ class user extends service {
       if (!roles) {
         roles = ['subscriber']; // if role is not selected, setting default role for new user
       }
-      let dbRoles = await this.Role.find({ slug: { $in: roles } });
+      let dbRoles = await this.role.find({ slug: { $in: roles } });
       if (dbRoles.length < 1) {
         throw new Error('You have selected an invalid role.');
       }
@@ -565,7 +566,7 @@ class user extends service {
       if (!roles) {
         roles = ['subscriber']; // if role is not selected, setting default role for new user
       }
-      let dbRoles = await this.Role.find({ slug: { $in: roles } });
+      let dbRoles = await this.role.find({ slug: { $in: roles } });
       if (dbRoles.length < 1) {
         throw new Error('You have selected an invalid role.');
       }

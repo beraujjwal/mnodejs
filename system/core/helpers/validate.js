@@ -1,5 +1,5 @@
 const Validator = require('validatorjs');
-const Models = require('../../system/core/model/index');
+const Models = require('../model/index');
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/;
 

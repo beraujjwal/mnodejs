@@ -1,7 +1,10 @@
 'use strict';
 require('dotenv').config();
 //var appRoot = require('app-root-path');
-var winston = require('winston');
+let winston = require('winston');
+
+let today = new Date();
+let todayFromat = today.toISOString().split('T')[0];
 
 const levels = {
   error: 0,
@@ -14,10 +17,10 @@ const levels = {
 };
 
 // define the custom settings for each transport (file, console)
-var options = {
+let options = {
   file: {
     level: 'info',
-    filename: './logs/app.log',
+    filename: `./logs/app-${todayFromat}.log`,
     handleExceptions: true,
     json: true,
     maxsize: 5242880, // 5MB
@@ -33,7 +36,7 @@ var options = {
 };
 
 // instantiate a new Winston Logger with the settings defined above
-var logger = winston.createLogger({
+let logger = winston.createLogger({
   transports: [
     new winston.transports.File(options.file),
     new winston.transports.Console(options.console),

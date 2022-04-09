@@ -26,22 +26,30 @@ class authMiddleware extends middleware {
     let token = req.headers['x-access-token'];
 
     if (!token) {
-      return this.ApiRes.errorResponse(res, 'No token provided!');
+      next('Authorization token not found!');
     }
 
     try {
       let decoded = await jwt.verify(token, this.env.JWT_SECRET);
+      if (!decoded) {
+        next('Invalid authorization token.');
+      }
       req.user_id = decoded.id;
       //Finding user with set criteria
-      let user = await this.User.findOne({ _id: decoded.id });
+      let user = await this.User.findOne({
+        _id: decoded.id,
+        verified: true,
+        status: true,
+        deleted: false,
+      });
       if (user === null) {
-        return this.ApiRes.errorResponse(res, 'Permission denied!');
+        next('Invalid authorization token.');
       }
       req.user = JSON.parse(JSON.stringify(user));
       next();
       return;
     } catch (ex) {
-      return this.ApiRes.errorResponse(res, ex.message);
+      next('Invalid authorization token.');
     }
   }
 }

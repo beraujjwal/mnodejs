@@ -21,30 +21,22 @@ class permissionsController extends controller {
    * @desc Fetching list of permissions
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async permissionList(req, res) {
+  async permissionList(req, res, next) {
     try {
       let result = await this.service.getAll(req.query);
       //if all filter fields name are same as db field name you can just use
       //let result = await this.service.getAll (req.query);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Permission list got successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching list of permissions.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Permission list got successfully!'));
       }
+
+      next('Some error occurred while fetching list of permissions.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message ||
-          'Some error occurred while fetching list of permissions.',
-      );
+      next(err);
     }
   }
 
@@ -52,29 +44,21 @@ class permissionsController extends controller {
    * @desc Store a new permission
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async permissionStore(req, res) {
+  async permissionStore(req, res, next) {
     try {
       let { name } = req.body;
       //let result = await this.service.permissionStore(name);
       let result = await this.service.permissionStore(name);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Permission details stored successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while storing permission.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'New permission created successfully!'));
       }
+      next('Some error occurred while creating new permission.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while storing permission.',
-      );
+      next(err);
     }
   }
 
@@ -82,28 +66,22 @@ class permissionsController extends controller {
    * @desc Fetch detail of a permission
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async permissionDetails(req, res) {
+  async permissionDetails(req, res, next) {
     try {
       let permissionId = req.params.id;
       let result = await this.service.get(permissionId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Permission details fetched successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching permission.',
-        );
+        return res
+          .status(200)
+          .json(
+            this.success(result, 'Permission details fetched successfully!'),
+          );
       }
+      next('Some error occurred while fetching permission details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching permission.',
-      );
+      next(err);
     }
   }
 
@@ -111,8 +89,9 @@ class permissionsController extends controller {
    * @desc Updated a permission
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async permissionUpdate(req, res) {
+  async permissionUpdate(req, res, next) {
     try {
       let permissionId = req.params.id;
       let { name, status } = req.body;
@@ -122,22 +101,15 @@ class permissionsController extends controller {
         status,
       );
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Permission details updated successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while updating permission.',
-        );
+        return res
+          .status(200)
+          .json(
+            this.success(result, 'Permission details updated successfully!'),
+          );
       }
+      next('Some error occurred while updating permission details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while updating permission.',
-      );
+      next(err);
     }
   }
 
@@ -145,28 +117,20 @@ class permissionsController extends controller {
    * @desc Delete a permission
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async permissionDelete(req, res) {
+  async permissionDelete(req, res, next) {
     try {
       let permissionId = req.params.id;
       let result = await this.service.permissionDelete(permissionId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Permission details deleted successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while deleting permission.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Permission deleted successfully!'));
       }
+      next('Some error occurred while deleting permission.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while deleting permission.',
-      );
+      next(err);
     }
   }
 }

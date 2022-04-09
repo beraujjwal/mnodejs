@@ -93,19 +93,25 @@ You will know server is running by checking the output of the command `npm run d
 
 ```bash
 ✔ Bootstrapping Application
-✔ Mapping Routes
 ✔ Mode: YOUR_APP_MODE
 ✔ Port: YOUR_APP_PORT
-✔ Starting Application
-✔ Application Started
 ✔ Connected to database with  YOUR_DB_CONNECTION_STRING
+✔ Mapping Routes
+✔ Application Started
+
 ```
 
 **Note:** `YOUR_APP_MODE` is your application running mode that you have set up in `.env` file, `YOUR_APP_PORT` is your node port that you have set up in `.env` file for run node app and `YOUR_DB_CONNECTION_STRING` will be your MongoDB connection string.
 
 ### Creating new models
 
-If you need to add more models to the project just create a new file in `/models/` and use them in the controllers or services by this.db.modelname.
+If you need to add more models to the project just create a new file in `/models/`. To create a new model you can use below command.
+
+```bash
+node cli make:model product
+```
+
+product is your model here
 
 ### Creating new routes
 
@@ -113,7 +119,13 @@ If you need to add more routes to the project just create a new file in `/routes
 
 ### Creating new controllers
 
-If you need to add more controllers to the project just create a new file in `/app/controllers/` and use them in the routes.
+If you need to add more controllers to the project just create a new file in `/app/controllers/` and use them in the routes. To create a new model you can use below command.
+
+```bash
+node cli make:controller product
+```
+
+product is your controller here
 
 ### Helpfull Commands from CLI to create files (recommended)
 

@@ -2,7 +2,6 @@
 const autoBind = require('auto-bind');
 const jwt = require('jsonwebtoken');
 const { baseService } = require('@core/service/baseService');
-const { ApiResponse } = require('@helper/apiResponse');
 
 const mailer = require('../helpers/mailer');
 //const crypto = require("crypto");
@@ -18,7 +17,6 @@ class service extends baseService {
     this.mailer = mailer;
     this.model = this.db[model];
     //this.crypto = crypto;
-    this.ApiRes = new ApiResponse();
     autoBind(this);
   }
 

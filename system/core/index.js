@@ -11,6 +11,9 @@ const logger = require('morgan');
 const i18n = require('../../config/i18n');
 const routers = require('../route');
 const winston = require('../../config/winston');
+
+const { errorResponse } = require('./helpers/apiResponse');
+
 log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
 const app = express();
 
@@ -79,8 +82,9 @@ app
     log(chalk.white.bgGreen.bold('✔ Application Started'));
   });
 
-/*app.use(function (err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
+
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
@@ -91,9 +95,7 @@ app
     } - ${req.ip}`,
   );
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});*/
+  return res.status(200).json(errorResponse(err));
+});
 
 module.exports = app; // for testing

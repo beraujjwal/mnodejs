@@ -1,9 +1,8 @@
 'use strict';
 const autoBind = require('auto-bind');
-const { controller } = require('@controller/controller');
-const validator = require('@helper/validate');
+const { validation } = require('./validation');
 
-class permissionValidation extends controller {
+class permissionValidation extends validation {
   /**
    * Validation constructor
    * @author Ujjwal Bera
@@ -18,32 +17,14 @@ class permissionValidation extends controller {
     const validationRule = {
       name: 'required|string',
     };
-
-    let { name } = req.body;
-
-    await validator({ name }, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 
   async update(req, res, next) {
     const validationRule = {
       name: 'required|string',
     };
-
-    let { name } = req.body;
-
-    await validator({ name }, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 }
 module.exports = new permissionValidation();

@@ -21,29 +21,21 @@ class blogsController extends controller {
    * @desc Fetching list of blogs
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async blogList(req, res) {
+  async blogList(req, res, next) {
     try {
       let result = await this.service.getAll(req.query);
       //if all filter fields name are same as db field name you can just use
       //let result = await this.service.getAll (req.query);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Blog list got successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching list of blogs.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Blog list got successfully!'));
       }
+      next('Some error occurred while fetching list of blogs.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching list of blogs.',
-      );
+      next(err);
     }
   }
 
@@ -51,29 +43,21 @@ class blogsController extends controller {
    * @desc Store a new blog
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async blogStore(req, res) {
+  async blogStore(req, res, next) {
     try {
       let { name, content } = req.body;
       //let result = await this.service.blogStore(name);
       let result = await this.service.blogStore(name, content);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Blog details stored successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while storing blog.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'New blog created successfully!'));
       }
+      next('Some error occurred while creating new blog.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while storing blog.',
-      );
+      next(err);
     }
   }
 
@@ -81,28 +65,20 @@ class blogsController extends controller {
    * @desc Fetch detail of a blog
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async blogDetails(req, res) {
+  async blogDetails(req, res, next) {
     try {
       let blogId = req.params.id;
       let result = await this.service.get(blogId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Blog details fetched successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching blog.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Blog details fetched successfully!'));
       }
+      next('Some error occurred while fetching blog details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching blog.',
-      );
+      next(err);
     }
   }
 
@@ -110,29 +86,21 @@ class blogsController extends controller {
    * @desc Updated a blog
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async blogUpdate(req, res) {
+  async blogUpdate(req, res, next) {
     try {
       let blogId = req.params.id;
       let { name, content, status } = req.body;
       let result = await this.service.blogUpdate(blogId, name, content, status);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Blog details updated successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while updating blog.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Blog details updated successfully!'));
       }
+      next('Some error occurred while updating blog details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while updating blog.',
-      );
+      next(err);
     }
   }
 
@@ -140,28 +108,20 @@ class blogsController extends controller {
    * @desc Delete a blog
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async blogDelete(req, res) {
+  async blogDelete(req, res, next) {
     try {
       let blogId = req.params.id;
       let result = await this.service.blogDelete(blogId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Blog details deleted successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while deleting blog.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Blog deleted successfully!'));
       }
+      next('Some error occurred while deleting blog.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while deleting blog.',
-      );
+      next(err);
     }
   }
 }

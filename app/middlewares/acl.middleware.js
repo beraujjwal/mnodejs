@@ -1,5 +1,4 @@
 'use strict';
-const jwt = require('jsonwebtoken');
 const autoBind = require('auto-bind');
 const { middleware } = require('./middleware');
 
@@ -23,7 +22,6 @@ class aclMiddleware extends middleware {
    */
   hasPermission(action, module) {
     let userModel = this.User;
-    let ApiRes = this.ApiRes;
 
     return async function (req, res, next) {
       let criteria = {
@@ -105,7 +103,7 @@ class aclMiddleware extends middleware {
       }
 
       if (haveAccess == false) {
-        return ApiRes.errorResponse(res, 'Permission denied!');
+        next('Unauthorized to access this section.');
       }
 
       next();

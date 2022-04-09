@@ -1,9 +1,8 @@
 'use strict';
 const autoBind = require('auto-bind');
-const { controller } = require('@controller/controller');
-const validator = require('@helper/validate');
+const { validation } = require('./validation');
 
-class userValidation extends controller {
+class userValidation extends validation {
   /**
    * Validation constructor
    * @author Ujjwal Bera
@@ -11,8 +10,6 @@ class userValidation extends controller {
    */
   constructor() {
     super();
-    this.User = this.db.User;
-    this.Role = this.db.Role;
     this.regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     autoBind(this);
   }
@@ -24,21 +21,7 @@ class userValidation extends controller {
       phone: 'required|numeric|length:10|unique:User,phone',
       password: 'required|string|min:6',
     };
-
-    let { name, email, phone, password } = req.body;
-
-    await validator(
-      { name, email, phone, password },
-      validationRule,
-      {},
-      (err, status) => {
-        if (!status) {
-          this.ApiRes.validationErrorWithData(res, err);
-        } else {
-          next();
-        }
-      },
-    );
+    return await this.validate(req, res, next, validationRule);
   }
 
   async verify(req, res, next) {
@@ -48,14 +31,7 @@ class userValidation extends controller {
     const validationRule = {
       username: rule,
     };
-
-    validator(req.body, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 
   async signin(req, res, next) {
@@ -63,14 +39,7 @@ class userValidation extends controller {
       username: 'required',
       password: 'required',
     };
-
-    validator(req.body, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 
   async profile(req, res, next) {
@@ -80,28 +49,14 @@ class userValidation extends controller {
       email: 'required|email|unique:User,email,_id,' + userId,
       phone: 'required|string|unique:User,phone,_id,' + userId,
     };
-
-    validator(req.body, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 
   async forgotPassword(req, res, next) {
     const validationRule = {
       username: 'required',
     };
-
-    validator(req.body, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 
   async changePassword(req, res, next) {
@@ -110,14 +65,7 @@ class userValidation extends controller {
       password: 'required',
       password_confirmation: 'required',
     };
-
-    validator(req.body, validationRule, {}, (err, status) => {
-      if (!status) {
-        this.ApiRes.validationErrorWithData(res, err);
-      } else {
-        next();
-      }
-    });
+    return await this.validate(req, res, next, validationRule);
   }
 }
 module.exports = new userValidation();

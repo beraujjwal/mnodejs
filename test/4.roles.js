@@ -37,6 +37,7 @@ describe('Role', () => {
       },
     ],
   };
+  const createdID = [];
 
   /*
    * Test the /POST route
@@ -184,6 +185,14 @@ describe('Role', () => {
   });
 
   after((done) => {
+    createdID.forEach((id) => {
+      db.Role.findByIdAndRemove(id, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+
     db.Role.deleteOne({ _id: roleData.id }, (err) => {
       done();
     });

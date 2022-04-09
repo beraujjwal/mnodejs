@@ -3,6 +3,8 @@ const autoBind = require('auto-bind');
 const { parseInt } = require('lodash');
 const { base } = require('../base');
 
+const { log, error, info } = require('../helpers/errorLogs');
+
 class baseService extends base {
   /**
    * Base Service Layer
@@ -14,6 +16,9 @@ class baseService extends base {
     this.name = model;
     this.model = this.db[model];
     this.dataPerPage = this.env.DATA_PER_PAGE;
+    this.log = log;
+    this.errorLog = error;
+    this.infoLog = info;
     autoBind(this);
   }
 

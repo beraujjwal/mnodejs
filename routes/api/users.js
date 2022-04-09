@@ -30,7 +30,7 @@ router.group('/v1.0', (router) => {
   router.group('/user', authMiddleware.verifyToken, (router) => {
     router.get('/profile', usersController.profile);
 
-    router.post(
+    router.put(
       '/profile',
       [userValidation.profile],
       usersController.updateProfile,

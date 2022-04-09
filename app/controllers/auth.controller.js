@@ -22,8 +22,9 @@ class authController extends controller {
    * @desc create new user
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async register(req, res) {
+  async register(req, res, next) {
     try {
       let { name, email, phone, password, roles } = req.body;
       let result = await this.service.singup({
@@ -33,16 +34,16 @@ class authController extends controller {
         password,
         roles,
       });
-      this.ApiRes.successResponseWithData(
-        res,
-        result,
-        'User created successfully!',
+      if (result) {
+        return res
+          .status(200)
+          .json(this.success(result, 'User created successfully!'));
+      }
+      next(
+        'Some error occurred while creating your account. Please try again.',
       );
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while creating the User.',
-      );
+      next(err);
     }
   }
 
@@ -50,28 +51,20 @@ class authController extends controller {
    * @desc verify new user
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async verify(req, res) {
+  async verify(req, res, next) {
     try {
       let { user_id, token } = req.params;
       let result = await this.service.verify(user_id, token);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'User acctivated successfully!',
-        );
-      } else {
-        this.ApiRes.errorResponse(
-          res,
-          'Some error occurred while verify your account. Please try again.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'User acctivated successfully!'));
       }
+      next('Some error occurred while verify your account. Please try again.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while creating the User.',
-      );
+      next(err);
     }
   }
 
@@ -79,25 +72,19 @@ class authController extends controller {
    * @desc user login
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       let result = await this.service.singin(req.body, res);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'User login successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(res, 'Some error occurred while login');
+        return res
+          .status(200)
+          .json(this.success(result, 'User login successfully!'));
       }
+      next('Some error occurred while login');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while login.',
-        400,
-      );
+      next(err);
     }
   }
 
@@ -105,21 +92,22 @@ class authController extends controller {
    * @desc User forgot password
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async forgotPassword(req, res) {
+  async forgotPassword(req, res, next) {
     try {
       let { username } = req.body;
       let result = await this.service.forgotPassword({ username });
-      this.ApiRes.successResponseWithData(
-        res,
-        result,
-        'Forgot password mail sent successfully!',
-      );
+      if (result) {
+        return res
+          .status(200)
+          .json(
+            this.success(result, 'Forgot password mail sent successfully!'),
+          );
+      }
+      next('Some error occurred while login');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while creating the User.',
-      );
+      next(err);
     }
   }
 
@@ -127,28 +115,20 @@ class authController extends controller {
    * @desc reset user password
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async reset(req, res) {
+  async reset(req, res, next) {
     try {
       let { user_id, token } = req.params;
       let result = await this.service.verify(user_id, token);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'User acctivated successfully!',
-        );
-      } else {
-        this.ApiRes.errorResponse(
-          res,
-          'Some error occurred while verify your account. Please try again.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'User acctivated successfully!'));
       }
+      next('Some error occurred while verify your account. Please try again.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while creating the User.',
-      );
+      next(err);
     }
   }
 
@@ -156,28 +136,20 @@ class authController extends controller {
    * @desc reset user password
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async resetPassword(req, res) {
+  async resetPassword(req, res, next) {
     try {
       let { user_id, token } = req.params;
       let result = await this.service.verify(user_id, token);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'User acctivated successfully!',
-        );
-      } else {
-        this.ApiRes.errorResponse(
-          res,
-          'Some error occurred while verify your account. Please try again.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'User acctivated successfully!'));
       }
+      next('Some error occurred while verify your account. Please try again.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while creating the User.',
-      );
+      next(err);
     }
   }
 }

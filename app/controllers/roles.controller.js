@@ -21,27 +21,19 @@ class rolesController extends controller {
    * @desc Fetching list of roles
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async roleList(req, res) {
+  async roleList(req, res, next) {
     try {
       let result = await this.service.roleList(req.query);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Role list got successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching list of roles.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Role list got successfully!'));
       }
+      next('Some error occurred while fetching list of roles.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching list of roles.',
-      );
+      next(err);
     }
   }
 
@@ -49,28 +41,20 @@ class rolesController extends controller {
    * @desc Store a new role
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async roleStore(req, res) {
+  async roleStore(req, res, next) {
     try {
       let { name, rights } = req.body;
       let result = await this.service.roleStore(name, rights);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Role details stored successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while storing role.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'New role created successfully!'));
       }
+      next('Some error occurred while creating new role.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while storing role.',
-      );
+      next(err);
     }
   }
 
@@ -78,28 +62,20 @@ class rolesController extends controller {
    * @desc Fetch detail of a role
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async roleDetails(req, res) {
+  async roleDetails(req, res, next) {
     try {
       let roleId = req.params.id;
       let result = await this.service.roleDetails(roleId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Role details fetched successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while fetching role.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Role details got successfully!'));
       }
+      next('Some error occurred while fetching role details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while fetching role.',
-      );
+      next(err);
     }
   }
 
@@ -107,29 +83,21 @@ class rolesController extends controller {
    * @desc Updated a role
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async roleUpdate(req, res) {
+  async roleUpdate(req, res, next) {
     try {
       let roleId = req.params.id;
       let { name, rights, status } = req.body;
       let result = await this.service.roleUpdate(roleId, name, rights, status);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Role details updated successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while updating role.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Role details updated successfully!'));
       }
+      next('Some error occurred while updating role details.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while updating role.',
-      );
+      next(err);
     }
   }
 
@@ -137,28 +105,20 @@ class rolesController extends controller {
    * @desc Delete a role
    * @param {*} req
    * @param {*} res
+   * @param {*} next
    */
-  async roleDelete(req, res) {
+  async roleDelete(req, res, next) {
     try {
       let roleId = req.params.id;
       let result = await this.service.roleDelete(roleId);
       if (result) {
-        this.ApiRes.successResponseWithData(
-          res,
-          result,
-          'Role details deleted successfully!',
-        );
-      } else {
-        this.ApiRes.successResponse(
-          res,
-          'Some error occurred while deleting role.',
-        );
+        return res
+          .status(200)
+          .json(this.success(result, 'Role deleted successfully!'));
       }
+      next('Some error occurred while deleting role.');
     } catch (err) {
-      this.ApiRes.errorResponse(
-        res,
-        err.message || 'Some error occurred while deleting role.',
-      );
+      next(err);
     }
   }
 }

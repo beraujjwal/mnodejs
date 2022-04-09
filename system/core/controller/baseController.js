@@ -10,6 +10,8 @@ const {
   unauthorizedResponse,
 } = require('../helpers/apiResponse');
 
+const { log, error, info } = require('../helpers/errorLogs');
+
 class baseController extends base {
   /**
    * Base Controller Layer
@@ -24,6 +26,10 @@ class baseController extends base {
     this.error = errorResponse;
     this.validationError = validationError;
     this.unauthorized = unauthorizedResponse;
+
+    this.log = log;
+    this.errorLog = error;
+    this.infoLog = info;
     autoBind(this);
   }
 
@@ -32,8 +38,7 @@ class baseController extends base {
       const response = await this.service.getAll(req.query);
       return res.status(200).json(this.success(response));
     } catch (e) {
-      return res.status(200).json(this.error(e));
-      //next(e);
+      next(e);
     }
   }
 
@@ -42,22 +47,18 @@ class baseController extends base {
 
     try {
       const response = await this.service.get(id);
-
       return res.status(200).json(this.success(response));
     } catch (e) {
-      return res.status(200).json(this.error(e));
-      //next(e);
+      next(e);
     }
   }
 
   async insert(req, res, next) {
     try {
       const response = await this.service.insert(req.body);
-
       return res.status(200).json(this.success(response));
     } catch (e) {
-      return res.status(200).json(this.error(e));
-      //next(e);
+      next(e);
     }
   }
 
@@ -66,11 +67,9 @@ class baseController extends base {
 
     try {
       const response = await this.service.update(id, req.body);
-
       return res.status(200).json(this.success(response));
     } catch (e) {
-      return res.status(200).json(this.error(e));
-      //next(e);
+      next(e);
     }
   }
 
@@ -79,11 +78,9 @@ class baseController extends base {
 
     try {
       const response = await this.service.delete(id);
-
       return res.status(200).json(this.success(response));
     } catch (e) {
-      return res.status(200).json(this.error(e));
-      //next(e);
+      next(e);
     }
   }
 }

@@ -1,6 +1,5 @@
 'use strict';
 const autoBind = require('auto-bind');
-const { ApiResponse } = require('@helper/apiResponse');
 const {
   baseMiddleware,
 } = require('../../system/core/middleware/baseMiddleware');
@@ -13,7 +12,6 @@ class middleware extends baseMiddleware {
    */
   constructor() {
     super();
-    this.ApiRes = new ApiResponse();
     autoBind(this);
   }
 }
