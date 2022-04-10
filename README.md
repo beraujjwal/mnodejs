@@ -115,7 +115,11 @@ product is your model here
 
 ### Creating new routes
 
-If you need to add more routes to the project just create a new file in `/routes/` for web and add in `/routes/api` for api. It will be loaded dynamically.
+If you need to add more routes to the project just create a new file in `/routes/` for web and add in `/routes/api` for api. It will be loaded dynamically. To create a new model you can use below command.
+
+```bash
+node cli make:route product
+```
 
 ### Creating new controllers
 
@@ -135,6 +139,8 @@ node cli make:model product
 node cli make:service product
 node cli make:validation product
 node cli make:middleware product
+node cli make:route product
+node cli make:testCase product
 ```
 
 ## Authorization & ACL setting

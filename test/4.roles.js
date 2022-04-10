@@ -54,9 +54,6 @@ describe('Role', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User login successfully!');
           loginResponse = res.body.data;
           done();
         });
@@ -75,9 +72,6 @@ describe('Role', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Role list got successfully!');
           done();
         });
     });
@@ -115,9 +109,7 @@ describe('Role', () => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           roleData = res.body.data;
-          res.body.should.have
-            .property('message')
-            .eql('Role details stored successfully!');
+          createdID.push(roleData.id);
           done();
         });
     });
@@ -135,9 +127,24 @@ describe('Role', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Role details fetched successfully!');
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /PUT/:id route
+   */
+  describe('/PUT/:id role', () => {
+    it('it should not update the roles', (done) => {
+      chai
+        .request(server)
+        .put('/api/v1.0/role/' + roleData.id)
+        .send()
+        .set('x-access-token', loginResponse.accessToken)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(true);
           done();
         });
     });
@@ -148,17 +155,15 @@ describe('Role', () => {
    */
   describe('/PUT/:id role', () => {
     it('it should PUT the roles', (done) => {
+      let updatedTestData = { ...testData, status: true };
       chai
         .request(server)
         .put('/api/v1.0/role/' + roleData.id)
-        .send(testData)
+        .send(updatedTestData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Role details updated successfully!');
           done();
         });
     });
@@ -176,9 +181,6 @@ describe('Role', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Role details deleted successfully!');
           done();
         });
     });
@@ -186,15 +188,8 @@ describe('Role', () => {
 
   after((done) => {
     createdID.forEach((id) => {
-      db.Role.findByIdAndRemove(id, (err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
+      db.Role.findByIdAndRemove(id);
     });
-
-    db.Role.deleteOne({ _id: roleData.id }, (err) => {
-      done();
-    });
+    done();
   });
 });

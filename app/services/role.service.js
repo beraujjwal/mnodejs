@@ -10,6 +10,7 @@ class role extends service {
   constructor(model) {
     super(model);
     this.model = this.db[model];
+    this.resource = this.db['Resource'];
     autoBind(this);
   }
 
@@ -31,7 +32,8 @@ class role extends service {
         order = -1;
       }
 
-      return await this.Role.find(filter)
+      return await this.model
+        .find(filter)
         .sort({ [orderby]: order })
         .limit(parseInt(limit))
         .skip(parseInt(skip));
@@ -47,7 +49,7 @@ class role extends service {
         for await (const right of rights) {
           rightSlugs.push(right.resource);
         }
-        let dbResources = await this.Resource.find({
+        let dbResources = await this.resource.find({
           slug: { $in: rightSlugs },
         });
         if (dbResources.length != rights.length) {
@@ -55,7 +57,7 @@ class role extends service {
         }
       }
 
-      const role = new this.Role({
+      const role = new this.model({
         name: name,
         slug: name.split(' ').join('-').toLowerCase(),
         rights: rights,
@@ -69,7 +71,7 @@ class role extends service {
 
   async roleDetails(roleId) {
     try {
-      let role = await this.Role.findOne({
+      let role = await this.model.findOne({
         _id: roleId,
         deleted: false,
       });
@@ -84,7 +86,7 @@ class role extends service {
 
   async roleUpdate(roleId, name, rights, status) {
     try {
-      let role = await this.Role.findOne({
+      let role = await this.model.findOne({
         _id: roleId,
         deleted: false,
       });
@@ -97,7 +99,7 @@ class role extends service {
         for await (const right of rights) {
           rightSlugs.push(right.resource);
         }
-        let dbResources = await this.Resource.find({
+        let dbResources = await this.resource.find({
           slug: { $in: rightSlugs },
         });
         if (dbResources.length != rights.length) {
@@ -126,9 +128,9 @@ class role extends service {
       delete data.createdAt;
 
       let filter = { _id: roleId };
-      await this.Role.updateOne(filter, { $set: data });
+      await this.model.updateOne(filter, { $set: data });
 
-      return await this.Role.findOne({
+      return await this.model.findOne({
         _id: roleId,
         deleted: false,
       });
@@ -139,7 +141,7 @@ class role extends service {
 
   async roleDelete(roleId) {
     try {
-      let role = await this.Role.findOne({
+      let role = await this.model.findOne({
         _id: roleId,
         deleted: false,
       });
@@ -149,7 +151,7 @@ class role extends service {
 
       await role.delete();
 
-      return await this.Role.findOne({
+      return await this.model.findOne({
         _id: roleId,
         deleted: true,
       });

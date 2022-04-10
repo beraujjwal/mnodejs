@@ -6,7 +6,7 @@ const moduleGenerator = require('./system/generator');
 async function main() {
   try {
     const argumentsArr = process.argv.slice(2);
-    if (argumentsArr.length === 2 && argumentsArr[0].indexOf(':') === 4) {
+    if (argumentsArr[0].indexOf(':') === 4) {
       let processAction = argumentsArr[0].slice(5);
       let actionArr = [
         'controller',
@@ -14,6 +14,8 @@ async function main() {
         'service',
         'validation',
         'middleware',
+        'route',
+        'testCase',
       ];
       if (actionArr.includes(processAction)) {
         await moduleGenerator(argumentsArr);

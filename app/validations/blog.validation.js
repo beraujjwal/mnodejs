@@ -16,6 +16,8 @@ class blogValidation extends validation {
   async create(req, res, next) {
     const validationRule = {
       name: 'required|string',
+      content: 'required|string',
+      publish: 'required|boolean',
     };
     return await this.validate(req, res, next, validationRule);
   }
@@ -23,6 +25,9 @@ class blogValidation extends validation {
   async update(req, res, next) {
     const validationRule = {
       name: 'required|string',
+      content: 'required|string',
+      publish: 'required|boolean',
+      status: 'required|boolean',
     };
     return await this.validate(req, res, next, validationRule);
   }

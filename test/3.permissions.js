@@ -31,6 +31,7 @@ describe('Permission', () => {
   const testData = {
     name: 'Gest',
   };
+  const createdID = [];
 
   /*
    * Test the /POST route
@@ -47,9 +48,6 @@ describe('Permission', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User login successfully!');
           loginResponse = res.body.data;
           done();
         });
@@ -68,9 +66,6 @@ describe('Permission', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Permission list got successfully!');
           done();
         });
     });
@@ -108,9 +103,7 @@ describe('Permission', () => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           permissionData = res.body.data;
-          res.body.should.have
-            .property('message')
-            .eql('Permission details stored successfully!');
+          createdID.push(permissionData.id);
           done();
         });
     });
@@ -128,9 +121,24 @@ describe('Permission', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Permission details fetched successfully!');
+          done();
+        });
+    });
+  });
+
+  /*
+   * Test the /PUT/:id route
+   */
+  describe('/PUT/:id permission', () => {
+    it('it should not update the permissions', (done) => {
+      chai
+        .request(server)
+        .put('/api/v1.0/permission/' + permissionData.id)
+        .send()
+        .set('x-access-token', loginResponse.accessToken)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property('error').eql(true);
           done();
         });
     });
@@ -141,17 +149,15 @@ describe('Permission', () => {
    */
   describe('/PUT/:id permission', () => {
     it('it should PUT the permissions', (done) => {
+      let updatedTestData = { ...testData, status: true };
       chai
         .request(server)
         .put('/api/v1.0/permission/' + permissionData.id)
-        .send(testData)
+        .send(updatedTestData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Permission details updated successfully!');
           done();
         });
     });
@@ -169,17 +175,15 @@ describe('Permission', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('Permission details deleted successfully!');
           done();
         });
     });
   });
 
   after((done) => {
-    db.Permission.deleteOne({ _id: permissionData.id }, (err) => {
-      done();
+    createdID.forEach((id) => {
+      db.Permission.findByIdAndRemove(id);
     });
+    done();
   });
 });

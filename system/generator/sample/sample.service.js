@@ -7,8 +7,9 @@ class SERVICE_CAMEL_CASE_SINGULAR_FROM extends service {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
+  constructor(model) {
+    super(model);
+    this.model = this.db[model];
     /**
      * Your code goes here
      */

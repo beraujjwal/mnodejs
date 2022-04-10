@@ -90,7 +90,7 @@ exports.errorResponse = (err, code) => {
     statusCode = findCode.code;
     indicate = findCode.indicate;
   }
-  console.log(typeof err);
+
   let message = null;
   if (typeof err === Object) {
     message = err.message;
@@ -108,31 +108,28 @@ exports.errorResponse = (err, code) => {
   };
 };
 
-exports.notFoundResponse = (res, msg) => {
-  let resData = {
+exports.notFoundResponse = (msg) => {
+  return {
     error: true,
     code: 404,
     message: msg,
   };
-  return res.status(200).json(resData);
 };
 
-exports.validationError = (res, data, msg = null) => {
+exports.validationError = (data, msg = null) => {
   if (msg == null) msg = 'Validation failed';
-  let resData = {
+  return {
     error: true,
     code: 400,
     message: msg,
     data: data.errors,
   };
-  return res.status(200).json(resData);
 };
 
-exports.unauthorizedResponse = (res, msg) => {
-  let resData = {
+exports.unauthorizedResponse = (msg) => {
+  return {
     error: true,
     code: 401,
     message: msg,
   };
-  return res.status(200).json(resData);
 };

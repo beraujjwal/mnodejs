@@ -1,6 +1,11 @@
 'use strict';
-const { controller } = require('./controller');
 const autoBind = require('auto-bind');
+const { controller } = require('./controller');
+const {
+  CONTROLLER_CAMEL_CASE_SINGULAR,
+} = require('@service/CONTROLLER_CAMEL_CASE_SINGULAR.service');
+const CONTROLLER_CAMEL_CASE_SINGULARService =
+  new CONTROLLER_CAMEL_CASE_SINGULAR('MODEL_SINGULAR_FORM');
 
 class CONTROLLER_CAMEL_CASE_PLURAL_FORMController extends controller {
   /**
@@ -8,8 +13,9 @@ class CONTROLLER_CAMEL_CASE_PLURAL_FORMController extends controller {
    * @author Ujjwal Bera
    * @param null
    */
-  constructor() {
-    super();
+  constructor(service) {
+    super(service);
+    this.service = service;
     /*
       	add your line here
       */
@@ -21,4 +27,6 @@ class CONTROLLER_CAMEL_CASE_PLURAL_FORMController extends controller {
   */
 }
 
-module.exports = new CONTROLLER_CAMEL_CASE_PLURAL_FORMController();
+module.exports = new CONTROLLER_CAMEL_CASE_PLURAL_FORMController(
+  CONTROLLER_CAMEL_CASE_SINGULARService,
+);

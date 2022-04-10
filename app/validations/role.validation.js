@@ -23,6 +23,7 @@ class roleValidation extends validation {
   async update(req, res, next) {
     const validationRule = {
       name: 'required|string',
+      status: 'required|boolean',
     };
     return await this.validate(req, res, next, validationRule);
   }

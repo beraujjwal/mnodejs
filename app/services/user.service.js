@@ -43,7 +43,6 @@ class user extends service {
         status: status ? status : false,
         verified: verified ? verified : false,
       });
-
       // Save User object in the database
       user.roles = await dbRoles.map((role) => role._id);
 
@@ -54,6 +53,10 @@ class user extends service {
         name: name,
         phone: phone,
         email: email,
+      });
+
+      let otpToken = await generateOTP(6, {
+        digits: true,
       });
 
       const userEmailToken = await new this.token({
@@ -369,7 +372,6 @@ class user extends service {
 
   async updateProfile(profileId, { name, email, phone, roles }) {
     try {
-      console.log('Started');
       const profileDetails = await this.model
         .findById(profileId)
         .populate({
@@ -382,7 +384,6 @@ class user extends service {
           ],
         })
         .exec();
-      console.log('Ended');
       if (!profileDetails) {
         throw new Error('User profile not found!.');
       }

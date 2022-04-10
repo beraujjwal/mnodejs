@@ -2,6 +2,7 @@
 const { chai, server, should } = require('./testConfig');
 const db = require('../system/core/model');
 
+const { log, error, info } = require('../system/core/helpers/errorLogs');
 /**
  * Test cases to test all the authentication APIs
  * Covered Routes:
@@ -14,7 +15,6 @@ describe('User', () => {
   // Before each test we should store some required
   before((done) => {
     db.User.deleteMany({}, (err) => {
-      console.log(err);
       db.Token.deleteMany({});
       done();
     });
@@ -52,7 +52,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
-          res.body.should.have.property('message').eql('Validation failed');
           done();
         });
     });
@@ -69,11 +68,7 @@ describe('User', () => {
         .send(testData)
         .end((err, res) => {
           res.should.have.status(200);
-          //res.body.should.have.property('error').eql(false);
-          //res.body.should.have.property('code').eql(200);
-          res.body.should.have
-            .property('message')
-            .eql('User created successfully!');
+          res.body.should.have.property('error').eql(false);
           newTestData = res.body.data;
           createdID.push(newTestData.token.user);
           done();
@@ -92,13 +87,7 @@ describe('User', () => {
         .send({ username: testData.email, password: testData.password })
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.should.have.property('code').eql(400);
           res.body.should.have.property('error').eql(true);
-          /*res.body.should.have
-            .property('message')
-            .eql(
-              'You have not yet verified your account. Please verify your account.',
-            );*/
           done();
         });
     });
@@ -132,11 +121,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
-          /*res.body.should.have
-            .property('message')
-            .eql(
-              'You have submitted invalid login details.',
-            );*/
           done();
         });
     });
@@ -171,9 +155,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
-          res.body.should.have
-            .property('message')
-            .eql('We are unable to find your account with the given details.');
           done();
         });
     });
@@ -191,9 +172,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
-          res.body.should.have
-            .property('message')
-            .eql('You have submitted invalid login details.');
           done();
         });
     });
@@ -211,9 +189,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User login successfully!');
           done();
         });
     });
@@ -231,9 +206,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User login successfully!');
           done();
         });
     });
@@ -251,9 +223,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User login successfully!');
           done();
         });
     });
@@ -271,9 +240,6 @@ describe('User', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
-          res.body.should.have
-            .property('message')
-            .eql('User created successfully!');
           newRootUserData = res.body.data;
           done();
         });
@@ -300,7 +266,7 @@ describe('User', () => {
     createdID.forEach((id) => {
       db.User.findByIdAndRemove(id, (err) => {
         if (err) {
-          console.log(err);
+          errorLog(err);
         }
       });
     });

@@ -31,7 +31,8 @@ class resource extends service {
         order = -1;
       }
 
-      return await this.Resource.find(filter)
+      return await this.model
+        .find(filter)
         .sort({ [orderby]: order })
         .limit(parseInt(limit))
         .skip(parseInt(skip));
@@ -42,7 +43,7 @@ class resource extends service {
 
   async resourceStore(name) {
     try {
-      const resource = new this.Resource({
+      const resource = new this.model({
         name: name,
         slug: name.split(' ').join('-').toLowerCase(),
         status: true,
@@ -55,7 +56,7 @@ class resource extends service {
 
   async resourceDetails(resourceId) {
     try {
-      let resource = await this.Resource.findOne({
+      let resource = await this.model.findOne({
         _id: resourceId,
         deleted: false,
       });
@@ -70,7 +71,7 @@ class resource extends service {
 
   async resourceUpdate(resourceId, name, status) {
     try {
-      let resource = await this.Resource.findOne({
+      let resource = await this.model.findOne({
         _id: resourceId,
         deleted: false,
       });
@@ -95,9 +96,9 @@ class resource extends service {
       delete data.createdAt;
 
       let filter = { _id: resourceId };
-      await this.Resource.updateOne(filter, { $set: data });
+      await this.model.updateOne(filter, { $set: data });
 
-      return await this.Resource.findOne({
+      return await this.model.findOne({
         _id: resourceId,
         deleted: false,
       });
@@ -108,7 +109,7 @@ class resource extends service {
 
   async resourceDelete(resourceId) {
     try {
-      let resource = await this.Resource.findOne({
+      let resource = await this.model.findOne({
         _id: resourceId,
         deleted: false,
       });
@@ -118,7 +119,7 @@ class resource extends service {
 
       await resource.delete();
 
-      return await this.Resource.findOne({
+      return await this.model.findOne({
         _id: resourceId,
         deleted: true,
       });

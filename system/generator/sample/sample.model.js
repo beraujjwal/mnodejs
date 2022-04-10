@@ -30,6 +30,36 @@ module.exports = (mongoose, uuid) => {
 
   schema.plugin(mongoose_delete, { deletedAt: true });
 
+  schema.pre('save', function (next) {
+    let data = this;
+
+    if (this.isNew) {
+      data.createAt = Date.now();
+      data.slug = data.name.split(' ').join('-').toLowerCase();
+      data.updateAt = Date.now();
+    } else {
+      data.updateAt = Date.now();
+    }
+
+    MODEL_SINGULAR_FORM.findOne(
+      { slug: data.slug, _id: { $ne: data._id }, deleted: false },
+      'slug',
+      function (err, results) {
+        if (err) {
+          next(err);
+        } else if (results) {
+          console.warn('results', results);
+          data.invalidate('slug', 'slug must be unique');
+          let error = new Error('Name already exists.');
+          error.statusCode = 400;
+          next(error);
+        } else {
+          next();
+        }
+      },
+    );
+  });
+
   schema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
