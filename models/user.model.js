@@ -24,7 +24,7 @@ module.exports = (mongoose, uuid) => {
         trim: true,
       },
       phone: {
-        type: String,
+        type: Number,
         index: true,
         required: true,
         trim: true,

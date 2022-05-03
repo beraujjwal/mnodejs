@@ -1,6 +1,8 @@
 'use strict';
+const mongoose = require('mongoose');
+const uuid = require('uuid');
 const mongoose_delete = require('mongoose-delete');
-module.exports = (mongoose, uuid) => {
+module.exports = () => {
   var schema = mongoose.Schema(
     {
       _id: {

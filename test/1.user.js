@@ -15,6 +15,7 @@ describe('User', () => {
   // Before each test we should store some required
   before((done) => {
     db.User.deleteMany({}, (err) => {
+      if (err) error(err);
       db.Token.deleteMany({});
       done();
     });
@@ -36,8 +37,7 @@ describe('User', () => {
     password: '123456',
     roles: ['administrator'],
   };
-  var newTestData;
-  var newRootUserData;
+  var newTestData, newRootUserData;
   const createdID = [];
 
   /*
@@ -50,6 +50,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signup')
         .send({ email: testData.email })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -67,6 +68,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signup')
         .send(testData)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           newTestData = res.body.data;
@@ -86,6 +88,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email, password: testData.password })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -104,6 +107,7 @@ describe('User', () => {
           `/auth/verify/${newTestData.token.user}/${newTestData.token.token}`,
         )
         .end((err, res) => {
+          if (err) error(err);
           done();
         });
     });
@@ -119,6 +123,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -136,6 +141,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.phone })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -153,6 +159,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: 'admin@admin.com', password: '1234' })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -170,6 +177,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email, password: '1234' })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -187,6 +195,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email, password: testData.password })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -204,6 +213,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.email, password: testData.password })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -221,6 +231,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signin')
         .send({ username: testData.phone, password: testData.password })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -238,6 +249,7 @@ describe('User', () => {
         .post('/api/v1.0/auth/signup')
         .send(rootUserData)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           newRootUserData = res.body.data;
@@ -257,18 +269,18 @@ describe('User', () => {
           `/auth/verify/${newRootUserData.token.user}/${newRootUserData.token.token}`,
         )
         .end((err, res) => {
+          if (err) error(err);
           done();
         });
     });
   });
 
-  after(() => {
+  after((done) => {
     createdID.forEach((id) => {
       db.User.findByIdAndRemove(id, (err) => {
-        if (err) {
-          errorLog(err);
-        }
+        if (err) error(err);
       });
     });
+    done();
   });
 });

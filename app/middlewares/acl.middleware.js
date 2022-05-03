@@ -24,17 +24,21 @@ class aclMiddleware extends middleware {
     let userModel = this.User;
 
     return async function (req, res, next) {
-      let criteria = {
-        status: true,
-        verified: true,
-        _id: req.user.id,
-      };
-      let user = await userModel
-        .findOne(criteria)
-        .populate('roles', '-__v')
-        .exec();
+      try {
+        if (!req.user) {
+          next('Invalid authorization token1.');
+        }
+        let criteria = {
+          status: true,
+          verified: true,
+          _id: req.user.id,
+        };
+        let user = await userModel
+          .findOne(criteria)
+          .populate('roles', '-__v')
+          .exec();
 
-      /*.populate(
+        /*.populate(
 			[
 				{
 					path: 'candidateId',
@@ -51,11 +55,35 @@ class aclMiddleware extends middleware {
 			])
    		);*/
 
-      let haveAccess = false;
-      loop1: if (haveAccess === false) {
-        //Checking role have permission
-        for await (const role of user.roles) {
-          for await (const right of role.rights) {
+        let haveAccess = false;
+        loop1: if (haveAccess === false) {
+          //Checking role have permission
+          for await (const role of user.roles) {
+            for await (const right of role.rights) {
+              if (right.resource === 'root') {
+                if (right.full && right.full === true) {
+                  haveAccess = true;
+                  break loop1;
+                }
+              }
+              if (right.resource === module) {
+                if (right.deny && right.deny === false) {
+                  break loop1;
+                } else if (right.full && right.full === true) {
+                  haveAccess = true;
+                  break loop1;
+                } else if (right[action] && right[action] === true) {
+                  haveAccess = true;
+                  break loop1;
+                } else {
+                  break loop1;
+                }
+              }
+            }
+          }
+
+          //Checking user have permission
+          for await (const right of user.rights) {
             if (right.resource === 'root') {
               if (right.full && right.full === true) {
                 haveAccess = true;
@@ -78,36 +106,15 @@ class aclMiddleware extends middleware {
           }
         }
 
-        //Checking user have permission
-        for await (const right of user.rights) {
-          if (right.resource === 'root') {
-            if (right.full && right.full === true) {
-              haveAccess = true;
-              break loop1;
-            }
-          }
-          if (right.resource === module) {
-            if (right.deny && right.deny === false) {
-              break loop1;
-            } else if (right.full && right.full === true) {
-              haveAccess = true;
-              break loop1;
-            } else if (right[action] && right[action] === true) {
-              haveAccess = true;
-              break loop1;
-            } else {
-              break loop1;
-            }
-          }
+        if (haveAccess == false) {
+          next('Unauthorized to access this section.');
         }
-      }
 
-      if (haveAccess == false) {
-        next('Unauthorized to access this section.');
+        next();
+        return;
+      } catch (ex) {
+        next(ex.message);
       }
-
-      next();
-      return;
     };
   }
 }

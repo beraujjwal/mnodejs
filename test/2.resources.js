@@ -1,6 +1,8 @@
 const { chai, server, should } = require('./testConfig');
 const db = require('../system/core/model');
 
+const { log, error, info } = require('../system/core/helpers/errorLogs');
+
 /**
  * Test cases to test all the resource APIs
  * Covered Routes:
@@ -16,6 +18,7 @@ describe('Resource', () => {
   //Before each test we empty the database
   /*before((done) => {
     db.Resource.deleteMany({}, (err) => {
+		if (err) error(err);
       done();
     });
   });*/
@@ -46,6 +49,7 @@ describe('Resource', () => {
           password: userTestData.password,
         })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           loginResponse = res.body.data;
@@ -64,6 +68,7 @@ describe('Resource', () => {
         .get('/api/v1.0/resources')
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -82,6 +87,7 @@ describe('Resource', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -100,6 +106,7 @@ describe('Resource', () => {
         .send(testData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           resourceData = res.body.data;
@@ -119,6 +126,7 @@ describe('Resource', () => {
         .get('/api/v1.0/resource/' + resourceData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -137,6 +145,7 @@ describe('Resource', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -156,6 +165,7 @@ describe('Resource', () => {
         .send(updatedTestData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -173,6 +183,7 @@ describe('Resource', () => {
         .delete('/api/v1.0/resource/' + resourceData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();

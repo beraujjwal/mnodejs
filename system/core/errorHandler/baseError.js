@@ -1,4 +1,4 @@
-class BaseError extends Error {
+class baseError extends Error {
   constructor(name, statusCode, isOperational, description) {
     super(description);
 
@@ -10,4 +10,4 @@ class BaseError extends Error {
   }
 }
 
-module.exports = BaseError;
+module.exports = baseError;

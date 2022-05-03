@@ -1,6 +1,8 @@
 const { chai, server, should } = require('./testConfig');
 const db = require('../system/core/model');
 
+const { log, error, info } = require('../system/core/helpers/errorLogs');
+
 /**
  * Test cases to test all the blog APIs
  * Covered Routes:
@@ -16,6 +18,7 @@ describe('Blog', () => {
   //Before each test we empty the database
   /*before((done) => {
     db.Blog.deleteMany({}, (err) => {
+		if (err) error(err);
       done();
     });
   });*/
@@ -49,6 +52,7 @@ describe('Blog', () => {
           password: userTestData.password,
         })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           loginResponse = res.body.data;
@@ -67,6 +71,7 @@ describe('Blog', () => {
         .get('/api/v1.0/blogs')
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -85,6 +90,7 @@ describe('Blog', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -103,6 +109,7 @@ describe('Blog', () => {
         .send(testData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           blogData = res.body.data;
@@ -122,6 +129,7 @@ describe('Blog', () => {
         .get('/api/v1.0/blog/' + blogData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -140,6 +148,7 @@ describe('Blog', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -159,6 +168,7 @@ describe('Blog', () => {
         .send(updatedTestData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -176,6 +186,7 @@ describe('Blog', () => {
         .delete('/api/v1.0/blog/' + blogData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();

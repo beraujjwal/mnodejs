@@ -25,8 +25,8 @@ module.exports = [
   },
   {
     _id: '928e31ca-a484-427a-b2ed-ffad662e478e',
-    name: 'Write',
-    slug: 'write',
+    name: 'Update',
+    slug: 'update',
     deleted: false,
     createdAt: new Date(),
     updatedAt: new Date(),

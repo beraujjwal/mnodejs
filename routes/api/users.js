@@ -27,23 +27,23 @@ router.group('/v1.0', (router) => {
     );
   });
 
+  router.get('/profile', authMiddleware.verifyToken, usersController.profile);
+
+  router.put(
+    '/profile',
+    [authMiddleware.verifyToken, userValidation.profile],
+    usersController.updateProfile,
+  );
+
+  router.post(
+    '/change-password',
+    [authMiddleware.verifyToken, userValidation.changePassword],
+    usersController.changePassword,
+  );
+
   router.group('/user', authMiddleware.verifyToken, (router) => {
-    router.get('/profile', usersController.profile);
-
-    router.put(
-      '/profile',
-      [userValidation.profile],
-      usersController.updateProfile,
-    );
-
     router.post(
-      '/change-password',
-      [userValidation.changePassword],
-      usersController.changePassword,
-    );
-
-    router.post(
-      '/store',
+      '',
       [aclMiddleware.hasPermission('create', 'users')],
       usersController.userStore,
     );
@@ -56,7 +56,7 @@ router.group('/v1.0', (router) => {
 
     router.put(
       '/:id',
-      [aclMiddleware.hasPermission('write', 'users')],
+      [aclMiddleware.hasPermission('update', 'users')],
       usersController.userUpdate,
     );
 

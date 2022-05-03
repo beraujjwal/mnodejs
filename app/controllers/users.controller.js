@@ -28,6 +28,7 @@ class usersController extends controller {
    */
   async profile(req, res, next) {
     try {
+      console.log(req.user);
       let result = await this.service.getProfile(req.user.id);
       if (result) {
         return res

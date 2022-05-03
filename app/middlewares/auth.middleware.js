@@ -49,7 +49,7 @@ class authMiddleware extends middleware {
       next();
       return;
     } catch (ex) {
-      next('Invalid authorization token.');
+      next(ex.message);
     }
   }
 }

@@ -87,10 +87,10 @@ class user extends service {
       //user.token = userEmailToken;
       await session.commitTransaction();
       return { user, token: userEmailToken };
-    } catch (error) {
+    } catch (ex) {
       await session.abortTransaction();
       throw new Error(
-        error.message ||
+        ex.message ||
           'An error occurred while creating your account. Please try again.',
       );
     } finally {
@@ -194,7 +194,9 @@ class user extends service {
         let tryAfter =
           (new Date(user.blockExpires).getTime() - new Date().getTime()) / 1000;
         throw new Error(
-          `Your login attempts exist. Please try after ${Math.round(tryAfter)}`,
+          `Your login attempts exist. Please try after ${Math.round(
+            tryAfter,
+          )} seconds`,
         );
       }
 
@@ -264,9 +266,9 @@ class user extends service {
         expiresIn,
       };
       return loginRes;
-    } catch (error) {
+    } catch (ex) {
       throw new Error(
-        error.message ||
+        ex.message ||
           'An error occurred while login into your account. Please try again.',
       );
     }
@@ -338,9 +340,9 @@ class user extends service {
       await this.mailer.send(mailOptions);
 
       return true;
-    } catch (error) {
+    } catch (ex) {
       throw new Error(
-        error.message ||
+        ex.message ||
           `An error occurred while you are trying to reset your password by ${field}. Please try again.`,
       );
     }
@@ -443,13 +445,18 @@ class user extends service {
       if (!user) {
         throw new Error('User profile not found!.');
       }
-      const passwordIsValid = await bcrypt.compareSync(password, user.password);
+      const passwordIsValid = await bcrypt.compareSync(
+        old_password,
+        user.password,
+      );
       if (!passwordIsValid) {
         throw new Error('Old massword not matching.');
       }
 
       let { __v, _id, ...newProfileDetails } = user;
       let data = newProfileDetails._doc;
+
+      console.log(data);
 
       data.password = password;
 
@@ -459,10 +466,11 @@ class user extends service {
       delete data.updatedAt;
       delete data.createdAt;
 
-      let filter = { _id: _id };
+      let filter = { _id: profileId };
       await this.model.updateOne(filter, { $set: data });
       return data;
     } catch (err) {
+      console.log(err);
       throw new Error(err.message);
     }
   }

@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const log = console.log;
 const fs = require('fs');
 const modelsPath = __dirname + '/../../../models';
-require('../db.connection');
+//require('../db.connection');
 const caseChanger = require('case');
 const db = require('../model');
 

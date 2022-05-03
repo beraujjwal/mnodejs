@@ -27,7 +27,7 @@ router.group('/v1.0', (router) => {
 
     router.put(
       '/:id',
-      [aclMiddleware.hasPermission('write', 'blogs'), blogValidation.update],
+      [aclMiddleware.hasPermission('update', 'blogs'), blogValidation.update],
       blogsController.update,
     );
 

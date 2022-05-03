@@ -1,37 +1,52 @@
 const express = require('express');
+require('express-router-group');
 const resourcesController = require('../../app/controllers/resources.controller');
 const resourceValidation = require('../../app/validations/resource.validation');
 const authMiddleware = require('../../app/middlewares/auth.middleware');
+const aclMiddleware = require('../../app/middlewares/acl.middleware');
 
 const router = express.Router();
 
-router.get(
-  '/v1.0/resources',
-  [authMiddleware.verifyToken],
-  resourcesController.resourceList,
-);
+router.group('/v1.0', (router) => {
+  router.get(
+    '/resources',
+    [
+      authMiddleware.verifyToken,
+      aclMiddleware.hasPermission('read', 'resources'),
+    ],
+    resourcesController.resourceList,
+  );
+  router.group('/resource', authMiddleware.verifyToken, (router) => {
+    router.post(
+      '',
+      [
+        aclMiddleware.hasPermission('create', 'resources'),
+        resourceValidation.create,
+      ],
+      resourcesController.resourceStore,
+    );
 
-router.post(
-  '/v1.0/resource',
-  [authMiddleware.verifyToken, resourceValidation.create],
-  resourcesController.resourceStore,
-);
+    router.get(
+      '/:id',
+      [aclMiddleware.hasPermission('read', 'resources')],
+      resourcesController.resourceDetails,
+    );
 
-router.get(
-  '/v1.0/resource/:id',
-  [authMiddleware.verifyToken],
-  resourcesController.resourceDetails,
-);
+    router.put(
+      '/:id',
+      [
+        aclMiddleware.hasPermission('update', 'resources'),
+        resourceValidation.update,
+      ],
+      resourcesController.resourceUpdate,
+    );
 
-router.put(
-  '/v1.0/resource/:id',
-  [authMiddleware.verifyToken, resourceValidation.update],
-  resourcesController.resourceUpdate,
-);
+    router.delete(
+      '/:id',
+      [aclMiddleware.hasPermission('delete', 'resources')],
+      resourcesController.resourceDelete,
+    );
+  });
+});
 
-router.delete(
-  '/v1.0/resource/:id',
-  [authMiddleware.verifyToken],
-  resourcesController.resourceDelete,
-);
 module.exports = router;

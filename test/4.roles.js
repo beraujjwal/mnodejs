@@ -1,6 +1,8 @@
 const { chai, server, should } = require('./testConfig');
 const db = require('../system/core/model');
 
+const { log, error, info } = require('../system/core/helpers/errorLogs');
+
 /**
  * Test cases to test all the role APIs
  * Covered Routes:
@@ -16,6 +18,7 @@ describe('Role', () => {
   //Before each test we empty the database
   /*before((done) => {
     db.Role.deleteMany({}, (err) => {
+		if (err) error(err);
       done();
     });
   });*/
@@ -52,6 +55,7 @@ describe('Role', () => {
           password: userTestData.password,
         })
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           loginResponse = res.body.data;
@@ -70,6 +74,7 @@ describe('Role', () => {
         .get('/api/v1.0/roles')
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -88,6 +93,7 @@ describe('Role', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -106,6 +112,7 @@ describe('Role', () => {
         .send(testData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           roleData = res.body.data;
@@ -125,6 +132,7 @@ describe('Role', () => {
         .get('/api/v1.0/role/' + roleData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -143,6 +151,7 @@ describe('Role', () => {
         .send()
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(true);
           done();
@@ -162,6 +171,7 @@ describe('Role', () => {
         .send(updatedTestData)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
@@ -179,6 +189,7 @@ describe('Role', () => {
         .delete('/api/v1.0/role/' + roleData.id)
         .set('x-access-token', loginResponse.accessToken)
         .end((err, res) => {
+          if (err) error(err);
           res.should.have.status(200);
           res.body.should.have.property('error').eql(false);
           done();
