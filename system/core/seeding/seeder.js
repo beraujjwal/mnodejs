@@ -41,16 +41,20 @@ const config = {
   inputPath: seederPath,
   dropDatabase: false,
   dropCollections: true,
+  databaseReconnectTimeout: 100000
 };
+
+log(chalk.white.bgGreen.bold('✔ Seeding process started'));
 const seeder = new Seeder(config);
 const collections = seeder.readCollectionsFromPath(seederPath);
-
+log(chalk.white.bgGreen.bold('✔ Reading collections file done.'));
 const main = async () => {
   try {
     await seeder.import(collections);
     log(chalk.white.bgGreen.bold('✔ Seed complete!'));
     process.exit(0);
   } catch (err) {
+    log(chalk.white.bgGreen.bold('✘ Seeding process failed to finished'));
     process.exit(0);
   }
 };

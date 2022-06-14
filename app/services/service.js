@@ -54,7 +54,9 @@ class service extends baseService {
     try {
       // Gets expiration time
       const expiration =
-        Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN;
+        parseInt(Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN);
+
+      console.log('expiration' + expiration);
 
       return jwt.sign(userInfo, this.env.JWT_SECRET, {
         expiresIn: expiration, // expiresIn time

@@ -40,7 +40,7 @@ exports.generateToken = function (userInfo, algorithm = 'HS256') {
   try {
     // Gets expiration time
     const expiration =
-      Math.floor(Date.now() / 1000) + 60 * process.env.JWT_EXPIRES_IN;
+    Math.floor(Date.now() / 1000) + 60 * parseInt(process.env.JWT_EXPIRES_IN);
 
     return jwt.sign(userInfo, process.env.JWT_SECRET, {
       expiresIn: expiration, // expiresIn time

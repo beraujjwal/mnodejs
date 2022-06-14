@@ -40,8 +40,8 @@ class user extends service {
         email: email,
         phone: phone,
         password: password, //bcrypt.hashSync(password, 8),
-        status: status ? status : false,
-        verified: verified ? verified : false,
+        status: status ?? false,
+        verified: verified ?? false,
       });
       // Save User object in the database
       user.roles = await dbRoles.map((role) => role._id);
@@ -88,6 +88,7 @@ class user extends service {
       await session.commitTransaction();
       return { user, token: userEmailToken };
     } catch (ex) {
+      console.log(ex);
       await session.abortTransaction();
       throw new Error(
         ex.message ||
@@ -392,15 +393,11 @@ class user extends service {
       let { __v, _id, ...newProfileDetails } = profileDetails;
       let data = newProfileDetails._doc;
 
-      if (name != null) {
-        data.name = name;
-      }
-      if (email != null) {
-        data.email = email;
-      }
-      if (phone != null) {
-        data.phone = phone;
-      }
+      
+
+      data.name = name ?? data.name;
+      data.email = email ?? data.email;
+      data.phone = phone ?? data.phone;
 
       if (roles) {
         //Find selected role
@@ -456,8 +453,6 @@ class user extends service {
       let { __v, _id, ...newProfileDetails } = user;
       let data = newProfileDetails._doc;
 
-      console.log(data);
-
       data.password = password;
 
       // Removing below data from main object
@@ -470,7 +465,6 @@ class user extends service {
       await this.model.updateOne(filter, { $set: data });
       return data;
     } catch (err) {
-      console.log(err);
       throw new Error(err.message);
     }
   }
@@ -519,7 +513,7 @@ class user extends service {
         email: email,
         phone: phone,
         password: password, //bcrypt.hashSync(password, 8),
-        status: status ? status : true,
+        status: status ?? true,
         verified: true,
       });
       // Save User object in the database
@@ -582,21 +576,10 @@ class user extends service {
 
       let data = user._doc;
 
-      if (name != null) {
-        data.name = name;
-      }
-
-      if (email != null) {
-        data.email = email;
-      }
-
-      if (phone != null) {
-        data.phone = phone;
-      }
-
-      if (status != null) {
-        data.status = status;
-      }
+      data.name = name ?? data.name;
+      data.email = email ?? data.email;
+      data.phone = phone ?? data.phone;
+      data.status = status ?? data.status;
 
       if (roles != null) {
         data.roles = await dbRoles.map((role) => role._id);

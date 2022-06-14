@@ -65,6 +65,11 @@ module.exports = async function (moduleArg) {
                         processName,
                     );
                     break;
+                case 'seeder':
+                    var { file, destPath, contents } = await createSeeder(
+                        processName,
+                    );
+                    break;
                 default:
                     break;
             }
@@ -266,6 +271,42 @@ async function createRoute(processName) {
 }
 
 async function createTestCase(processName) {
+    let origFilePath = `${templatePath}/sample.testCase.js`;
+    let paramCase = caseChanger.lower(processName);
+    let paramSingularProcessName = pluralize.singular(paramCase);
+    let paramPluralProcessName = pluralize.plural(paramCase);
+
+    let pascalSingularProcessName = await transformSingularPascalCase(
+        processName,
+    );
+
+    const d = new Date();
+    let time = d.getTime();
+
+    let file = `${time}.${paramPluralProcessName}.js`;
+    console.log(chalk.blueBright(`Creating Test Case: ${file}`));
+    let contents = fs.readFileSync(origFilePath, 'utf8');
+
+    contents = contents.replace(
+        /SINGULAR_SAMLL_CASE/g,
+        `${paramSingularProcessName}`,
+    );
+
+    contents = contents.replace(
+        /PLURAL_SAMLL_CASE/g,
+        `${paramPluralProcessName}`,
+    );
+
+    contents = contents.replace(
+        /MODEL_SINGULAR_FORM/g,
+        `${pascalSingularProcessName}`,
+    );
+
+    let destPath = `${CURR_DIR}/test`;
+    return { file, destPath, contents };
+}
+
+async function createSeeder(processName) {
     let origFilePath = `${templatePath}/sample.testCase.js`;
     let paramCase = caseChanger.lower(processName);
     let paramSingularProcessName = pluralize.singular(paramCase);

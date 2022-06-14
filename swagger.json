@@ -1,182 +1,38 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "MNode API",
-    "description": "MNode is a basic skeleton written in JavaScript with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. MNode takes the pain out of development by easing common tasks used in many applications. MNode is accessible, powerful, and provides tools required for large, robust applications.",
-    "version": "2.1.0"
-  },
-  "host": "localhost:5445",
-  "schemes": ["http", "https"],
-  "securityDefinitions": {
-    "ApiKeyAuth": {
-      "type": "apiKey",
-      "name": "x-access-token",
-      "in": "header"
+    "version": "1.0.0",
+    "title": "My User Project CRUD",
+    "description": "My User Project Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "produces": ["application/json"],
+  "host": "localhost:5445",
+  "basePath": "/api/v1.0",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
-    "/products": {
-      "get": {
-        "summary": "Product Types",
-        "security": [],
-        "description": "The Products endpoint returns information about the Uber products offered at a given location. The response includes the display name and other details about each product, and lists the products in the proper display order.",
-        "parameters": [
-          {
-            "name": "latitude",
-            "in": "query",
-            "description": "Latitude component of location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "longitude",
-            "in": "query",
-            "description": "Longitude component of location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          }
-        ],
-        "tags": ["Products"],
-        "responses": {
-          "200": {
-            "description": "An array of products",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Product"
-              }
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/estimates/price": {
-      "get": {
-        "summary": "Price Estimates",
-        "description": "The Price Estimates endpoint returns an estimated price range for each product offered at a given location. The price estimate is provided as a formatted string with the full price range and the localized currency symbol.<br><br>The response also includes low and high estimates, and the [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code for situations requiring currency conversion. When surge is active for a particular product, its surge_multiplier will be greater than 1, but the price estimate already factors in this multiplier.",
-        "parameters": [
-          {
-            "name": "start_latitude",
-            "in": "query",
-            "description": "Latitude component of start location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "start_longitude",
-            "in": "query",
-            "description": "Longitude component of start location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "end_latitude",
-            "in": "query",
-            "description": "Latitude component of end location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "end_longitude",
-            "in": "query",
-            "description": "Longitude component of end location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          }
-        ],
-        "tags": ["Estimates"],
-        "responses": {
-          "200": {
-            "description": "An array of price estimates by product",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PriceEstimate"
-              }
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/estimates/time": {
-      "get": {
-        "summary": "Time Estimates",
-        "description": "The Time Estimates endpoint returns ETAs for all products offered at a given location, with the responses expressed as integers in seconds. We recommend that this endpoint be called every minute to provide the most accurate, up-to-date ETAs.",
-        "parameters": [
-          {
-            "name": "start_latitude",
-            "in": "query",
-            "description": "Latitude component of start location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "start_longitude",
-            "in": "query",
-            "description": "Longitude component of start location.",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "customer_uuid",
-            "in": "query",
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique customer identifier to be used for experience customization."
-          },
-          {
-            "name": "product_id",
-            "in": "query",
-            "type": "string",
-            "description": "Unique identifier representing a specific product for a given latitude & longitude."
-          }
-        ],
-        "tags": ["Estimates"],
-        "responses": {
-          "200": {
-            "description": "An array of products",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Product"
-              }
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/api/v1.0/auth/signin": {
+    "/auth/signup": {
       "post": {
-        "tags": ["Users"],
-        "summary": "User Login",
-        "description": "User login function",
+        "tags": [
+          "Users"
+        ],
+        "description": "Create new user in system",
         "parameters": [
           {
             "name": "user",
@@ -187,7 +43,9 @@
             }
           }
         ],
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "New user is created",
@@ -196,60 +54,68 @@
             }
           }
         }
-      },
-
+      } 
+    },
+    "/users": {
       "get": {
-        "summary": "User Login",
-        "description": "User login function",
-        "tags": ["User"],
-        "responses": {
-          "200": {
-            "description": "Profile information for a user",
-            "schema": {
-              "$ref": "#/definitions/Profile"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/Error"
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get all users in system",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/Users"
+              }
             }
           }
         }
-      }
     },
-    "/history": {
-      "get": {
-        "summary": "User Activity",
-        "description": "The User Activity endpoint returns data about a user's lifetime activity with Uber. The response will include pickup locations and times, dropoff locations and times, the distance of past requests, and information about which products were requested.<br><br>The history array in the response will have a maximum length based on the limit parameter. The response value count may exceed limit, therefore subsequent API requests may be necessary.",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "type": "integer",
-            "format": "int32",
-            "description": "Offset the list of returned results by this amount. Default is zero."
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer",
-            "format": "int32",
-            "description": "Number of items to retrieve. Default is 5, maximum is 100."
-          }
+    "/user/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of user that we want to find",
+          "type": "integer"
+        }
+      ],
+      "delete": {
+        "summary": "Delete user with given ID",
+        "tags": [
+          "Users"
         ],
-        "tags": ["User"],
         "responses": {
           "200": {
-            "description": "History information for the given user",
+            "description": "User is deleted",
             "schema": {
-              "$ref": "#/definitions/Activities"
+              "$ref": "#/definitions/User"
             }
-          },
-          "default": {
-            "description": "Unexpected error",
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user with give ID",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User with new values of properties",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/updateUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           }
         }
@@ -257,221 +123,83 @@
     }
   },
   "definitions": {
-    "Permission": {
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific permission."
-        },
-        "slug": {
-          "type": "string",
-          "description": "Unique identifier representing a specific permission."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the permission."
-        },
-        "status": {
-          "type": "boolean",
-          "description": "Status of the permission."
-        },
-        "createdAt": {
-          "type": "datatime",
-          "description": "Creation time of permission."
-        },
-        "updatedAt": {
-          "type": "datatime",
-          "description": "Updation time of permission."
-        }
-      }
-    },
-    "Resource": {
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier of a resource."
-        },
-        "slug": {
-          "type": "string",
-          "description": "Unique identifier of a resource."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the resource."
-        },
-        "status": {
-          "type": "boolean",
-          "description": "Status of the resource."
-        },
-        "createdAt": {
-          "type": "datatime",
-          "description": "Creation time of resource."
-        },
-        "updatedAt": {
-          "type": "datatime",
-          "description": "Updation time of resource."
-        }
-      }
-    },
-    "Rights": {
-      "properties": {
-        "resource": {
-          "type": "string",
-          "description": "Unique identifier of a Resource."
-        },
-        "create": {
-          "type": "boolean",
-          "description": "Right to create."
-        },
-        "read": {
-          "type": "boolean",
-          "description": "Right to read."
-        },
-        "update": {
-          "type": "boolean",
-          "description": "Right to update."
-        },
-        "delete": {
-          "type": "boolean",
-          "description": "Right to delete."
-        },
-        "deny": {
-          "type": "boolean",
-          "description": "Deny of the resource"
-        }
-      }
-    },
-    "Role": {
-      "properties": {
-        "_id": {
-          "type": "uuid",
-          "description": "Unique identifier of a resource."
-        },
-        "slug": {
-          "type": "string",
-          "description": "Unique identifier of a resource."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the resource."
-        },
-        "status": {
-          "type": "boolean",
-          "description": "Status of the resource."
-        },
-        "rights": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Rights"
+      "User": {
+          "required": ["name", "email", "phone", "password"],
+          "properties": {
+            "_id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "verified": {
+              "type": "string"
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "loginAttempts": {
+              "type": "number"
+            },
+            "blockExpires": {
+              "type": "string"
+            },
+            "rights": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "resource": {
+                    "type": "string"
+                  },
+                  "create": {
+                    "type": "boolean"
+                  },
+                  "delete": {
+                    "type": "boolean"
+                  },
+                  "update": {
+                    "type": "boolean"
+                  },
+                  "read": {
+                    "type": "boolean"
+                  },
+                  "deny": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
           }
         },
-        "createdAt": {
-          "type": "datatime",
-          "description": "Creation time of resource."
-        },
-        "updatedAt": {
-          "type": "datatime",
-          "description": "Updation time of resource."
-        }
-      }
-    },
-    "User": {
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Unique identifier representing a specific user Id"
-        },
+    "updateUser": {
+      "required": ["name"],
+      "properties": {        
         "name": {
-          "type": "string",
-          "description": "Name of the user."
-        },
-        "email": {
-          "type": "string",
-          "description": "Email address of the user"
-        },
-        "phone": {
-          "type": "number",
-          "description": "Phone number of the Uber user."
-        },
-        "password": {
-          "type": "string",
-          "description": "Password of the Uber user."
-        },
-        "status": {
-          "type": "boolean",
-          "description": "Password of the Uber user."
-        },
-        "verified": {
-          "type": "boolean",
-          "description": "Password of the Uber user."
-        },
-        "roles": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "loginAttempts": {
-          "type": "number",
-          "description": "Password of the Uber user."
-        },
-        "blockExpires": {
-          "type": "datetime",
-          "description": "Password of the Uber user."
-        },
-        "rights": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Rights"
-          }
-        },
-        "createdAt": {
-          "type": "datatime",
-          "description": "Password of the Uber user."
-        },
-        "updatedAt": {
-          "type": "datatime",
-          "description": "Password of the Uber user."
-        }
-      }
-    },
-    "Token": {
-      "properties": {
-        "_id": {
-          "type": "uuid",
-          "description": "Unique identifier of a token"
-        },
-        "user": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Number of items to retrieve (100 max)."
-        },
-        "count": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Total number of items available."
-        },
-        "history": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Activity"
-          }
-        }
-      }
-    },
-    "Error": {
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
           "type": "string"
-        },
-        "fields": {
-          "type": "string"
-        }
+        }       
       }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
     }
+   
   }
 }
