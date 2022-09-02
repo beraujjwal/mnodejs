@@ -268,6 +268,7 @@ class user extends service {
       };
       return loginRes;
     } catch (ex) {
+      console.log(ex);
       throw new Error(
         ex.message ||
           'An error occurred while login into your account. Please try again.',

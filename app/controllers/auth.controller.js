@@ -84,6 +84,7 @@ class authController extends controller {
       }
       next('Some error occurred while login');
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
