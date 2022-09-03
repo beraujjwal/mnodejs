@@ -69,6 +69,17 @@ const routers = require('../route');
 //Route Prefixes
 app.use('/', routers);
 
+app.all('/api/*', (req, res) => {
+  res.json({ message: 'Page Not Found!!' });
+});
+
+app.all('/*', (req, res) => {
+  res.render('404', {
+    title: '404 Page not found!',
+    msg: 'Uh oh snap! You are drive to the wrong way',
+  });
+});
+
 // const swaggerDocument = require('../../swagger.json');
 // const swaggerUiOptions = {
 //   swaggerOptions: {
@@ -91,30 +102,22 @@ app.use('/', routers);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(docs));
 
-app.all('/api/*', (req, res) => {
-  res.json({ message: 'Page Not Found!!' });
-});
-app.all('/*', (req, res) => {
-  res.render('404', {
-    title: '404 Page not found!',
-    msg: 'Uh oh snap! You are drive to the wrong way',
-  });
-});
+app.use(function (err, req, res, next) {
 
-app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = MODE === 'development' ? err : {};
   if (MODE !== 'test') {
     // add this line to include winston logging
     winston.error(
-      `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${
-        req.method
-      } - ${req.ip}`,
+      `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
     );
   }
 
-  return res.status(200).json(errorResponse(err));
+  let statusCode = err.status || 500;
+
+  return res.status(statusCode).json(errorResponse(err));
+
 });
 
 module.exports = app; // for testing
