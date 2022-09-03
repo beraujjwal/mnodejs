@@ -40,8 +40,8 @@ class user extends service {
         email: email,
         phone: phone,
         password: password, //bcrypt.hashSync(password, 8),
-        status: status ?? false,
-        verified: verified ?? false,
+        status: status ?? true,
+        verified: verified ?? true,
       });
       // Save User object in the database
       user.roles = await dbRoles.map((role) => role._id);
@@ -252,6 +252,7 @@ class user extends service {
       const expiresIn = new Date(
         Date.now() + 60 * this.env.JWT_EXPIRES_IN * 1000,
       );
+      
       if (user.loginAttempts > 0) {
         let filter = { _id: user._id };
         let data = { loginAttempts: 0, blockExpires: new Date() };
@@ -268,7 +269,6 @@ class user extends service {
       };
       return loginRes;
     } catch (ex) {
-      console.log(ex);
       throw new Error(
         ex.message ||
           'An error occurred while login into your account. Please try again.',

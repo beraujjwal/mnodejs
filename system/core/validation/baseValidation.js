@@ -26,7 +26,7 @@ class baseValidation extends base {
   async validate(req, res, next, validationRule, customMessages = {}) {
     await validator(req.body, validationRule, customMessages, (err, status) => {
       if (!status) {
-        return res.status(200).json(this.validationError(err));
+        return res.status(400).json(this.validationError(err));
       } else {
         next();
       }
