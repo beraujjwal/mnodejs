@@ -15,27 +15,13 @@ class resource extends service {
 
   async resourceList(queries) {
     try {
-      let {
-        keyword = null,
-        orderby = 'name',
-        ordering = 'asc',
-        limit = 10,
-        skip = 0,
-      } = queries;
+      let { orderby, order, limit, page, ...search } = queries;
       let filter = { deleted: false };
-      if (keyword != null && keyword.length > 0) {
-        filter = { ...filter, name: new RegExp(keyword, 'i') };
-      }
-      let order = 1;
-      if (ordering == 'desc') {
-        order = -1;
+      if (search.name != null && search.name.length > 0) {
+        filter = { ...filter, name: new RegExp(search.name, 'i') };
       }
 
-      return await this.model
-        .find(filter)
-        .sort({ [orderby]: order })
-        .limit(parseInt(limit))
-        .skip(parseInt(skip));
+      return await this.getAll(queries, filter);
     } catch (ex) {
       throw new Error(ex.message);
     }

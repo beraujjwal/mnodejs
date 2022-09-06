@@ -23,10 +23,16 @@ class authMiddleware extends middleware {
    * @returns
    */
   async verifyToken(req, res, next) {
-    let token = req.headers['x-access-token'];
+    let bearerHeader = req.headers['authorization'];
 
-    if (!token) {
-      next('Authorization token not found!');
+    if( !bearerHeader ){
+      next('Authorization token not found!123');
+    }
+
+    const token = bearerHeader.split(' ')[1];
+
+    if( !token ){
+      next('Authorization token not found!!');
     }
 
     try {
