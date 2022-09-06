@@ -53,10 +53,7 @@ class service extends baseService {
   async generateToken(userInfo, algorithm = 'HS256') {
     try {
       // Gets expiration time
-      const expiration =
-        parseInt(Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN);
-
-      console.log('expiration' + expiration);
+      const expiration = parseInt(Math.floor(Date.now() / 1000) + 60 * this.env.JWT_EXPIRES_IN);
 
       return jwt.sign(userInfo, this.env.JWT_SECRET, {
         expiresIn: expiration, // expiresIn time

@@ -3,6 +3,7 @@ require('module-alias/register');
 const chalk = require('chalk');
 const log = console.log;
 require('dotenv').config();
+process.env['NODE_ENV'] = process.env.APP_ENV;
 const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
