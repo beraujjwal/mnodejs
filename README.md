@@ -186,9 +186,15 @@ Every project needs improvements, Feel free to report any bugs or improvements. 
 
 - 2021-09-09 [Pre-release][] (public, Pre-release)
 - 2022-03-28 [Release (v1.0.0)][] (public)
+- 2022-04-09 [Release (v2.0.0)][] (public)
+- 2022-04-10 [Release (v2.1.0)][] (public)
+- 2023-09-27 [Release (v3.0.0)][] (public)
 
 [pre-release]: https://github.com/beraujjwal/mnodejs/releases/tag/v0.1
 [release (v1.0.0)]: https://github.com/beraujjwal/mnodejs/releases/tag/V1.0.0
+[release (v2.0.0)]: https://github.com/beraujjwal/mnodejs/releases/tag/V2.0.0
+[release (v2.1.0)]: https://github.com/beraujjwal/mnodejs/releases/tag/v2.1.0
+[release (v3.0.0)]: https://github.com/beraujjwal/mnodejs/releases/tag/V3.0.0
 
 ## License
 
