@@ -25,7 +25,7 @@ fs.readdirSync(modelsPath)
   })
   .forEach((file) => {
     let modelName = changeCase.pascal(pluralize.singular(file.slice(0, -8)));
-    db[modelName] = require(path.join(modelsPath, file))(mongoose, uuid);
+    db[modelName] = require(path.join(modelsPath, file));
   });
 
 module.exports = db;

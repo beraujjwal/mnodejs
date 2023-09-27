@@ -3,53 +3,60 @@ require('module-alias/register');
 const chalk = require('chalk');
 const log = console.log;
 require('dotenv').config();
-process.env['NODE_ENV'] = process.env.APP_ENV;
+log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
 const express = require('express');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const cors = require('cors');
 const path = require('path');
 const logger = require('morgan');
-const swaggerUi = require('swagger-ui-express');
-const docs = require('../../docs');
 
+const i18n = require('../../config/i18n.config');
+//const Sentry = require('@sentry/node');
 const winston = require('../../config/winston');
 const { errorResponse } = require('./helpers/apiResponse');
-
-log(chalk.white.bgGreen.bold('✔ Bootstrapping Application'));
+const { consumerKafkaMessage } = require('../../libraries/consumer.library');
+const limiter = require('../../config/rateLimit.config');
 const app = express();
+let apiHitCount = 0;
 
-var corsOptions = {
+// Sentry.init({
+//   dsn: "https://e8bf701c3e4444ea9a9f1d0725cac7ce@o4505588600471553.ingest.sentry.io/4505589025079296",
+//   integrations: [
+//     // enable HTTP calls tracing
+//     new Sentry.Integrations.Http({ tracing: true }),
+//     // enable Express.js middleware tracing
+//     new Sentry.Integrations.Express({
+//       // to trace all requests to the default router
+//       app,
+//       // alternatively, you can specify the routes you want to trace:
+//       // router: someRouter,
+//     }),
+//   ],
+//   tracesSampleRate: 1.0,
+//   debug: false
+// });
+
+const corsOptions = {
+  credentials: true,
+  allowedHeaders: '*',
   origin: '*',
 };
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json({ limit: '20mb' }));
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
+app.use(express.json({ limit: '50mb' }));
 
 // To remove data using these defaults:
 app.use(mongoSanitize());
 
 // i18n
-//const i18n = require('../../config/i18n');
-//app.use(i18n);
+app.use(i18n);
 
 //Basic rate-limiting middleware for Express.
-const limiter = require('../../config/rateLimit');
 app.use(limiter);
 
 //Helmet helps you secure your Express apps by setting various HTTP headers.
 app.use(helmet());
-
-// replace with the directory path below ./
-app.set('views', path.join(__dirname, 'resources/views'));
-
-//set the path of the assets file to be used
-app.use(express.static(path.join(__dirname, './public')));
 
 const PORT = parseInt(process.env.APP_PORT) || 5445;
 const MODE = process.env.APP_ENV || 'development';
@@ -63,62 +70,49 @@ require('./db.connection');
 if (process.env.APP_ENV === 'development') {
   app.use(logger('dev', { stream: winston.stream }));
 }
-
+//app.use(Sentry.Handlers.requestHandler());
 log(chalk.white.bgGreen.bold('✔ Mapping Routes'));
+//app.use(Sentry.Handlers.tracingHandler());
+
+app.use(function (req, res, next) {
+  apiHitCount++
+  winston.info(
+    `${apiHitCount} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+  );
+  next();
+});
 
 const routers = require('../route');
 //Route Prefixes
 app.use('/', routers);
 
-app.all('/api/*', (req, res) => {
-  res.json({ message: 'Page Not Found!!' });
-});
-
 app.all('/*', (req, res) => {
-  res.render('404', {
-    title: '404 Page not found!',
-    msg: 'Uh oh snap! You are drive to the wrong way',
+  //Sentry.captureException(new Error('Request location not found in User Service'));
+  res.status(404).json({
+    code: 404,
+    error: true,
+    indicate: "Page not Found",
+    message: 'Request location not found in User Service'
   });
 });
 
-// const swaggerDocument = require('../../swagger.json');
-// const swaggerUiOptions = {
-//   swaggerOptions: {
-//     basicAuth: {
-//       name: 'x-access-token',
-//       schema: {
-//         type: 'basic',
-//         in: 'header',
-//       },
-//       value: '<user:token>',
-//     },
-//   },
-// };
-
-// app.use(
-//   '/api-docs',
-//   swaggerUi.serve,
-//   swaggerUi.setup(swaggerDocument, swaggerUiOptions),
-// );
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(docs));
+consumerKafkaMessage().catch(console.error);
 
 app.use(function (err, req, res, next) {
 
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = MODE === 'development' ? err : {};
+  const code = err.code || err.statusCode;
   if (MODE !== 'test') {
-    // add this line to include winston logging
     winston.error(
-      `${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+      `${code || 500} - ${err.toString()} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
     );
   }
 
-  let statusCode = err.status || 500;
-
-  return res.status(statusCode).json(errorResponse(err));
-
+  //Sentry.captureException(err);
+  return res.status(code || 500).json(errorResponse(err, code || 500));
 });
 
-module.exports = app; // for testing
+//Sentry.close().then(() => process.exit(0));
+//app.use(Sentry.Handlers.errorHandler());
+
+
+module.exports = app;

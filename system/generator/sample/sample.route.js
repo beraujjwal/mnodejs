@@ -1,9 +1,9 @@
 const express = require('express');
 require('express-router-group');
-const CONTROLLER_CAMEL_CASE_PLURAL_FORMController = require('../../app/controllers/CONTROLLER_CAMEL_CASE_PLURAL_FORM.controller');
-const VALIDATION_CAMEL_CASE_SINGULAR_FROMValidation = require('../../app/validations/VALIDATION_CAMEL_CASE_SINGULAR_FROM.validation');
-const authMiddleware = require('../../app/middlewares/auth.middleware');
-const aclMiddleware = require('../../app/middlewares/acl.middleware');
+const CONTROLLER_CAMEL_CASE_PLURAL_FORMController = require('../app/controllers/CONTROLLER_CAMEL_CASE_PLURAL_FORM.controller');
+const VALIDATION_CAMEL_CASE_SINGULAR_FROMValidation = require('../app/validations/VALIDATION_CAMEL_CASE_SINGULAR_FROM.validation');
+const authMiddleware = require('../app/middlewares/auth.middleware');
+const aclMiddleware = require('../app/middlewares/acl.middleware');
 
 const router = express.Router();
 router.group('/v1.0', (router) => {

@@ -15,6 +15,7 @@ class resourceValidation extends validation {
 
   async create(req, res, next) {
     const validationRule = {
+      parent: 'string|exists:Resource,_id',
       name: 'required|string',
     };
     return await this.validate(req, res, next, validationRule);
@@ -22,6 +23,7 @@ class resourceValidation extends validation {
 
   async update(req, res, next) {
     const validationRule = {
+      parent: 'string|exists:Resource,_id',
       name: 'required|string',
       status: 'required|boolean',
     };

@@ -238,11 +238,11 @@ async function createRoute(processName) {
     let paramPluralProcessName = pluralize.plural(paramCase);
 
     //Controller name
-    let camelPluralProcessName = transformPluralCamelCase(processName);
+    let camelPluralProcessName = await transformPluralCamelCase(processName);
     //Validation name
-    let camelSingularProcessName = transformSingularCamelCase(processName);
+    let camelSingularProcessName = await transformSingularCamelCase(processName);
 
-    let file = `${paramPluralProcessName}.js`;
+    let file = `${camelPluralProcessName}.js`;
     console.log(chalk.blueBright(`Creating Route: ${file}`));
     let contents = fs.readFileSync(origFilePath, 'utf8');
 
@@ -266,7 +266,7 @@ async function createRoute(processName) {
         `${camelSingularProcessName}`,
     );
 
-    let destPath = `${CURR_DIR}/routes/api`;
+    let destPath = `${CURR_DIR}/routes`;
     return { file, destPath, contents };
 }
 
@@ -283,7 +283,7 @@ async function createTestCase(processName) {
     const d = new Date();
     let time = d.getTime();
 
-    let file = `${time}.${paramPluralProcessName}.js`;
+    let file = `${time}.${pascalSingularProcessName}.js`;
     console.log(chalk.blueBright(`Creating Test Case: ${file}`));
     let contents = fs.readFileSync(origFilePath, 'utf8');
 

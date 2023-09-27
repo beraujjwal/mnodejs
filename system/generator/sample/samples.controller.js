@@ -1,6 +1,7 @@
 'use strict';
 const autoBind = require('auto-bind');
 const { controller } = require('./controller');
+const { baseError } = require('@error/baseError');
 const {
   CONTROLLER_CAMEL_CASE_SINGULAR,
 } = require('@service/CONTROLLER_CAMEL_CASE_SINGULAR.service');

@@ -2,15 +2,7 @@
 const autoBind = require('auto-bind');
 const { base } = require('../base');
 
-const {
-  successResponse,
-  errorResponse,
-  notFoundResponse,
-  validationError,
-  unauthorizedResponse,
-} = require('../helpers/apiResponse');
-
-const { log, error, info } = require('../helpers/errorLogs');
+const { baseError } = require('@error/baseError');
 
 class baseController extends base {
   /**
@@ -21,67 +13,146 @@ class baseController extends base {
   constructor(service) {
     super();
     this.service = service;
-    this.success = successResponse;
-    this.notFound = notFoundResponse;
-    this.error = errorResponse;
-    this.validationError = validationError;
-    this.unauthorized = unauthorizedResponse;
-
-    this.log = log;
-    this.errorLog = error;
-    this.infoLog = info;
+    
     autoBind(this);
   }
 
-  async getAll(req, res, next) {
-    try {
-      const response = await this.service.getAll(req.query);
-      return res.status(200).json(this.success(response));
-    } catch (e) {
-      next(e);
-    }
+  async getAll(req, session) {
+      const response = await this.service.getAll(req.query, session);
+      if (response) {
+        return {
+          code: 200,
+          result: response,
+          message: 'Items was fetched successfully.'
+        }
+      }
+      throw new baseError('Some error occurred while fetching items list.');
   }
 
-  async get(req, res, next) {
+  async getById(req, session) {
     const { id } = req.params;
-
-    try {
-      const response = await this.service.get(id);
-      return res.status(200).json(this.success(response));
-    } catch (e) {
-      next(e);
+    const response = await this.service.getById(id, session);
+    if (response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'Item details was fetched successfully.'
+      }
     }
+    throw new baseError('Some error occurred while fetching item details.');
   }
 
-  async insert(req, res, next) {
-    try {
-      const response = await this.service.insert(req.body);
-      return res.status(200).json(this.success(response));
-    } catch (e) {
-      next(e);
+  async get(req, session) {
+    const response = await this.service.get(req.params, session);
+    if (response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'Item details was fetched successfully.'
+      }
     }
+    throw new baseError('Some error occurred while fetching item details.');
   }
 
-  async update(req, res, next) {
+  async insertMany(req, session) {
+    const response = await this.service.insertMany(req.body, session);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'New items was added successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while adding new items.');
+  }
+
+  async insert(req, session) {
+    const response = await this.service.insert(req.body, session);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'The new item was added successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while adding the new item.');
+  }
+
+  async updateById(req, session) {
     const { id } = req.params;
+    const response = await this.service.updateById(id, req.body, session);
 
-    try {
-      const response = await this.service.update(id, req.body);
-      return res.status(200).json(this.success(response));
-    } catch (e) {
-      next(e);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'The item was updated successfully.'
+      }
     }
+    throw new baseError('Some error occurred while updating the item.');
   }
 
-  async delete(req, res, next) {
-    const { id } = req.params;
+  async update(req, session) {
+    const response = await this.service.update(req.params, req.body, session);
 
-    try {
-      const response = await this.service.delete(id);
-      return res.status(200).json(this.success(response));
-    } catch (e) {
-      next(e);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'The item was updated successfully.'
+      }
     }
+    throw new baseError('Some error occurred while updating the item.');
+  }
+
+  async updateMany(req, session) {
+    const response = await this.service.updateMany(req.params, req.body, session);
+
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'Items was updated successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while updating the items.');
+  }
+
+  async deleteById(req, session) {
+    const { id } = req.params;
+    const response = await this.service.deleteById(id, session);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'The item Deleted successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while deleting the item.');    
+  }
+
+  async delete(req, session) {
+    const response = await this.service.delete(req.params, session);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'The item was Deleted successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while deleting the item.');    
+  }
+
+  async deleteMany(req, session) {
+    const response = await this.service.delete(req.params, session);
+    if(response) {
+      return {
+        code: 200,
+        result: response,
+        message: 'Items was Deleted successfully.'
+      }
+    }
+    throw new baseError('Some error occurred while deleting items.');    
   }
 }
 

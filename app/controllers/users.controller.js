@@ -3,7 +3,7 @@ const autoBind = require('auto-bind');
 
 const { controller } = require('./controller');
 const { user } = require('@service/user.service');
-//const { role } = require('@service/role.service');
+const { baseError } = require('@error/baseError');
 const userService = new user('User');
 //const roleService = new role('Role');
 
@@ -15,103 +15,121 @@ class usersController extends controller {
    */
   constructor(service) {
     super(service);
-    this.service = service;
-    //this.roleService = roleService;
-    autoBind(this);
+    //autoBind(this);
+  }
+  
+
+  /**
+   * @desc create new user
+   * @param {*} req
+   * @param {*} session
+   */
+  async createNewCarrierUser(req, session) {
+    let { name, email, phone, password, roles } = req.body;      
+    let result = await userService.createNewCarrierUser({name, email, phone, password, roles }, session );
+
+    console.log(result);
+    if (result) {
+      return {
+        code: 201,
+        result,
+        message: 'User created successfully!'
+      }
+    }
+    throw new baseError(
+      'Some error occurred while creating your account. Please try again.',
+      500
+    );
   }
 
   /**
    * @desc get logged-in user profile
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async profile(req, res, next) {
-    try {
-      console.log(req.user);
-      let result = await this.service.getProfile(req.user.id);
-      if (result) {
-        return res
-          .status(200)
-          .json(this.success(result, 'Profile details got successfully!'));
+  async profile( req, session ) {
+    //console.log(req.user);
+    const phone = req?.user?.phone;
+    let result = await userService.getProfile(phone, session);
+    if (result) {
+      return {
+        code: 200,
+        result,
+        message: 'Profile details got successfully!'
       }
-      next('Some error occurred while fetching profile details.');
-    } catch (err) {
-      next(err);
-    }
+    }      
+    throw new baseError(
+      'Some error occurred while fetching profile details.',
+      500
+    );
   }
 
   /**
    * @desc update logged-in user profile
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async updateProfile(req, res, next) {
-    try {
-      console.log('In Controller');
-      let result = await this.service.updateProfile(req.user.id, req.body);
+  async updateProfile(req, session ) {
+    
+      let result = await userService.updateProfile(req.user.id, req.body);
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'Profile details updated successfully!'));
       }
-      next('Some error occurred while updating profile details.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while updating profile details.',
+        500
+      );
   }
 
   /**
    * @desc change password of logged-in user
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async changePassword(req, res, next) {
-    try {
-      let result = await this.service.changePassword(req.user.id, req.body);
+  async changePassword(req, session ) {
+      let result = await userService.changePassword(req.user.id, req.body);
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'Profile password updated successfully!'));
       }
-      next('Some error occurred while updating profile password.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while updating profile password.',
+        500
+      );
   }
 
   /**
    * @desc Fetching list of users
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async userList(req, res, next) {
-    try {
-      let result = await this.service.userList(req.query);
+  async userList(req, session ) {
+      let result = await userService.userList(req.query);
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'User list got successfully!'));
       }
-      next('Some error occurred while fetching list of users.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while fetching list of users.',
+        500
+      );
   }
 
   /**
    * @desc Store a new user
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async userStore(req, res, next) {
-    try {
+  async userStore(req, session ) {
       let { name, email, phone, password, roles, verified, status } = req.body;
-      let result = await this.service.userStore(
+      let result = await userService.userStore(
         name,
         email,
         phone,
@@ -125,81 +143,79 @@ class usersController extends controller {
           .status(200)
           .json(this.success(result, 'New user created successfully!'));
       }
-      next('Some error occurred while creating new user.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while creating new user.',
+        500
+      );
   }
 
   /**
    * @desc Fetch detail of a user
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async userDetails(req, res, next) {
-    try {
+  async userDetails(req, session ) {
       let userId = req.params.id;
-      let result = await this.service.userDetails(userId);
+      let result = await userService.userDetails(userId);
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'User details fetched successfully!'));
       }
-      next('Some error occurred while fetching user details.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while fetching user details.',
+        500
+      );
   }
 
   /**
    * @desc Updated a user
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async userUpdate(req, res, next) {
-    try {
+  async userUpdate(req, session ) {
       let userId = req.params.id;
       let { name, email, phone, roles, status } = req.body;
-      let result = await this.service.userUpdate(
+      let result = await userService.userUpdate({
         userId,
         name,
         email,
         phone,
         roles,
-        status,
-      );
+        status },
+        session );
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'User details updated successfully!'));
       }
-      next('Some error occurred while updating user details.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while updating user details.',
+        500
+      );
   }
 
   /**
    * @desc Delete a user
    * @param {*} req
-   * @param {*} res
-   * @param {*} next
+   * @param {*} session
    */
-  async userDelete(req, res, next) {
-    try {
+  async userDelete(req, session ) {
       let userId = req.params.id;
-      let result = await this.service.userDelete(userId);
+      let result = await userService.userDelete(userId, session);
       if (result) {
         return res
           .status(200)
           .json(this.success(result, 'User deleted successfully!'));
       }
-      next('Some error occurred while deleting user.');
-    } catch (err) {
-      next(err);
-    }
+      
+      throw new baseError(
+        'Some error occurred while deleting user.',
+        500
+      );
   }
 }
 module.exports = new usersController(userService);

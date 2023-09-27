@@ -1,4 +1,5 @@
 'use strict';
+const { baseError } = require('@error/baseError');
 const mongoose_delete = require('mongoose-delete');
 module.exports = (mongoose, uuid) => {
   var schema = mongoose.Schema(

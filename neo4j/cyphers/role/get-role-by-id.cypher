@@ -1,0 +1,1 @@
+MATCH (r:Role {id: $id}) RETURN r

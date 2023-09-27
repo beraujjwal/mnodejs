@@ -14,7 +14,7 @@ router.group('/v1.0', (router) => {
       authMiddleware.verifyToken,
       aclMiddleware.hasPermission('read', 'resources'),
     ],
-    resourcesController.resourceList,
+    resourcesController.resourcesList,
   );
   router.group('/resource', authMiddleware.verifyToken, (router) => {
     router.post(

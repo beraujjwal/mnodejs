@@ -3,27 +3,7 @@ const chalk = require('chalk');
 const log = console.log;
 require('dotenv').config();
 const db = require('./model');
-/*
-db.mongoose
-  .connect(db.url, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    if (process.env.APP_ENV === 'development') {
-      log(chalk.white.bgGreen.bold('✔ Connected to database with ', db.url));
-    } else {
-      log(chalk.white.bgGreen.bold('✔ Connected to the database!'));
-    }
-  })
-  .catch((err) => {
-    log(chalk.white.bgGreen.bold('✘ Cannot connect to the database!'));
-    log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
-    process.exit();
-  });
-*/
+
 function connectDB(db) {
   try {
     db.mongoose.connect(db.url, {
@@ -31,13 +11,22 @@ function connectDB(db) {
       useUnifiedTopology: true,
       useFindAndModify: false,
       useCreateIndex: true,
+      replicaSet      : 'rs0',
+      //user: process.env.DB_USERNAME,
+      //pass: process.env.DB_PASSWORD
+    }).then(() => {
+      if (process.env.APP_ENV !== 'production') {
+        log(chalk.white.bgGreen.bold('✔ Connected to database with ', db.url));
+      } else {
+        log(chalk.white.bgGreen.bold('✔ Connected to the database!'));
+      }
+    }).catch(err => {
+      console.log(err);
+      log(chalk.white.bgGreen.bold('✘ Cannot connect to the database with ', db.url));
+      log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
+      process.exit();
     });
 
-    if (process.env.APP_ENV !== 'production') {
-      log(chalk.white.bgGreen.bold('✔ Connected to database with ', db.url));
-    } else {
-      log(chalk.white.bgGreen.bold('✔ Connected to the database!'));
-    }
   } catch (err) {
     log(chalk.white.bgGreen.bold('✘ Cannot connect to the database!'));
     log(chalk.white.bgGreen.bold(`✘ Error: ${err.message}`));
@@ -49,19 +38,15 @@ function connectDecorator(func) {
 
   return function (db) {
     if (cache.has(db)) {
-      // if there's such key in cache
-      return cache.get(db); // read the result from it
+      return cache.get(db);
     }
-
-    let result = func(db); // otherwise call func
-
-    cache.set(db, result); // and cache (remember) the result
+    let result = func(db);
+    cache.set(db, result);
     return result;
   };
 }
 
 connectDB = connectDecorator(connectDB);
-
 connectDB(db);
 
 if (process.env.APP_ENV === 'development') {

@@ -1,9 +1,7 @@
 'use strict';
 const autoBind = require('auto-bind');
-const { parseInt } = require('lodash');
 const { base } = require('../base');
-
-const { log, error, info } = require('../helpers/errorLogs');
+const { baseError } = require('@error/baseError');
 
 class baseService extends base {
   /**
@@ -16,9 +14,6 @@ class baseService extends base {
     this.name = model;
     this.model = this.db[model];
     this.dataPerPage = this.env.DATA_PER_PAGE;
-    this.log = log;
-    this.errorLog = error;
-    this.infoLog = info;
     autoBind(this);
   }
 
@@ -34,142 +29,214 @@ class baseService extends base {
   ) {
     try {
       if (filter === null) {
-        for (const field in search) {
-          let filterValue;
-          if (typeof search[field] === 'number') {
-            filterValue = parseInt(search[field]);
-          } else if (typeof search[field] === 'string') {
-            filterValue = new RegExp(search[field], 'i');
-          } else if (typeof search[field] === 'boolean') {
-            filterValue = parseInt(search[field]);
-          } else {
-            filterValue = search[field];
-          }
-          filter = { ...filter, [field]: filterValue };
-        }
+        filter = await this.generateQueryFilterFromQueryParams(search);
       }
-      filter = { ...filter, deleted: false, deletedAt: null };
+      filter = { ...filter, deleted: false };
       let ordering = 1;
       if (order == 'desc') {
         ordering = -1;
       }
       let skip = parseInt(page) * parseInt(limit) - parseInt(limit);
-      const items = await this.model
-        .find(filter)
-        .sort({ [orderby]: ordering })
-        .skip(skip)
-        .limit(parseInt(limit));
-      const total = await this.model.countDocuments(filter);
-      return { items, totalCount: total };
+
+      const result = await this.model.aggregate([
+        {
+          $match: filter
+        },
+        {
+          $sort: { [orderby]: ordering }
+        },
+        {
+          $facet: {
+            items: [
+              { $skip: +skip }, { $limit: +limit}
+            ],
+            total: [
+              {
+                $count: 'count'
+              }
+            ]
+          }
+        }
+      ]);
+
+      return result[0];
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = 400;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while fetching ${this.name}s list.`, 400);
     }
   }
 
-  async get(id) {
+  async get(search, session) {
     try {
-      const item = await this.model.findById(id);
+      const filter = await this.generateQueryFilterFromQueryParams(search);
+      const item = await this.model.findOne(filter).session(session);
       if (item) {
         return item;
       }
-      throw new Error(`This ${this.name} not found.`);
+      
+      throw new baseError(`Some error occurred while fetching ${this.name} details.`, 410);
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = 400;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while fetching ${this.name} details.`, 400);
     }
   }
 
-  async insert(data) {
+  async getById(id, session) {
     try {
-      Object.keys(data).forEach(
-        (key) => data[key] === undefined && delete data[key],
-      );
-      const item = await this.model.create(data);
-
-      if (item) {
-        return item;
-      }
-      throw new Error(`Unable to create this ${this.name}.`);
+      const search = { _id: id,  deleted: false };
+      return await this.get(search, session);
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while fetching ${this.name} details.`, 400);
     }
   }
 
-  async updateById(id, data) {
-    try {
-      Object.keys(data).forEach(
-        (key) => data[key] === undefined && delete data[key],
-      );
-
-      const item = await this.model.findByIdAndUpdate(id, data, { new: true });
-
-      if (item) {
-        return item;
-      }
-      throw new Error(`Unable to update this ${this.name}.`);
-    } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
-      throw error;
-    }
-  }
-
-  async update(filter, data) {
+  async insert(data, session) {
     try {
       Object.keys(data).forEach(
         (key) => data[key] === undefined && delete data[key],
       );
-      const item = await this.model.findByIdAndUpdate(filter, data, {
-        new: true,
-      });
+      let item =  null;
+      if(session) item = await this.model.create([data], { session });
+      else item = await this.model.create(data);
 
       if (item) {
         return item;
       }
-      throw new Error(`Unable to update this ${this.name}.`);
+      throw new baseError(`Some error occurred while adding this new ${this.name}.`);
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while adding new ${this.name}.`, 400);
     }
   }
 
-  async deleteById(id) {
+  async insertMany(data, session) {
     try {
-      let data = { deleted: true, deletedAt: new Date() };
-      const item = await this.model.findByIdAndUpdate(id, data, { new: true });
+      const item = await this.model.insertMany(data).session(session);
 
       if (item) {
         return item;
       }
-      throw new Error(`Unable to update this ${this.name}.`);
+      throw new baseError(`Some error occurred while adding new ${this.name}s.`);
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while adding new ${this.name}s.`, 400);
     }
   }
 
-  async delete(filter) {
+  async updateById(id, data, session) {
     try {
-      let data = { deleted: true, deletedAt: new Date() };
-      const item = await this.model.findByIdAndUpdate(filter, data, {
-        new: true,
-      });
+      const search = { _id: id,  deleted: false };
+      return await this.update(search, data, session);
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while updating the ${this.name}.`, 400);
+    }
+  }
 
+  async update(search, data, session) {
+    try {
+      const filter = await this.generateQueryFilterFromQueryParams(search);
+      const dbItem = await this.get(filter, session);
+      if (!dbItem) {
+        throw new baseError(`Some error occurred while fetching the ${this.name} details.`, 500);
+      }
+      Object.keys(data).forEach(
+        (key) => data[key] === undefined && delete data[key],
+      );
+
+      const item = await this.model.updateOne(filter, data).session(session);
+      if (!item) {
+        throw new baseError(`Some error occurred while updating the ${this.name}.`, 500);
+      }
+
+      const oldDBItem = JSON.parse(JSON.stringify(dbItem));
+      const newTeamDetails = { ...oldDBItem, ...data };
+      return newTeamDetails;
+      
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while updating the ${this.name}.`, ex.statusCode || 400);
+    }
+  }
+
+  async updateMany(search, data, session) {
+    try {
+      const filter = await this.generateQueryFilterFromQueryParams(search);
+      Object.keys(data).forEach(
+        (key) => data[key] === undefined && delete data[key],
+      );
+
+      const item = await this.model.updateMany(filter, data).session(session);
+      if (!item) {
+        throw new baseError(`Some error occurred while updating the ${this.name}s.`, 500);
+      }
+      
+      return item;
+      
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while updating the ${this.name}.`, ex.statusCode || 400);
+    }
+  }
+
+  async deleteById(id, session) {
+    try {
+      let filter = { _id: id,  deleted: false };
+      return await this.delete(filter, session);
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while deleting the ${this.name}.`, ex.statusCode || 400);
+    }
+  }
+
+  async delete(search, session) {
+    try {
+      const filter = await this.generateQueryFilterFromQueryParams(search);
+      const item = await this.model.deleteOne(filter).session(session);
       if (item) {
         return item;
       }
-      throw new Error('Something wrong happened');
+      throw new baseError(`Some error occurred while deleting the ${this.name}.`, 500);
     } catch (ex) {
-      let error = new Error(ex.message);
-      error.statusCode = ex.statusCode;
-      throw error;
+      throw new baseError(ex.message || `Some error occurred while deleting the ${this.name}.`, ex.statusCode || 400);
+    }
+  }
+
+  async deleteMany(search, session) {
+    try {
+      const filter = await this.generateQueryFilterFromQueryParams(search);
+      const count = await this.model.deleteMany(filter).session(session);
+      if (count) {
+        return count;
+        //returns {deletedCount: x} 
+      }
+      throw new baseError(`Some error occurred while deleting the ${this.name}.`, 500);
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while deleting the ${this.name}.`, ex.statusCode || 400);
+    }
+  }
+
+  async generateQueryFilterFromQueryParams(search){
+    try {
+      let filter = { deleted: false }
+      for (const field in search) {
+        let filterValue;
+        if (typeof search[field] === 'number') {
+          filterValue = parseInt(search[field]);
+        } else if (typeof search[field] === 'string') {
+          if(field == 'id') {            
+            if(search[field].length !== 36) filterValue = new RegExp(search[field], 'i');
+            else filterValue = search[field];            
+            field = '_id'
+          } else if(field == 'ids') {            
+            const idsArr = ids.split(',');
+            filterValue = { "$in": idsArr }
+            field = '_id'
+          } else {
+            filterValue = new RegExp(search[field], 'i');
+          }          
+        } else if (typeof search[field] === 'boolean') {
+          filterValue = parseInt(search[field]);
+        } else {
+          filterValue = search[field];
+        }
+        filter = { ...filter, [field]: filterValue };
+      }
+      return filter;
+    } catch (ex) {
+      throw new baseError(ex.message || `Some error occurred while generating query.`, ex.statusCode || 400);
     }
   }
 }

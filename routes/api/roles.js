@@ -11,7 +11,7 @@ router.group('/v1.0', (router) => {
   router.get(
     '/roles',
     [authMiddleware.verifyToken, aclMiddleware.hasPermission('read', 'roles')],
-    rolesController.roleList,
+    rolesController.rolesList,
   );
   router.group('/role', authMiddleware.verifyToken, (router) => {
     router.post(

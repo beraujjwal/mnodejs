@@ -1,0 +1,1 @@
+MATCH (n:User {uuid: $uuid}) DELETE n

@@ -1,5 +1,8 @@
 const autoBind = require('auto-bind');
 const { service } = require('@service/service');
+const { baseError } = require('@error/baseError');
+
+const permissionGraph = require('../../neo4j/services/permission');
 
 class permission extends service {
   /**
@@ -23,31 +26,34 @@ class permission extends service {
 
       return await this.getAll(queries, filter);
     } catch (ex) {
-      throw new Error(ex.message);
+      throw new baseError(ex);
     }
   }
 
-  async permissionStore(name) {
+  async permissionStore( { name, status = true }, session) {
     try {
-      return await this.insert({
-        name: name,
-        slug: name.split(' ').join('-').toLowerCase(),
-        status: true,
-      });
+      console.log(name);
+      const permission = await this.insert({
+        name,
+        status,
+      }, session);
+
+      await permissionGraph.create(permission[0]);
+      return permission;
     } catch (ex) {
-      throw new Error(ex.message);
+      throw new baseError(ex);
     }
   }
 
   async permissionDetails(permissionId) {
     try {
-      let permission = await this.get(permissionId);
+      let permission = await this.get(permissionId, { deleted: false });
       if (!permission) {
-        throw new Error('Permission not found with this given details.');
+        throw new baseError('Permission not found with this given details.');
       }
       return permission;
     } catch (ex) {
-      throw new Error(ex.message);
+      throw new baseError(ex);
     }
   }
 
@@ -56,10 +62,11 @@ class permission extends service {
       await this.updateById(permissionId, {
         name: name,
         status: status,
-      });
+      }, { deleted: false });
       return await this.get(permissionId);
     } catch (ex) {
-      throw new Error(ex.message);
+      console.log(ex);
+      throw new baseError(ex);
     }
   }
 
@@ -67,7 +74,7 @@ class permission extends service {
     try {
       return await this.delete({ _id: permissionId });
     } catch (ex) {
-      throw new Error(ex.message);
+      throw new baseError(ex);
     }
   }
 }

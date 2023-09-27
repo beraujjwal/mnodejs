@@ -1,5 +1,6 @@
 const autoBind = require('auto-bind');
 const { service } = require('@service/service');
+const { baseError } = require('@error/baseError');
 
 class SERVICE_CAMEL_CASE_SINGULAR_FROM extends service {
   /**

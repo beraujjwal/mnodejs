@@ -17,10 +17,13 @@ class userValidation extends validation {
   async signup(req, res, next) {
     const validationRule = {
       name: 'required|string',
-      email: 'required|email|unique:User,email',
-      phone: 'required|numeric|length:10|unique:User,phone',
-      password: 'required|string|min:6',
+      email: 'required|email',
+      phone: 'required|numeric',
+      password: 'required|string|strict|min:6',
+      role: 'string|exists:Role,slug'
     };
+    //return await this.validate(req, res, next, validationRule);
+    console.log('Calling Validation');
     return await this.validate(req, res, next, validationRule);
   }
 
@@ -35,6 +38,7 @@ class userValidation extends validation {
   }
 
   async signin(req, res, next) {
+
     const validationRule = {
       username: 'required',
       password: 'required',
@@ -43,7 +47,7 @@ class userValidation extends validation {
   }
 
   async profile(req, res, next) {
-    var userId = req.user.id;
+    const userId = req.user.id;
     const validationRule = {
       name: 'required|string',
       email: 'required|email|unique:User,email,_id,' + userId,

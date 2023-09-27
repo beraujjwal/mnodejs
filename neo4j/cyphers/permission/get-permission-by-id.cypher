@@ -1,0 +1,1 @@
+MATCH (p:Permission {id: $id}) RETURN p

@@ -15,6 +15,7 @@ class roleValidation extends validation {
 
   async create(req, res, next) {
     const validationRule = {
+      parent: 'string|exists:Role,slug',
       name: 'required|string',
     };
     return await this.validate(req, res, next, validationRule);

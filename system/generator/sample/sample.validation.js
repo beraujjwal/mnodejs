@@ -13,9 +13,17 @@ class VALIDATION_CAMEL_CASE_SINGULAR_FROMValidation extends validation {
     autoBind(this);
   }
 
-  async sampleValidation(req, res, next) {
+  async create(req, res, next) {
     const validationRule = {
       name: 'required|string',
+    };
+    return await this.validate(req, res, next, validationRule);
+  }
+
+  async update(req, res, next) {
+    const validationRule = {
+      name: 'required|string',
+      status: 'required|boolean',
     };
     return await this.validate(req, res, next, validationRule);
   }

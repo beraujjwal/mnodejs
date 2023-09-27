@@ -1,5 +1,6 @@
 'use strict';
 const { baseController } = require('@core/controller/baseController');
+const { baseError } = require('@error/baseError');
 var autoBind = require('auto-bind');
 
 class controller extends baseController {

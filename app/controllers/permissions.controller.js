@@ -4,6 +4,7 @@ const autoBind = require('auto-bind');
 const { controller } = require('./controller');
 const { permission } = require('@service/permission.service');
 const permissionService = new permission('Permission');
+const { baseError } = require('@error/baseError');
 
 class permissionsController extends controller {
   /**
@@ -23,21 +24,18 @@ class permissionsController extends controller {
    * @param {*} res
    * @param {*} next
    */
-  async permissionList(req, res, next) {
-    try {
+  async permissionList(req, session) {
       let result = await this.service.getAll(req.query);
       //if all filter fields name are same as db field name you can just use
       //let result = await this.service.getAll (req.query);
       if (result) {
-        return res
-          .status(200)
-          .json(this.success(result, 'Permission list got successfully!'));
+        return {
+          code: 200,
+          result,
+          message: 'Permission list got successfully.'
+        }
       }
-
-      next('Some error occurred while fetching list of permissions.');
-    } catch (err) {
-      next(err);
-    }
+      throw new baseError('Some error occurred while fetching list of permissions.');
   }
 
   /**
@@ -46,20 +44,19 @@ class permissionsController extends controller {
    * @param {*} res
    * @param {*} next
    */
-  async permissionStore(req, res, next) {
-    try {
+  async permissionStore(req, session) {
       let { name } = req.body;
+      console.log(req.body);
       //let result = await this.service.permissionStore(name);
-      let result = await this.service.permissionStore(name);
+      let result = await this.service.permissionStore({ name }, session);
       if (result) {
-        return res
-          .status(200)
-          .json(this.success(result, 'New permission created successfully!'));
+        return {
+          code: 201,
+          result,
+          message: 'New permission created successfully.'
+        }
       }
-      next('Some error occurred while creating new permission.');
-    } catch (err) {
-      next(err);
-    }
+      throw new baseError('Some error occurred while creating new permission.');
   }
 
   /**
@@ -68,8 +65,7 @@ class permissionsController extends controller {
    * @param {*} res
    * @param {*} next
    */
-  async permissionDetails(req, res, next) {
-    try {
+  async permissionDetails(req, session) {
       let permissionId = req.params.id;
       let result = await this.service.get(permissionId);
       if (result) {
@@ -79,10 +75,7 @@ class permissionsController extends controller {
             this.success(result, 'Permission details fetched successfully!'),
           );
       }
-      next('Some error occurred while fetching permission details.');
-    } catch (err) {
-      next(err);
-    }
+      throw new baseError('Some error occurred while fetching permission details.');
   }
 
   /**
@@ -91,8 +84,7 @@ class permissionsController extends controller {
    * @param {*} res
    * @param {*} next
    */
-  async permissionUpdate(req, res, next) {
-    try {
+  async permissionUpdate(req, session) {
       let permissionId = req.params.id;
       let { name, status } = req.body;
       let result = await this.service.permissionUpdate(
@@ -107,10 +99,7 @@ class permissionsController extends controller {
             this.success(result, 'Permission details updated successfully!'),
           );
       }
-      next('Some error occurred while updating permission details.');
-    } catch (err) {
-      next(err);
-    }
+      throw new baseError('Some error occurred while updating permission details.');
   }
 
   /**
@@ -119,19 +108,15 @@ class permissionsController extends controller {
    * @param {*} res
    * @param {*} next
    */
-  async permissionDelete(req, res, next) {
-    try {
-      let permissionId = req.params.id;
-      let result = await this.service.permissionDelete(permissionId);
-      if (result) {
-        return res
-          .status(200)
-          .json(this.success(result, 'Permission deleted successfully!'));
-      }
-      next('Some error occurred while deleting permission.');
-    } catch (err) {
-      next(err);
+  async permissionDelete(req, session) {
+    let permissionId = req.params.id;
+    let result = await this.service.permissionDelete(permissionId);
+    if (result) {
+      return res
+        .status(200)
+        .json(this.success(result, 'Permission deleted successfully!'));
     }
+    throw new baseError('Some error occurred while deleting permission.');
   }
 }
 module.exports = new permissionsController(permissionService);

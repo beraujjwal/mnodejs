@@ -1,0 +1,1 @@
+MATCH (n:User {email: $email}) DELETE n

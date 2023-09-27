@@ -1,62 +1,71 @@
 'use strict';
-/*const seederConfig = require('../../../config/seeder.config');
-const db = require('../model');
-
-var countries = require('../../../database/seeder/1649652613675.countries');
-var states = require('../../../database/seeder/1649652614675.states');
-var cities = require('../../../database/seeder/1649652615675.cities');
-var permissions = require('../../../database/seeder/1649652610675.permissions');
-var resources = require('../../../database/seeder/1649652611675.resources');
-var roles = require('../../../database/seeder/1649652612675.roles');
-
-async function _runCountriesSeeder() {
-  async.each(
-    countries,
-    function iteratee(country, next) {
-      var cn = new Country({
-        _id: country.id,
-        sortname: country.sortname,
-        name: country.name,
-      });
-
-      cn.save(function (err, res) {
-        next();
-      });
-    },
-    function () {
-      console.log('================= All Countries loaded ===================');
-    },
-  );
-}
-*/
+require('dotenv').config();
 const chalk = require('chalk');
 const log = console.log;
 const { Seeder } = require('mongo-seeding');
+const fs = require('fs');
 const path = require('path');
 const dbConfig = require('../../../config/db.config');
 const seederPath = path.resolve(__dirname, '../../../database/seeder/');
+const servicePath = path.resolve(__dirname + '/../../../neo4j/services/');
 
+const pluralize = require('pluralize');
+const caseChanger = require('case');
+const basename = 'index.js';
 const config = {
   database: dbConfig.url,
   inputPath: seederPath,
   dropDatabase: false,
   dropCollections: true,
-  databaseReconnectTimeout: 100000
+  databaseReconnectTimeout: 3000
 };
 
 log(chalk.white.bgGreen.bold('✔ Seeding process started'));
 const seeder = new Seeder(config);
 const collections = seeder.readCollectionsFromPath(seederPath);
 log(chalk.white.bgGreen.bold('✔ Reading collections file done.'));
+
+const sedding = [];
+
+fs.readdirSync(servicePath)
+  .filter((file) => {
+    return (
+      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+    );
+  }).forEach((file) => {
+    let moduleName = file.slice(0, -3);
+    sedding[moduleName] = require(path.join(servicePath, moduleName));
+  });
+
+//const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 const main = async () => {
   try {
+    log(chalk.white.bgGreen.bold('✔ MongoDB migration started.'));
     await seeder.import(collections);
+    log(chalk.white.bgGreen.bold('✔ MongoDB migration ended.'));
+    log(chalk.white.bgGreen.bold('✔ Neo4j migration started.'));
+
+    await collections.forEach( async collection => {
+      const singularModelName = pluralize.singular(collection.name);
+      const documents = collection.documents;
+      const neo4jService = sedding[singularModelName]
+      if(neo4jService) {
+        log(chalk.white.bgGreen.bold(`✔ Neo4J seeding for ${singularModelName}`));
+        await documents.forEach( async (document) => {
+          document.id = document._id;
+          await neo4jService.create(document);
+          //await sleep(10000);
+        });
+      }
+    });
     log(chalk.white.bgGreen.bold('✔ Seed complete!'));
-    process.exit(0);
+    //process.exit(0);
   } catch (err) {
-    log(chalk.white.bgGreen.bold('✘ Seeding process failed to finished'));
-    process.exit(0);
+    console.log(err)
+    log(chalk.white.bgGreen.bold('✘ Seeding process failed!'));
+    //process.exit(0);
   }
+
 };
 
 main();
