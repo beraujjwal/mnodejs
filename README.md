@@ -30,11 +30,12 @@ I'm doing my best to provide you a good experience when using my apps, so if you
 - Email helper ready just import and use.
 - Integrated Authorization.
 - Integrated ACL with User permission & Role Permission.
+- Integrated with Neo4J, Redis and Kafka.
 
 ## Software Requirements
 
-- Node.js **10+** (Recommended **12+**)
-- MongoDB **4+** (Recommended **4.4+**)
+- Node.js **16.20+** (Recommended **18.18**)
+- MongoDB **5+** (Recommended **6.0**)
 
 ## How to install
 
