@@ -5,9 +5,11 @@ const chalk = require('chalk');
 const { redisClient } = require('../app/helpers/redis');
 const log = console.log;
 
-redisClient.connect().catch((err)=> {
-    log(chalk.white.bgRed.bold('✘ Redis client setup process failed!'));
-});
+if(redisClient) {
+    redisClient.connect().catch((err)=> {
+        log(chalk.white.bgRed.bold('✘ Redis client setup process failed!'));
+    });
+}
 
 exports.set = async (key, value, timeout = '5m') => {
     try {

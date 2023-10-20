@@ -96,7 +96,7 @@ app.all('/*', (req, res) => {
   });
 });
 
-consumerKafkaMessage().catch(console.error);
+consumerKafkaMessage();
 
 app.use(function (err, req, res, next) {
 

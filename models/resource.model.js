@@ -30,7 +30,7 @@ const schema = mongoose.Schema(
       slug: "name",
       unique: true,
       slugPaddingSize: 4,
-      on:{ save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true }
+      slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true }
     },
     description: {
       type: String,

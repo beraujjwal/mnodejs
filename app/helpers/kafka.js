@@ -9,9 +9,12 @@ const serviceLogger = () => ({ label, log }) => {
     if (!PERFORMANCE_TEST) console.log(label + " namespace:" + log.message, log);
 };
 
-const brokers = config.brokers.split(',');
+let brokers = [];
+let kafka = null;
+if(config.brokers)
+  brokers = config.brokers.split(',');
 
-exports.kafka =  new Kafka({
+kafka =  new Kafka({
   logLevel: logLevel.INFO,
   clientId: config.clientId,
   brokers: brokers,
@@ -21,3 +24,5 @@ exports.kafka =  new Kafka({
     retries: config.retry,
   },
 });
+
+module.exports = { kafka };

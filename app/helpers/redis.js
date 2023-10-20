@@ -3,8 +3,14 @@ const { baseError } = require('@error/baseError');
 const { config } = require('../../config/redis.config');
 const redis = require('redis');
 
-exports.redisClient = redis.createClient({
-  port      : config.port,
-  host      : config.host,
-  url       : config.url
-});
+let redisClient = null;
+
+if(config.host) {
+  redisClient = redis.createClient({
+    port      : config.port,
+    host      : config.host,
+    url       : config.url
+  });
+}
+
+module.exports = { redisClient };
