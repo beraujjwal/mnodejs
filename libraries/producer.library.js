@@ -2,7 +2,7 @@
 require('dotenv').config();
 const chalk = require('chalk');
 
-const { kafka } = require('../app/helpers/kafka');
+const { kafka } = require('../helpers/kafka');
 const log = console.log;
 let producer = null;
 if(kafka) {

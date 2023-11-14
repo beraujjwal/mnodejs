@@ -6,7 +6,7 @@ const {
   generatePassword,
   generateOTP,
   generateToken,
-} = require('../helpers/utility');
+} = require('../../helpers/utility');
 
 const { sentOTPMail } = require('../../libraries/email.library');
 const { sentOTPSMS } = require('../../libraries/sms.library');
@@ -23,7 +23,7 @@ class token extends service {
     this.regexEmail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     autoBind(this);
   }
-  
+
   async findOtp(userId, otp, type, sentOn) {
     try {
       let cutoff = moment().utc(this.env.APP_TIMEZONE).toDate();
@@ -40,7 +40,7 @@ class token extends service {
       throw new baseError(ex);
     }
   }
-  
+
   async deactiveOtp(Id) {
     try {
       let data = {
@@ -55,7 +55,7 @@ class token extends service {
       throw new baseError(ex);
     }
   }
-  
+
   async createToken({userId, type, sentOn}, session) {
     try {
       let isEmail = sentOn.match(this.regexEmail) ? true : false;
@@ -80,14 +80,14 @@ class token extends service {
         status: true,
         expiresAt: moment().utc(this.env.APP_TIMEZONE).add(5, 'm').toDate(),
       }], { session: session });
-      
+
       return userToken;
     } catch (ex) {
       console.log(ex);
       throw new baseError(ex);
     }
   }
-  
+
   async findUpdateOrCreate(userId, type, sentOn) {
     try {
       let isEmail = sentOn.match(this.regexEmail) ? true : false;
@@ -113,16 +113,16 @@ class token extends service {
         digits: true,
       });
 
-      if(otpResponse) {                
-        
+      if(otpResponse) {
+
         let filter = { _id: otpResponse._id };
         await this.model.updateOne(
-          filter, 
-          { 
-            $set: { 
-              token: otpToken, 
-              expiresAt: expiresAt 
-            } 
+          filter,
+          {
+            $set: {
+              token: otpToken,
+              expiresAt: expiresAt
+            }
           }
         ).session(session);
 
@@ -130,7 +130,7 @@ class token extends service {
         otpResponse.expiresAt = expiresAt;
         return otpResponse
 
-      }      
+      }
 
       let userToken = await this.model.create({
         user: userId,
@@ -141,13 +141,13 @@ class token extends service {
         status: true,
         expiresAt: expiresAt,
       }, { session: session });
-      
+
       return userToken;
     } catch (ex) {
       throw new baseError(ex);
     }
   }
-  
+
 }
 
 module.exports = { token };

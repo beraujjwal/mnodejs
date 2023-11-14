@@ -1,6 +1,6 @@
 'use strict';
 require('dotenv').config();
-const { sendSMS } = require('../app/helpers/sms');
+const { sendSMS } = require('../helpers/sms');
 
 
 exports.sentOTPSMS = function (email, token) {

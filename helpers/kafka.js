@@ -1,7 +1,7 @@
 'use strict';
 require('dotenv').config();
 const { Kafka, logLevel } = require('kafkajs');
-const { config } = require('../../config/kafka.config');
+const { config } = require('../config/kafka.config');
 
 const PERFORMANCE_TEST = true;
 

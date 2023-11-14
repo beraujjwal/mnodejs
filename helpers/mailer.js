@@ -4,10 +4,10 @@ const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 const { baseError } = require('@error/baseError');
-const { config, defaultMail } = require('../../config/mail.config');
+const { config, defaultMail } = require('../config/mail.config');
 
-const viewPath =  path.resolve(__dirname, '../../resources/templates/views/');
-const partialsPath = path.resolve(__dirname, '../../resources/templates/partials');
+const viewPath =  path.resolve(__dirname, '../resources/templates/views/');
+const partialsPath = path.resolve(__dirname, '../resources/templates/partials');
 
 
 exports.sendMail = function (mailOptions) {

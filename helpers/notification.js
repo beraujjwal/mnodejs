@@ -2,9 +2,9 @@
 const fs = require('fs');
 const util = require('util');
 const { baseError } = require('@error/baseError');
-const { admin } = require('../../config/firebase.config');
+const { admin } = require('../config/firebase.config');
 
-const log_file = fs.createWriteStream(__dirname + '/../../logs/notifications.log', {flags : 'w'});
+const log_file = fs.createWriteStream(__dirname + '/../logs/notifications.log', {flags : 'w'});
 const log_stdout = process.stdout;
 
 console.log = function(d) { //
@@ -27,14 +27,14 @@ exports.send = function (fcmTokens, title, message, options) {
 
     if(!title) title = 'Hello';
 
-    if(!message) message = 'Welcome to enNinja';
+    if(!message) message = 'Welcome to MNode';
 
     let newOptions = {...notificationOptions, ...options}
 
     if(fcmTokens.length < 1 ) {
     } else {
         admin.messaging().sendToDevice(fcmTokens, payload, newOptions).then( response => {
-            return true;        
+            return true;
         }).catch( err => {
             console.debug(err.message);
         });

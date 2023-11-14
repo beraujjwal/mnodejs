@@ -2,7 +2,7 @@
 require('dotenv').config();
 const chalk = require('chalk');
 
-const { redisClient } = require('../app/helpers/redis');
+const { redisClient } = require('../helpers/redis');
 const log = console.log;
 
 if(redisClient) {

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const { baseService } = require('@core/service/baseService');
 const { baseError } = require('@error/baseError');
-const mailer = require('../helpers/mailer');
+const mailer = require('../../helpers/mailer');
 
 class service extends baseService {
   /**
@@ -39,10 +39,10 @@ class service extends baseService {
     try {
       // Update status of the current node
       await this.model.updateOne({ _id: rootId }, { $set: { status: newStatus } });
-  
+
       // Find children of the current node
       const children = await this.model.find({ parent: rootId });
-  
+
       // Recursively update status for each child
       for (const child of children) {
         await this.updateNestedStatus(child._id, newStatus);
@@ -56,12 +56,12 @@ class service extends baseService {
     try {
       const map = {};
       const roots = [];
-  
+
       for (let i = 0; i < list.length; i += 1) {
         map[list[i]._id] = i;
         list[i].childrens = [];
       }
-      
+
       for (let i = 0; i < list.length; i += 1) {
         const node = list[i];
         if (node.parent !== null && map[node.parent] !== undefined) {
@@ -70,7 +70,7 @@ class service extends baseService {
           roots.push(node);
         }
       }
-  
+
       return roots;
     } catch (error) {
       throw new baseError(error.message);
@@ -82,14 +82,14 @@ class service extends baseService {
       return data.map(item => {
         const { _id, ...rest } = item;
         const newItem = { id: _id, ...rest };
-    
+
         // Recursively modify subchildren
         for (const key in newItem) {
           if (Array.isArray(newItem[key])) {
             newItem[key].push(this.modifyIds(newItem[key]));
           }
         }
-    
+
         return newItem;
       });
     } catch (error) {
@@ -192,7 +192,7 @@ class service extends baseService {
     try {
       // Gets expiration time
       const expiration = this.env.JWT_REFRESH_IN;
-      
+
       return jwt.sign(userInfo, this.env.JWT_REFRESH_TOKEN_SECRET, {
         expiresIn: expiration, // expiresIn time
         algorithm: algorithm,
@@ -226,7 +226,7 @@ class service extends baseService {
     }
     return Number(text);
   };
-  
+
   async generatePassword (
     length,
     { digits = true, lowerCase = true, upperCase = true, specialChars = true },
@@ -238,7 +238,7 @@ class service extends baseService {
       specialChars: specialChars,
     });
   };
-  
+
   async generateOTP(
     length,
     { digits = true, lowerCase = false, upperCase = false, specialChars = false },
@@ -251,7 +251,7 @@ class service extends baseService {
     });
   };
 
-  
+
 
 
   async sentOTPSMS(number, OTP){
@@ -289,7 +289,7 @@ class service extends baseService {
     let hDisplay = (h > 0) ? (h < 10) ? "0"+h+":" : h+":" : "00:";
     let mDisplay = (m > 0) ? (m < 10) ? "0"+m+":" : m+":" : "00:";
     let sDisplay = (s > 0) ? (s < 10) ? "0"+s+":" : s+":" : "00";
-    return hDisplay + mDisplay + sDisplay; 
+    return hDisplay + mDisplay + sDisplay;
   }
 }
 

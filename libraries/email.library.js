@@ -1,12 +1,12 @@
 'use strict';
 require('dotenv').config();
-const { sendMail } = require('../app/helpers/mailer');
+const { sendMail } = require('../helpers/mailer');
 const path = require('path');
 
 
 exports.sentOTPMail = function (email, token) {
     try {
-        const filePath = path.join(__dirname, '../resources/templates/views/index.handlebars');    
+        const filePath = path.join(__dirname, '../resources/templates/views/index.handlebars');
         const mailOptions = {
             to: email,
             subject: 'User registration',

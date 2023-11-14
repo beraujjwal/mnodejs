@@ -1,5 +1,5 @@
 const neo4j = require('neo4j-driver');
-const config = require('../../config/neo4j.config');
+const config = require('../config/neo4j.config');
 let neo4jDriver = null;
 
 if(config.url) {

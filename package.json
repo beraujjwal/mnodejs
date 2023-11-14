@@ -76,7 +76,7 @@
     "@controller": "app/controllers",
     "@middleware": "app/middlewares",
     "@service": "app/services",
-    "@helper": "app/helpers",
+    "@helper": "helpers",
     "@validation": "app/validations",
     "@error": "system/core/error"
   }
