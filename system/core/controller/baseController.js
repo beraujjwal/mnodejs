@@ -2,7 +2,7 @@
 const autoBind = require('auto-bind');
 const { base } = require('../base');
 
-const { baseError } = require('@error/baseError');
+const { baseError } = require('../error/baseError');
 
 class baseController extends base {
   /**
@@ -13,7 +13,7 @@ class baseController extends base {
   constructor(service) {
     super();
     this.service = service;
-    
+
     autoBind(this);
   }
 
@@ -128,7 +128,7 @@ class baseController extends base {
         message: 'The item Deleted successfully.'
       }
     }
-    throw new baseError('Some error occurred while deleting the item.');    
+    throw new baseError('Some error occurred while deleting the item.');
   }
 
   async delete(req, session) {
@@ -140,7 +140,7 @@ class baseController extends base {
         message: 'The item was Deleted successfully.'
       }
     }
-    throw new baseError('Some error occurred while deleting the item.');    
+    throw new baseError('Some error occurred while deleting the item.');
   }
 
   async deleteMany(req, session) {
@@ -152,7 +152,7 @@ class baseController extends base {
         message: 'Items was Deleted successfully.'
       }
     }
-    throw new baseError('Some error occurred while deleting items.');    
+    throw new baseError('Some error occurred while deleting items.');
   }
 }
 

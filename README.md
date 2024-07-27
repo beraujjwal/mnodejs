@@ -1,8 +1,8 @@
-![MNode](https://github.com/beraujjwal/mnodejs/blob/main/MNode.png?raw=true)
+![MNodeJs](https://github.com/beraujjwal/mnodejs/blob/main/MNodeJs.png?raw=true)
 
 ## Getting started
 
-MNode is a basic skeleton written in JavaScript with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. MNode takes the pain out of development by easing common tasks used in many applications. MNode is accessible, powerful, and provides tools required for large, robust applications.
+MNodeJs is a Node.js application showcasing best practices in modern web development. This project serves as a boilerplate for building scalable and secure web applications using Node.js. We believe development must be an enjoyable and creative experience to be truly fulfilling. MNodeJs takes the pain out of development by easing common tasks used in many applications. MNodeJs is accessible, powerful, and provides tools required for large, robust applications.
 
 A ready-to-use boilerplate for REST API Development with Node.js, Express, and MongoDB.
 
@@ -16,7 +16,7 @@ I am open for a good job or work contract. You can contact me directly on my ema
 
 Hi! I'm Ujjwal Bera, I'm an open source enthusiast and devote my free time to building projects in this field.
 
-I'm the creator and maintainer of [MNode](https://github.com/beraujjwal/mnodejs/blob/main/README.md) and [SNode](https://github.com/beraujjwal/snode/blob/main/README.md).
+I'm the creator and maintainer of [MNodeJs](https://github.com/beraujjwal/mnodejs/blob/main/README.md) and [SNodeJs](https://github.com/beraujjwal/snode/blob/main/README.md).
 
 I'm doing my best to provide you a good experience when using my apps, so if you like what I'm doing and wish to say "thanks!", You can appreciate me or my hard work and time spent to create this helpful structure with buying me a coffee.
 
@@ -24,13 +24,13 @@ I'm doing my best to provide you a good experience when using my apps, so if you
 
 ## Features
 
-- Multiple environment ready (development, production)
-- Basic Authentication (Register/Login/Forgot Password)
-- Profile Management (Pull Profile Details/Update Profile/Change Password)
-- Email helper ready just import and use.
-- Integrated Authorization.
-- Integrated ACL with User permission & Role Permission.
-- Integrated with Neo4J, Redis and Kafka.
+- **Express.js**: A fast, unopinionated, minimalist web framework for Node.js.
+- **Authentication**: Secure user authentication using industry-standard practices.
+- **Authorization**: Implement access controls to ensure proper data protection.
+- **Logging**: Comprehensive logging for monitoring and debugging.
+- **Error Handling**: Graceful handling of errors to enhance user experience.
+- **Integrated**: ACL with User permission & Role Permission.
+- **Libraries**: with Neo4J, Redis and Kafka.
 
 ## Software Requirements
 
@@ -178,6 +178,10 @@ If you need to add more test cases to the project just create a new file in `/te
 
 Every project needs improvements, Feel free to report any bugs or improvements. Pull requests are always welcome.
 
+## Contributing
+
+Feel free to contribute to make this project even better! Please follow the contribution guidelines.
+
 ## Who do I talk to?
 
 - [Ujjwal Bera](https://github.com/beraujjwal)
@@ -199,3 +203,7 @@ Every project needs improvements, Feel free to report any bugs or improvements. 
 ## License
 
 This project is open-sourced software licensed under the MIT License. See the LICENSE file for more information.
+
+## Acknowledgments
+
+Thanks to the open-source community for inspiring and contributing to the tools used in this project.
